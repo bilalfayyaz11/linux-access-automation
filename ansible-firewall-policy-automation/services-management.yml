@@ -1,0 +1,78 @@
+---
+- name: Manage Firewall Services
+  hosts: firewallnodes
+  become: yes
+
+  tasks:
+    - name: List available services
+      ansible.builtin.command: firewall-cmd --get-services
+      register: available_services
+      changed_when: false
+
+    - name: Display first 25 available services
+      ansible.builtin.debug:
+        msg: "{{ available_services.stdout.split()[:25] }}"
+
+    - name: Enable common web and infrastructure services
+      ansible.posix.firewalld:
+        service: "{{ item }}"
+        permanent: yes
+        immediate: yes
+        state: enabled
+        zone: public
+      loop:
+        - http
+        - https
+        - ssh
+
+    - name: Create custom service definition directory
+      ansible.builtin.file:
+        path: /etc/firewalld/services
+        state: directory
+        mode: '0755'
+
+    - name: Create custom application service
+      ansible.builtin.copy:
+        content: |
+          <?xml version="1.0" encoding="utf-8"?>
+          <service>
+            <short>Custom App</short>
+            <description>Custom web application ports for internal platform traffic</description>
+            <port protocol="tcp" port="8080"/>
+            <port protocol="tcp" port="8443"/>
+          </service>
+        dest: /etc/firewalld/services/custom-app.xml
+        mode: '0644'
+
+    - name: Reload firewalld to recognize custom service
+      ansible.builtin.command: firewall-cmd --reload
+      changed_when: true
+
+    - name: Enable custom application service
+      ansible.posix.firewalld:
+        service: custom-app
+        permanent: yes
+        immediate: yes
+        state: enabled
+        zone: public
+
+    - name: Disable unnecessary default services if present
+      ansible.posix.firewalld:
+        service: "{{ item }}"
+        permanent: yes
+        immediate: yes
+        state: disabled
+        zone: public
+      loop:
+        - cockpit
+        - dhcpv6-client
+      ignore_errors: yes
+
+    - name: Check enabled services in public zone
+      ansible.builtin.command: firewall-cmd --zone=public --list-services
+      register: enabled_services
+      changed_when: false
+
+    - name: Display enabled services
+      ansible.builtin.debug:
+        msg: "Enabled public services: {{ enabled_services.stdout }}"

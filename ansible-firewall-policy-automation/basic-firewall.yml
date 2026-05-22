@@ -1,0 +1,51 @@
+---
+- name: Configure Basic Firewall Rules
+  hosts: firewallnodes
+  become: yes
+
+  tasks:
+    - name: Ensure firewalld is installed
+      ansible.builtin.package:
+        name: firewalld
+        state: present
+
+    - name: Ensure python firewall bindings are installed
+      ansible.builtin.package:
+        name: python3-firewall
+        state: present
+
+    - name: Start and enable firewalld
+      ansible.builtin.systemd:
+        name: firewalld
+        state: started
+        enabled: yes
+
+    - name: Allow SSH service
+      ansible.posix.firewalld:
+        service: ssh
+        permanent: yes
+        immediate: yes
+        state: enabled
+
+    - name: Allow HTTP service
+      ansible.posix.firewalld:
+        service: http
+        permanent: yes
+        immediate: yes
+        state: enabled
+
+    - name: Allow HTTPS service
+      ansible.posix.firewalld:
+        service: https
+        permanent: yes
+        immediate: yes
+        state: enabled
+
+    - name: Display current firewall rules
+      ansible.builtin.command: firewall-cmd --list-all
+      register: firewall_rules
+      changed_when: false
+
+    - name: Show firewall configuration
+      ansible.builtin.debug:
+        var: firewall_rules.stdout_lines

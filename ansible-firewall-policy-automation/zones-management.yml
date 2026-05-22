@@ -1,0 +1,62 @@
+---
+- name: Manage Firewall Zones
+  hosts: firewallnodes
+  become: yes
+
+  tasks:
+    - name: List available zones
+      ansible.builtin.command: firewall-cmd --get-zones
+      register: available_zones
+      changed_when: false
+
+    - name: Display available zones
+      ansible.builtin.debug:
+        msg: "Available zones: {{ available_zones.stdout }}"
+
+    - name: Get default zone
+      ansible.builtin.command: firewall-cmd --get-default-zone
+      register: default_zone
+      changed_when: false
+
+    - name: Display default zone
+      ansible.builtin.debug:
+        msg: "Default zone: {{ default_zone.stdout }}"
+
+    - name: Create custom DMZ zone
+      ansible.posix.firewalld:
+        zone: dmz-custom
+        permanent: yes
+        state: present
+
+    - name: Reload firewalld after zone creation
+      ansible.builtin.command: firewall-cmd --reload
+      changed_when: true
+
+    - name: Configure DMZ zone services
+      ansible.posix.firewalld:
+        zone: dmz-custom
+        service: "{{ item }}"
+        permanent: yes
+        immediate: yes
+        state: enabled
+      loop:
+        - http
+        - https
+        - ssh
+
+    - name: Add AWS private source range to trusted zone
+      ansible.posix.firewalld:
+        zone: trusted
+        source: 172.31.0.0/16
+        permanent: yes
+        immediate: yes
+        state: enabled
+
+    - name: List all zone configurations
+      ansible.builtin.command: firewall-cmd --list-all-zones
+      register: all_zones
+      changed_when: false
+
+    - name: Display first 80 lines of zone configuration
+      ansible.builtin.debug:
+        msg: "{{ all_zones.stdout_lines[:80] }}"

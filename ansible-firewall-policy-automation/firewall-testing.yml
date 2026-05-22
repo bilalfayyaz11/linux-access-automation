@@ -1,0 +1,71 @@
+---
+- name: Validate Firewall Configuration
+  hosts: firewallnodes
+  become: yes
+
+  tasks:
+    - name: Check firewalld service state
+      ansible.builtin.command: firewall-cmd --state
+      register: firewall_state
+      changed_when: false
+
+    - name: Display firewall state
+      ansible.builtin.debug:
+        msg: "Firewall state: {{ firewall_state.stdout }}"
+
+    - name: List active services
+      ansible.builtin.command: firewall-cmd --list-services
+      register: active_services
+      changed_when: false
+
+    - name: Display active services
+      ansible.builtin.debug:
+        var: active_services.stdout_lines
+
+    - name: List open ports
+      ansible.builtin.command: firewall-cmd --list-ports
+      register: open_ports
+      changed_when: false
+
+    - name: Display open ports
+      ansible.builtin.debug:
+        var: open_ports.stdout_lines
+
+    - name: List rich rules
+      ansible.builtin.command: firewall-cmd --list-rich-rules
+      register: rich_rules
+      changed_when: false
+
+    - name: Display rich rules
+      ansible.builtin.debug:
+        var: rich_rules.stdout_lines
+
+    - name: Verify telnet port is blocked
+      ansible.builtin.command: firewall-cmd --query-port=23/tcp
+      register: telnet_status
+      changed_when: false
+      failed_when: false
+
+    - name: Display telnet security status
+      ansible.builtin.debug:
+        msg: "Telnet blocked: {{ 'YES' if telnet_status.stdout == 'no' else 'NO' }}"
+
+    - name: Create firewall backup directory
+      ansible.builtin.file:
+        path: /tmp/firewall-backups
+        state: directory
+        mode: '0755'
+
+    - name: Export firewall configuration backup
+      ansible.builtin.shell: |
+        firewall-cmd --list-all > /tmp/firewall-backups/firewall-config.txt
+      changed_when: false
+
+    - name: Verify backup exists
+      ansible.builtin.stat:
+        path: /tmp/firewall-backups/firewall-config.txt
+      register: backup_status
+
+    - name: Display backup status
+      ansible.builtin.debug:
+        msg: "Firewall backup created: {{ backup_status.stat.exists }}"

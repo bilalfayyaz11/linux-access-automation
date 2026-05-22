@@ -1,0 +1,49 @@
+---
+- name: Configure Advanced Firewall Rules
+  hosts: firewallnodes
+  become: yes
+
+  vars:
+    custom_ports:
+      - 8080/tcp
+      - 3306/tcp
+      - 5432/tcp
+
+  tasks:
+    - name: Open custom TCP ports
+      ansible.posix.firewalld:
+        port: "{{ item }}"
+        permanent: yes
+        immediate: yes
+        state: enabled
+      loop: "{{ custom_ports }}"
+
+    - name: Block telnet port
+      ansible.posix.firewalld:
+        port: 23/tcp
+        permanent: yes
+        immediate: yes
+        state: disabled
+
+    - name: Allow SSH from private network range
+      ansible.posix.firewalld:
+        rich_rule: 'rule family="ipv4" source address="172.31.0.0/16" service name="ssh" accept'
+        permanent: yes
+        immediate: yes
+        state: enabled
+
+    - name: Allow high application port range
+      ansible.posix.firewalld:
+        port: 60000-61000/tcp
+        permanent: yes
+        immediate: yes
+        state: enabled
+
+    - name: Verify advanced firewall configuration
+      ansible.builtin.command: firewall-cmd --list-all
+      register: advanced_rules
+      changed_when: false
+
+    - name: Display advanced firewall rules
+      ansible.builtin.debug:
+        var: advanced_rules.stdout_lines
