@@ -1,0 +1,57 @@
+---
+- name: Master Safe Network Automation Configuration
+  hosts: networknodes
+  become: yes
+
+  vars:
+    managed_profile: secondary-managed-profile
+
+  tasks:
+    - name: Gather network facts
+      ansible.builtin.setup:
+        gather_subset:
+          - network
+
+    - name: Ensure NetworkManager is running
+      ansible.builtin.service:
+        name: NetworkManager
+        state: started
+        enabled: yes
+
+    - name: Display primary interface
+      ansible.builtin.debug:
+        msg: "Primary interface detected: {{ ansible_default_ipv4.interface }}"
+
+    - name: Verify managed NetworkManager profile exists
+      ansible.builtin.command: nmcli connection show "{{ managed_profile }}"
+      register: managed_profile_check
+      changed_when: false
+      failed_when: managed_profile_check.rc != 0
+
+    - name: Display managed profile details
+      ansible.builtin.debug:
+        var: managed_profile_check.stdout_lines
+
+    - name: Display active routing table
+      ansible.builtin.command: ip route show
+      register: route_table
+      changed_when: false
+
+    - name: Show active routes
+      ansible.builtin.debug:
+        var: route_table.stdout_lines
+
+    - name: Test DNS resolution
+      ansible.builtin.command: nslookup "{{ item }}"
+      loop:
+        - google.com
+        - github.com
+        - redhat.com
+      register: dns_tests
+      changed_when: false
+      failed_when: false
+
+    - name: Display DNS test results
+      ansible.builtin.debug:
+        msg: "DNS resolution for {{ item.item }}: {{ 'SUCCESS' if item.rc == 0 else 'FAILED' }}"
+      loop: "{{ dns_tests.results }}"

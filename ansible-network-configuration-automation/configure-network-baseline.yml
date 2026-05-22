@@ -1,0 +1,33 @@
+---
+- name: Baseline Network Automation
+  hosts: networknodes
+  become: yes
+
+  tasks:
+    - name: Gather network facts
+      ansible.builtin.setup:
+        gather_subset:
+          - network
+
+    - name: Display detected interface
+      ansible.builtin.debug:
+        msg: "Primary interface detected: {{ ansible_default_ipv4.interface }}"
+
+    - name: Display detected IP address
+      ansible.builtin.debug:
+        msg: "Current IP: {{ ansible_default_ipv4.address }}"
+
+    - name: Ensure NetworkManager service is enabled
+      ansible.builtin.service:
+        name: NetworkManager
+        state: started
+        enabled: yes
+
+    - name: Show active NetworkManager connections
+      ansible.builtin.command: nmcli connection show
+      register: nmcli_connections
+      changed_when: false
+
+    - name: Display active connections
+      ansible.builtin.debug:
+        var: nmcli_connections.stdout_lines

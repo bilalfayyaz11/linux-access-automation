@@ -1,0 +1,36 @@
+---
+- name: Configure Safe Static Routes with NetworkManager
+  hosts: networknodes
+  become: yes
+
+  vars:
+    route_profile: secondary-managed-profile
+    safe_routes:
+      - "10.20.0.0/16 10.10.10.1"
+      - "10.30.0.0/16 10.10.10.1"
+
+  tasks:
+    - name: Add safe static routes to secondary profile
+      community.general.nmcli:
+        conn_name: "{{ route_profile }}"
+        type: ethernet
+        routes4: "{{ safe_routes }}"
+        state: present
+
+    - name: Show configured secondary profile
+      ansible.builtin.command: nmcli connection show "{{ route_profile }}"
+      register: route_profile_output
+      changed_when: false
+
+    - name: Display route profile details
+      ansible.builtin.debug:
+        var: route_profile_output.stdout_lines
+
+    - name: Display active kernel routing table
+      ansible.builtin.command: ip route show
+      register: active_routes
+      changed_when: false
+
+    - name: Show active routes
+      ansible.builtin.debug:
+        var: active_routes.stdout_lines

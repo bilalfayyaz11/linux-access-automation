@@ -1,0 +1,49 @@
+---
+- name: Configure DNS Settings with NetworkManager
+  hosts: networknodes
+  become: yes
+
+  vars:
+    dns_profile: secondary-managed-profile
+    dns_servers:
+      - "8.8.8.8"
+      - "8.8.4.4"
+      - "1.1.1.1"
+    search_domains:
+      - "example.com"
+      - "internal.net"
+
+  tasks:
+    - name: Configure DNS servers on secondary profile
+      community.general.nmcli:
+        conn_name: "{{ dns_profile }}"
+        type: ethernet
+        dns4: "{{ dns_servers }}"
+        dns4_search: "{{ search_domains }}"
+        state: present
+
+    - name: Backup current resolver configuration
+      ansible.builtin.copy:
+        src: /etc/resolv.conf
+        dest: /tmp/resolv.conf.backup
+        remote_src: yes
+        mode: '0644'
+
+    - name: Display active DNS resolver configuration
+      ansible.builtin.command: cat /etc/resolv.conf
+      register: resolver_config
+      changed_when: false
+
+    - name: Show resolver configuration
+      ansible.builtin.debug:
+        var: resolver_config.stdout_lines
+
+    - name: Test DNS resolution
+      ansible.builtin.command: nslookup google.com
+      register: dns_test
+      changed_when: false
+      failed_when: false
+
+    - name: Show DNS test result
+      ansible.builtin.debug:
+        var: dns_test.stdout_lines

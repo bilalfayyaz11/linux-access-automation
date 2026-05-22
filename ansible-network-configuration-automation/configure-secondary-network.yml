@@ -1,0 +1,31 @@
+---
+- name: Configure Safe Secondary Network Profile
+  hosts: networknodes
+  become: yes
+
+  vars:
+    secondary_ip: "10.10.10.50/24"
+
+  tasks:
+    - name: Gather network facts
+      ansible.builtin.setup:
+        gather_subset:
+          - network
+
+    - name: Create secondary network profile
+      community.general.nmcli:
+        conn_name: secondary-managed-profile
+        ifname: "{{ ansible_default_ipv4.interface }}"
+        type: ethernet
+        ip4: "{{ secondary_ip }}"
+        method4: manual
+        state: present
+
+    - name: Verify secondary profile exists
+      ansible.builtin.command: nmcli connection show
+      register: profile_check
+      changed_when: false
+
+    - name: Display profile status
+      ansible.builtin.debug:
+        var: profile_check.stdout_lines

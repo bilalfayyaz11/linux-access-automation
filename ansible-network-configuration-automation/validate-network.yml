@@ -1,0 +1,61 @@
+---
+- name: Validate Network Automation State
+  hosts: networknodes
+  become: yes
+
+  tasks:
+    - name: Check NetworkManager device status
+      ansible.builtin.command: nmcli device status
+      register: device_status
+      changed_when: false
+
+    - name: Display interface status
+      ansible.builtin.debug:
+        var: device_status.stdout_lines
+
+    - name: Check active NetworkManager connections
+      ansible.builtin.command: nmcli connection show --active
+      register: active_connections
+      changed_when: false
+
+    - name: Display active connections
+      ansible.builtin.debug:
+        var: active_connections.stdout_lines
+
+    - name: Test internet connectivity
+      ansible.builtin.uri:
+        url: "https://www.google.com"
+        method: HEAD
+        timeout: 10
+      register: internet_test
+      ignore_errors: yes
+
+    - name: Display internet connectivity status
+      ansible.builtin.debug:
+        msg: "Internet connectivity: {{ 'AVAILABLE' if internet_test.status is defined and internet_test.status in [200, 301, 302] else 'UNAVAILABLE' }}"
+
+    - name: Generate network configuration report
+      ansible.builtin.shell: |
+        mkdir -p /tmp/network-automation-reports
+        echo "=== Network Configuration Report ===" > /tmp/network-automation-reports/localhost_network_report.txt
+        echo "Hostname: $(hostname)" >> /tmp/network-automation-reports/localhost_network_report.txt
+        echo "Date: $(date)" >> /tmp/network-automation-reports/localhost_network_report.txt
+        echo "" >> /tmp/network-automation-reports/localhost_network_report.txt
+        echo "=== IP Configuration ===" >> /tmp/network-automation-reports/localhost_network_report.txt
+        ip addr show >> /tmp/network-automation-reports/localhost_network_report.txt
+        echo "" >> /tmp/network-automation-reports/localhost_network_report.txt
+        echo "=== Routing Table ===" >> /tmp/network-automation-reports/localhost_network_report.txt
+        ip route show >> /tmp/network-automation-reports/localhost_network_report.txt
+        echo "" >> /tmp/network-automation-reports/localhost_network_report.txt
+        echo "=== NetworkManager Connections ===" >> /tmp/network-automation-reports/localhost_network_report.txt
+        nmcli connection show >> /tmp/network-automation-reports/localhost_network_report.txt
+        echo "" >> /tmp/network-automation-reports/localhost_network_report.txt
+        echo "=== DNS Configuration ===" >> /tmp/network-automation-reports/localhost_network_report.txt
+        cat /etc/resolv.conf >> /tmp/network-automation-reports/localhost_network_report.txt
+      changed_when: false
+
+    - name: Fetch network report
+      ansible.builtin.fetch:
+        src: /tmp/network-automation-reports/localhost_network_report.txt
+        dest: "./reports/localhost_network_report.txt"
+        flat: yes
