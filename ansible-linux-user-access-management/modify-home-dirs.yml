@@ -1,0 +1,73 @@
+---
+- name: Modify Linux user home directories
+  hosts: local
+  become: yes
+  tasks:
+    - name: Create centralized user directory
+      ansible.builtin.file:
+        path: /opt/users
+        state: directory
+        mode: '0755'
+
+    - name: Create eve new home directory
+      ansible.builtin.file:
+        path: /opt/users/eve
+        state: directory
+        owner: eve
+        group: developers
+        mode: '0750'
+
+    - name: Copy eve existing data safely
+      ansible.builtin.shell: |
+        if [ -d /home/eve ]; then
+          cp -a /home/eve/. /opt/users/eve/
+        fi
+      ignore_errors: yes
+
+    - name: Update eve home directory
+      ansible.builtin.user:
+        name: eve
+        home: /opt/users/eve
+        move_home: yes
+
+    - name: Create shared project directory
+      ansible.builtin.file:
+        path: /home/shared/project-alpha
+        state: directory
+        owner: root
+        group: project-alpha
+        mode: '0770'
+
+    - name: Create project symlink for bob
+      ansible.builtin.file:
+        src: /home/shared/project-alpha
+        dest: /home/bob/project-alpha
+        state: link
+
+    - name: Set alice home permissions
+      ansible.builtin.file:
+        path: /home/alice
+        state: directory
+        owner: alice
+        group: developers
+        mode: '0750'
+
+    - name: Create alice workspace
+      ansible.builtin.file:
+        path: /home/alice/workspace
+        state: directory
+        owner: alice
+        group: developers
+        mode: '0755'
+
+    - name: Display home directory information
+      ansible.builtin.shell: |
+        for user in alice bob carol david eve; do
+          echo "User $user home: $(getent passwd $user | cut -d: -f6)"
+        done
+      register: home_info
+      changed_when: false
+
+    - name: Show home information
+      ansible.builtin.debug:
+        msg: "{{ home_info.stdout_lines }}"

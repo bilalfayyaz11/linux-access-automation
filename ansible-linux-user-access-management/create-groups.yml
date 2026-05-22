@@ -1,0 +1,37 @@
+---
+- name: Create Linux access groups
+  hosts: local
+  become: yes
+  tasks:
+    - name: Create developers group
+      ansible.builtin.group:
+        name: developers
+        state: present
+        gid: 3001
+
+    - name: Create testers group
+      ansible.builtin.group:
+        name: testers
+        state: present
+        gid: 3002
+
+    - name: Create managers group
+      ansible.builtin.group:
+        name: managers
+        state: present
+        gid: 3003
+
+    - name: Create contractors group
+      ansible.builtin.group:
+        name: contractors
+        state: present
+        gid: 3004
+
+    - name: Display created groups
+      ansible.builtin.shell: getent group | grep -E "(developers|testers|managers|contractors)"
+      register: group_info
+      changed_when: false
+
+    - name: Show group information
+      ansible.builtin.debug:
+        msg: "{{ group_info.stdout_lines }}"

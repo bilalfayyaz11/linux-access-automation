@@ -1,0 +1,73 @@
+---
+- name: Create Linux users with role-based groups
+  hosts: local
+  become: yes
+  tasks:
+    - name: Create alice
+      ansible.builtin.user:
+        name: alice
+        comment: "Alice Johnson - Senior Developer"
+        uid: 2001
+        group: developers
+        groups: developers
+        shell: /bin/bash
+        home: /home/alice
+        create_home: yes
+        state: present
+
+    - name: Create bob
+      ansible.builtin.user:
+        name: bob
+        comment: "Bob Smith - Junior Developer"
+        uid: 2002
+        group: developers
+        groups: developers
+        shell: /bin/bash
+        home: /home/bob
+        create_home: yes
+        state: present
+
+    - name: Create carol
+      ansible.builtin.user:
+        name: carol
+        comment: "Carol Davis - QA Tester"
+        uid: 2003
+        group: testers
+        groups: testers
+        shell: /bin/bash
+        home: /home/carol
+        create_home: yes
+        state: present
+
+    - name: Create david
+      ansible.builtin.user:
+        name: david
+        comment: "David Wilson - Project Manager"
+        uid: 2004
+        group: managers
+        groups: managers,developers,testers
+        shell: /bin/bash
+        home: /home/david
+        create_home: yes
+        state: present
+
+    - name: Create eve
+      ansible.builtin.user:
+        name: eve
+        comment: "Eve Brown - External Contractor"
+        uid: 2005
+        group: contractors
+        groups: contractors
+        shell: /bin/sh
+        home: /home/eve
+        create_home: yes
+        state: present
+
+    - name: Display created users
+      ansible.builtin.shell: getent passwd | grep -E "^(alice|bob|carol|david|eve):"
+      register: user_info
+      changed_when: false
+
+    - name: Show user information
+      ansible.builtin.debug:
+        msg: "{{ user_info.stdout_lines }}"

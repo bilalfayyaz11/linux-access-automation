@@ -1,0 +1,34 @@
+---
+- name: Modify Linux user login shells
+  hosts: local
+  become: yes
+  tasks:
+    - name: Install zsh shell
+      ansible.builtin.package:
+        name: zsh
+        state: present
+
+    - name: Change alice shell to zsh
+      ansible.builtin.user:
+        name: alice
+        shell: /bin/zsh
+
+    - name: Confirm bob shell is bash
+      ansible.builtin.user:
+        name: bob
+        shell: /bin/bash
+
+    - name: Confirm eve shell is sh
+      ansible.builtin.user:
+        name: eve
+        shell: /bin/sh
+
+    - name: Display current shell information
+      ansible.builtin.shell: |
+        getent passwd | grep -E "^(alice|bob|carol|david|eve):" | cut -d: -f1,7
+      register: shell_info
+      changed_when: false
+
+    - name: Show shell information
+      ansible.builtin.debug:
+        msg: "{{ shell_info.stdout_lines }}"

@@ -1,0 +1,51 @@
+---
+- name: Fix remaining Linux home directory configuration
+  hosts: local
+  become: yes
+  tasks:
+    - name: Ensure eve home path is correct without moving existing directory
+      ansible.builtin.user:
+        name: eve
+        home: /opt/users/eve
+        move_home: no
+
+    - name: Ensure eve home ownership and permissions
+      ansible.builtin.file:
+        path: /opt/users/eve
+        state: directory
+        owner: eve
+        group: developers
+        mode: '0750'
+
+    - name: Create shared project directory
+      ansible.builtin.file:
+        path: /home/shared/project-alpha
+        state: directory
+        owner: root
+        group: project-alpha
+        mode: '0770'
+
+    - name: Create project symlink for bob
+      ansible.builtin.file:
+        src: /home/shared/project-alpha
+        dest: /home/bob/project-alpha
+        state: link
+        owner: bob
+        group: developers
+        force: yes
+
+    - name: Set alice home permissions
+      ansible.builtin.file:
+        path: /home/alice
+        state: directory
+        owner: alice
+        group: developers
+        mode: '0750'
+
+    - name: Create alice workspace
+      ansible.builtin.file:
+        path: /home/alice/workspace
+        state: directory
+        owner: alice
+        group: developers
+        mode: '0755'

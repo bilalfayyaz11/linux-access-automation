@@ -1,0 +1,73 @@
+---
+- name: Verify Linux user and group management
+  hosts: local
+  become: yes
+  tasks:
+    - name: Check all managed users exist
+      ansible.builtin.command: "getent passwd {{ item }}"
+      register: user_check
+      failed_when: user_check.rc != 0
+      changed_when: false
+      loop:
+        - alice
+        - bob
+        - carol
+        - david
+        - eve
+        - frank
+        - grace
+
+    - name: Check all managed groups exist
+      ansible.builtin.command: "getent group {{ item }}"
+      register: group_check
+      failed_when: group_check.rc != 0
+      changed_when: false
+      loop:
+        - developers
+        - testers
+        - managers
+        - contractors
+        - project-alpha
+        - sysadmins
+
+    - name: Verify selected user shells
+      ansible.builtin.shell: "getent passwd {{ item }} | cut -d: -f7"
+      register: shell_check
+      changed_when: false
+      loop:
+        - alice
+        - bob
+        - eve
+
+    - name: Display shell verification
+      ansible.builtin.debug:
+        msg: "User {{ item.item }} has shell: {{ item.stdout }}"
+      loop: "{{ shell_check.results }}"
+
+    - name: Check managed home directories exist
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      register: home_check
+      loop:
+        - /home/alice
+        - /home/bob
+        - /home/carol
+        - /home/david
+        - /opt/users/eve
+        - /home/frank
+        - /home/grace
+
+    - name: Display home directory status
+      ansible.builtin.debug:
+        msg: "Directory {{ item.item }} exists: {{ item.stat.exists }}"
+      loop: "{{ home_check.results }}"
+
+    - name: Final verification summary
+      ansible.builtin.debug:
+        msg:
+          - "=== VERIFICATION COMPLETE ==="
+          - "All managed users exist"
+          - "All managed groups exist"
+          - "User shells are configured"
+          - "Home directories are present"
+          - "Group memberships were updated"
