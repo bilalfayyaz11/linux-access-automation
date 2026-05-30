@@ -1,0 +1,18 @@
+
+PLAY [Configure Linux firewall rules with Ansible] *****************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Ensure firewalld package is installed] ***********************************
+ok: [localhost]
+
+TASK [Ensure firewalld service is enabled and running] *************************
+ok: [localhost]
+
+TASK [Configure firewall services] *********************************************
+fatal: [localhost]: FAILED! => {"msg": "'firewall_services' is undefined. 'firewall_services' is undefined"}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=3    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+

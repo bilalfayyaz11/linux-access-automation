@@ -1,0 +1,73 @@
+---
+- name: Configure Linux firewall rules with Ansible
+  hosts: firewall_targets
+  become: true
+  gather_facts: true
+
+  handlers:
+    - name: reload firewalld
+      ansible.builtin.service:
+        name: firewalld
+        state: reloaded
+
+  tasks:
+    - name: Ensure firewalld package is installed
+      ansible.builtin.package:
+        name: firewalld
+        state: present
+
+    - name: Ensure firewalld service is enabled and running
+      ansible.builtin.service:
+        name: firewalld
+        state: started
+        enabled: true
+
+    - name: Configure firewall services
+      ansible.posix.firewalld:
+        service: "{{ item }}"
+        zone: "{{ firewall_zone }}"
+        permanent: true
+        immediate: true
+        state: enabled
+      loop: "{{ firewall_services }}"
+      notify: reload firewalld
+
+    - name: Configure firewall ports
+      ansible.posix.firewalld:
+        port: "{{ item }}"
+        zone: "{{ firewall_zone }}"
+        permanent: true
+        immediate: true
+        state: enabled
+      loop: "{{ firewall_ports }}"
+      notify: reload firewalld
+
+    - name: Configure firewall rich rules
+      ansible.posix.firewalld:
+        rich_rule: "{{ item }}"
+        zone: "{{ firewall_zone }}"
+        permanent: true
+        immediate: true
+        state: enabled
+      loop: "{{ firewall_rich_rules }}"
+      notify: reload firewalld
+
+    - name: Validate active firewall services
+      ansible.builtin.command:
+        cmd: "firewall-cmd --zone={{ firewall_zone }} --list-services"
+      register: active_services
+      changed_when: false
+
+    - name: Validate active firewall ports
+      ansible.builtin.command:
+        cmd: "firewall-cmd --zone={{ firewall_zone }} --list-ports"
+      register: active_ports
+      changed_when: false
+
+    - name: Display firewall service validation
+      ansible.builtin.debug:
+        msg: "Active services: {{ active_services.stdout }}"
+
+    - name: Display firewall port validation
+      ansible.builtin.debug:
+        msg: "Active ports: {{ active_ports.stdout }}"

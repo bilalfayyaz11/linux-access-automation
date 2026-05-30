@@ -1,0 +1,42 @@
+---
+- name: Generate firewall audit report
+  hosts: firewall_targets
+  become: true
+  gather_facts: true
+
+  vars:
+    report_file: "reports/firewall-audit-report.txt"
+
+  tasks:
+    - name: Generate firewall audit report
+      ansible.builtin.shell: |
+        {
+          echo "Firewall Automation Audit Report"
+          echo "Generated At: {{ ansible_date_time.iso8601 }}"
+          echo "Hostname: {{ ansible_hostname }}"
+          echo
+          echo "Firewalld State"
+          firewall-cmd --state
+          echo
+          echo "Default Zone"
+          firewall-cmd --get-default-zone
+          echo
+          echo "Public Zone Full Configuration"
+          firewall-cmd --zone=public --list-all
+          echo
+          echo "Enabled Services"
+          firewall-cmd --zone=public --list-services
+          echo
+          echo "Enabled Ports"
+          firewall-cmd --zone=public --list-ports
+          echo
+          echo "Rich Rules"
+          firewall-cmd --zone=public --list-rich-rules
+        } > "{{ report_file }}"
+      args:
+        chdir: "{{ playbook_dir }}/.."
+      changed_when: true
+
+    - name: Display report location
+      ansible.builtin.debug:
+        msg: "Firewall audit report generated at {{ report_file }}"

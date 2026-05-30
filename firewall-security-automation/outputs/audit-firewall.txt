@@ -1,0 +1,17 @@
+
+PLAY [Generate firewall audit report] ******************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Generate firewall audit report] ******************************************
+changed: [localhost]
+
+TASK [Display report location] *************************************************
+ok: [localhost] => {
+    "msg": "Firewall audit report generated at reports/firewall-audit-report.txt"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=3    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
