@@ -1,0 +1,115 @@
+---
+- name: Robust System Reboot with Error Handling
+  hosts: managed_nodes
+  become: true
+  gather_facts: true
+  serial: 1
+
+  vars:
+    reboot_timeout: 300
+    connect_timeout: 10
+    max_reboot_attempts: 2
+    critical_files:
+      - /etc/fstab
+      - /etc/hosts
+
+  pre_tasks:
+    - name: Verify system is accessible
+      ansible.builtin.ping:
+
+    - name: Check available disk space
+      ansible.builtin.shell: df / | awk 'NR==2 {print $5}' | sed 's/%//'
+      register: disk_usage
+      changed_when: false
+
+    - name: Fail if disk space is critical
+      ansible.builtin.fail:
+        msg: "Insufficient disk space: {{ disk_usage.stdout }}% used"
+      when: disk_usage.stdout | int > 95
+
+    - name: Check system load
+      ansible.builtin.shell: uptime | awk -F'load average:' '{print $2}' | awk '{print $1}' | sed 's/,//'
+      register: system_load
+      changed_when: false
+
+    - name: Warn if system load is high
+      ansible.builtin.debug:
+        msg: "WARNING: High system load detected: {{ system_load.stdout }}"
+      when: system_load.stdout | float > 5.0
+
+  tasks:
+    - name: Create local reports directory
+      ansible.builtin.file:
+        path: "{{ playbook_dir }}/../reports"
+        state: directory
+        mode: '0755'
+      delegate_to: localhost
+
+    - name: Create local outputs directory
+      ansible.builtin.file:
+        path: "{{ playbook_dir }}/../outputs"
+        state: directory
+        mode: '0755'
+      delegate_to: localhost
+
+    - name: Backup critical files before reboot
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: "{{ item }}.backup.{{ ansible_date_time.epoch }}"
+        remote_src: true
+      loop: "{{ critical_files }}"
+      ignore_errors: true
+
+    - name: Perform reboot with error handling
+      block:
+        - name: Perform controlled reboot
+          ansible.builtin.reboot:
+            reboot_timeout: "{{ reboot_timeout }}"
+            connect_timeout: "{{ connect_timeout }}"
+            test_command: "whoami"
+            msg: "Ansible reboot with error handling"
+          register: reboot_result
+
+        - name: Confirm reboot success
+          ansible.builtin.debug:
+            msg: "Reboot successful. Elapsed time: {{ reboot_result.elapsed }} seconds"
+
+      rescue:
+        - name: Set reboot error message
+          ansible.builtin.set_fact:
+            reboot_error_msg: "Reboot failed or host did not reconnect within timeout"
+
+        - name: Log reboot failure locally
+          ansible.builtin.lineinfile:
+            path: "{{ playbook_dir }}/../outputs/failed-reboots.log"
+            line: "{{ ansible_date_time.iso8601 }} - FAILED: {{ inventory_hostname }} - {{ reboot_error_msg }}"
+            create: true
+          delegate_to: localhost
+
+        - name: Attempt emergency recovery
+          ansible.builtin.include_tasks: emergency-recovery.yml
+
+        - name: Fail host after recovery attempt
+          ansible.builtin.fail:
+            msg: "{{ reboot_error_msg }}"
+
+      always:
+        - name: Record reboot attempt locally
+          ansible.builtin.lineinfile:
+            path: "{{ playbook_dir }}/../outputs/reboot-attempts.log"
+            line: "{{ ansible_date_time.iso8601 }} - {{ inventory_hostname }} - {{ 'SUCCESS' if reboot_result is defined and reboot_result.elapsed is defined else 'FAILED' }}"
+            create: true
+          delegate_to: localhost
+
+  post_tasks:
+    - name: Refresh facts after reboot
+      ansible.builtin.setup:
+
+    - name: Run comprehensive system health check
+      ansible.builtin.include_tasks: health-check.yml
+
+    - name: Generate reboot report
+      ansible.builtin.template:
+        src: reboot-report.j2
+        dest: "{{ playbook_dir }}/../reports/reboot-report-{{ inventory_hostname }}-{{ ansible_date_time.epoch }}.txt"
+      delegate_to: localhost

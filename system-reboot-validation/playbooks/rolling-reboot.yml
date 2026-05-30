@@ -1,0 +1,60 @@
+---
+- name: Rolling System Reboot Pattern
+  hosts: managed_nodes
+  become: true
+  gather_facts: true
+  serial: 1
+
+  vars:
+    reboot_timeout: 300
+
+  pre_tasks:
+    - name: Show current host being processed
+      ansible.builtin.debug:
+        msg: "Starting rolling reboot workflow for {{ inventory_hostname }}"
+
+    - name: Simulate connection draining window
+      ansible.builtin.wait_for:
+        timeout: 10
+      delegate_to: localhost
+
+    - name: Count active SSH connections
+      ansible.builtin.shell: ss -tan | grep ':22' | grep ESTAB | wc -l
+      register: active_connections
+      changed_when: false
+
+    - name: Display active connection count
+      ansible.builtin.debug:
+        msg: "Active SSH connections before reboot: {{ active_connections.stdout }}"
+
+  tasks:
+    - name: Perform graceful rolling reboot
+      ansible.builtin.reboot:
+        reboot_timeout: "{{ reboot_timeout }}"
+        pre_reboot_delay: 5
+        post_reboot_delay: 20
+        test_command: "whoami"
+        msg: "Rolling reboot initiated by Ansible"
+      register: reboot_result
+
+  post_tasks:
+    - name: Refresh facts after rolling reboot
+      ansible.builtin.setup:
+
+    - name: Verify system is reachable after rolling reboot
+      ansible.builtin.ping:
+
+    - name: Verify SSH service after rolling reboot
+      ansible.builtin.systemd:
+        name: sshd
+        state: started
+        enabled: true
+
+    - name: Show rolling reboot result
+      ansible.builtin.debug:
+        msg: "Rolling reboot completed for {{ inventory_hostname }} in {{ reboot_result.elapsed }} seconds"
+
+    - name: Wait before next host
+      ansible.builtin.wait_for:
+        timeout: 10
+      delegate_to: localhost

@@ -1,0 +1,38 @@
+
+PLAY [Detailed Service Validation After Reboot] ********************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Validate service processes are running] **********************************
+ok: [localhost] => (item={'key': 'sshd', 'value': {'process_name': 'sshd', 'config_file': '/etc/ssh/sshd_config'}})
+ok: [localhost] => (item={'key': 'NetworkManager', 'value': {'process_name': 'NetworkManager', 'config_file': '/etc/NetworkManager/NetworkManager.conf'}})
+ok: [localhost] => (item={'key': 'chronyd', 'value': {'process_name': 'chronyd', 'config_file': '/etc/chrony.conf'}})
+
+TASK [Verify service configuration files exist] ********************************
+ok: [localhost] => (item={'key': 'sshd', 'value': {'process_name': 'sshd', 'config_file': '/etc/ssh/sshd_config'}})
+ok: [localhost] => (item={'key': 'NetworkManager', 'value': {'process_name': 'NetworkManager', 'config_file': '/etc/NetworkManager/NetworkManager.conf'}})
+ok: [localhost] => (item={'key': 'chronyd', 'value': {'process_name': 'chronyd', 'config_file': '/etc/chrony.conf'}})
+
+TASK [Display configuration file status] ***************************************
+ok: [localhost] => (item={'changed': False, 'stat': {'exists': True, 'path': '/etc/ssh/sshd_config', 'mode': '0600', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 3673, 'inode': 2097387, 'dev': 66309, 'nlink': 1, 'atime': 1780152361.669013, 'mtime': 1768809614.5168395, 'ctime': 1768809614.5168395, 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': False, 'xgrp': False, 'woth': False, 'roth': False, 'xoth': False, 'isuid': False, 'isgid': False, 'blocks': 8, 'block_size': 4096, 'device_type': 0, 'readable': True, 'writeable': True, 'executable': False, 'pw_name': 'root', 'gr_name': 'root', 'checksum': '02f49065d0828ae9feeacb89782772378b83d6eb', 'mimetype': 'text/plain', 'charset': 'us-ascii', 'version': '3590187762', 'attributes': [], 'attr_flags': ''}, 'invocation': {'module_args': {'path': '/etc/ssh/sshd_config', 'follow': False, 'get_md5': False, 'get_checksum': True, 'get_mime': True, 'get_attributes': True, 'checksum_algorithm': 'sha1'}}, 'failed': False, 'item': {'key': 'sshd', 'value': {'process_name': 'sshd', 'config_file': '/etc/ssh/sshd_config'}}, 'ansible_loop_var': 'item'}) => {
+    "msg": "Config file /etc/ssh/sshd_config for sshd: EXISTS"
+}
+ok: [localhost] => (item={'changed': False, 'stat': {'exists': True, 'path': '/etc/NetworkManager/NetworkManager.conf', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 2263, 'inode': 4325959, 'dev': 66309, 'nlink': 1, 'atime': 1780152359.340008, 'mtime': 1763414930.0, 'ctime': 1767163305.9377406, 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False, 'blocks': 8, 'block_size': 4096, 'device_type': 0, 'readable': True, 'writeable': True, 'executable': False, 'pw_name': 'root', 'gr_name': 'root', 'checksum': 'a6be17addd123da952be22accee02128fddc49de', 'mimetype': 'text/plain', 'charset': 'us-ascii', 'version': '3008174405', 'attributes': [], 'attr_flags': ''}, 'invocation': {'module_args': {'path': '/etc/NetworkManager/NetworkManager.conf', 'follow': False, 'get_md5': False, 'get_checksum': True, 'get_mime': True, 'get_attributes': True, 'checksum_algorithm': 'sha1'}}, 'failed': False, 'item': {'key': 'NetworkManager', 'value': {'process_name': 'NetworkManager', 'config_file': '/etc/NetworkManager/NetworkManager.conf'}}, 'ansible_loop_var': 'item'}) => {
+    "msg": "Config file /etc/NetworkManager/NetworkManager.conf for NetworkManager: EXISTS"
+}
+ok: [localhost] => (item={'changed': False, 'stat': {'exists': True, 'path': '/etc/chrony.conf', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 1371, 'inode': 6291729, 'dev': 66309, 'nlink': 1, 'atime': 1761559187.0, 'mtime': 1761559187.0, 'ctime': 1767163369.6722305, 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False, 'blocks': 8, 'block_size': 4096, 'device_type': 0, 'readable': True, 'writeable': True, 'executable': False, 'pw_name': 'root', 'gr_name': 'root', 'checksum': '537d85615b6193df1b1802f6ed6fc79e14010ec4', 'mimetype': 'text/plain', 'charset': 'us-ascii', 'version': '2341404631', 'attributes': [], 'attr_flags': ''}, 'invocation': {'module_args': {'path': '/etc/chrony.conf', 'follow': False, 'get_md5': False, 'get_checksum': True, 'get_mime': True, 'get_attributes': True, 'checksum_algorithm': 'sha1'}}, 'failed': False, 'item': {'key': 'chronyd', 'value': {'process_name': 'chronyd', 'config_file': '/etc/chrony.conf'}}, 'ansible_loop_var': 'item'}) => {
+    "msg": "Config file /etc/chrony.conf for chronyd: EXISTS"
+}
+
+TASK [Test DNS resolution] *****************************************************
+ok: [localhost]
+
+TASK [Display DNS test result] *************************************************
+ok: [localhost] => {
+    "msg": "DNS resolution: AVAILABLE"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=6    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

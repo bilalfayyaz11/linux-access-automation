@@ -1,0 +1,40 @@
+---
+- name: Controlled System Reboot and Basic Validation
+  hosts: managed_nodes
+  become: true
+  gather_facts: true
+
+  vars:
+    reboot_timeout: 300
+    connect_timeout: 10
+
+  tasks:
+    - name: Capture uptime before reboot
+      ansible.builtin.command: uptime
+      register: uptime_before
+      changed_when: false
+
+    - name: Show uptime before reboot
+      ansible.builtin.debug:
+        msg: "System uptime before reboot: {{ uptime_before.stdout }}"
+
+    - name: Perform controlled system reboot
+      ansible.builtin.reboot:
+        reboot_timeout: "{{ reboot_timeout }}"
+        connect_timeout: "{{ connect_timeout }}"
+        test_command: "whoami"
+        msg: "Reboot initiated by Ansible automation"
+      register: reboot_result
+
+    - name: Show reboot result
+      ansible.builtin.debug:
+        msg: "System successfully rebooted. Elapsed time: {{ reboot_result.elapsed }} seconds"
+
+    - name: Capture uptime after reboot
+      ansible.builtin.command: uptime
+      register: uptime_after
+      changed_when: false
+
+    - name: Show uptime after reboot
+      ansible.builtin.debug:
+        msg: "System uptime after reboot: {{ uptime_after.stdout }}"

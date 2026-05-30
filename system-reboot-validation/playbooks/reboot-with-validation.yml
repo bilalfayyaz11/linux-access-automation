@@ -1,0 +1,98 @@
+---
+- name: System Reboot with Service and Health Validation
+  hosts: managed_nodes
+  become: true
+  gather_facts: true
+
+  vars:
+    reboot_timeout: 600
+    connect_timeout: 15
+    post_reboot_delay: 20
+    critical_services:
+      - sshd
+      - NetworkManager
+      - chronyd
+
+  tasks:
+    - name: Capture pre-reboot system information
+      ansible.builtin.debug:
+        msg:
+          - "Hostname: {{ ansible_hostname }}"
+          - "Kernel: {{ ansible_kernel }}"
+          - "Uptime seconds: {{ ansible_uptime_seconds }}"
+          - "Architecture: {{ ansible_architecture }}"
+
+    - name: Create reboot log directory
+      ansible.builtin.file:
+        path: /var/log/ansible-reboot
+        state: directory
+        mode: '0755'
+
+    - name: Log reboot start
+      ansible.builtin.lineinfile:
+        path: /var/log/ansible-reboot/reboot.log
+        line: "{{ ansible_date_time.iso8601 }} - Controlled reboot started"
+        create: true
+
+    - name: Perform controlled reboot
+      ansible.builtin.reboot:
+        reboot_timeout: "{{ reboot_timeout }}"
+        connect_timeout: "{{ connect_timeout }}"
+        post_reboot_delay: "{{ post_reboot_delay }}"
+        test_command: "whoami"
+        msg: "Ansible-controlled maintenance reboot"
+      register: reboot_result
+
+    - name: Refresh facts after reboot
+      ansible.builtin.setup:
+
+    - name: Log reboot completion
+      ansible.builtin.lineinfile:
+        path: /var/log/ansible-reboot/reboot.log
+        line: "{{ ansible_date_time.iso8601 }} - Controlled reboot completed in {{ reboot_result.elapsed }} seconds"
+
+    - name: Validate critical services are enabled and running
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        state: started
+        enabled: true
+      loop: "{{ critical_services }}"
+      register: service_validation
+
+    - name: Collect service facts
+      ansible.builtin.service_facts:
+
+    - name: Display service validation results
+      ansible.builtin.debug:
+        msg: "{{ item }} state: {{ ansible_facts.services[item + '.service'].state | default('not-found') }}"
+      loop: "{{ critical_services }}"
+
+    - name: Validate root filesystem usage
+      ansible.builtin.command: df -h /
+      register: disk_check
+      changed_when: false
+
+    - name: Validate memory state
+      ansible.builtin.command: free -m
+      register: memory_check
+      changed_when: false
+
+    - name: Validate systemd state
+      ansible.builtin.command: systemctl is-system-running
+      register: system_state
+      changed_when: false
+      failed_when: false
+
+    - name: Show post-reboot validation summary
+      ansible.builtin.debug:
+        msg: |
+          Reboot elapsed: {{ reboot_result.elapsed }} seconds
+
+          Root filesystem:
+          {{ disk_check.stdout }}
+
+          Memory:
+          {{ memory_check.stdout }}
+
+          System state:
+          {{ system_state.stdout }}

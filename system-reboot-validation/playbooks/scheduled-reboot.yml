@@ -1,0 +1,67 @@
+---
+- name: Scheduled Maintenance Reboot Workflow
+  hosts: managed_nodes
+  become: true
+  gather_facts: true
+
+  vars:
+    maintenance_start_hour: 0
+    maintenance_end_hour: 23
+    reboot_timeout: 600
+
+  pre_tasks:
+    - name: Refresh time facts
+      ansible.builtin.setup:
+        filter: ansible_date_time
+
+    - name: Check if current time is inside maintenance window
+      ansible.builtin.set_fact:
+        in_maintenance_window: "{{ (ansible_date_time.hour | int >= maintenance_start_hour | int) and (ansible_date_time.hour | int <= maintenance_end_hour | int) }}"
+
+    - name: Display maintenance window decision
+      ansible.builtin.debug:
+        msg:
+          - "Current hour: {{ ansible_date_time.hour }}"
+          - "Maintenance window: {{ maintenance_start_hour }}:00 - {{ maintenance_end_hour }}:00"
+          - "Inside maintenance window: {{ in_maintenance_window }}"
+
+    - name: Stop host if outside maintenance window
+      ansible.builtin.meta: end_host
+      when: not in_maintenance_window
+
+  tasks:
+    - name: Create maintenance log entry
+      ansible.builtin.lineinfile:
+        path: /var/log/maintenance.log
+        line: "{{ ansible_date_time.iso8601 }} - Maintenance reboot started"
+        create: true
+
+    - name: Notify active terminal users
+      ansible.builtin.command: wall "System will reboot shortly for scheduled maintenance"
+      changed_when: true
+      failed_when: false
+
+    - name: Wait briefly before reboot
+      ansible.builtin.wait_for:
+        timeout: 10
+      delegate_to: localhost
+
+    - name: Perform scheduled maintenance reboot
+      ansible.builtin.reboot:
+        reboot_timeout: "{{ reboot_timeout }}"
+        post_reboot_delay: 20
+        test_command: "whoami"
+        msg: "Scheduled maintenance reboot"
+      register: maintenance_reboot
+
+    - name: Refresh facts after maintenance reboot
+      ansible.builtin.setup:
+
+    - name: Log maintenance completion
+      ansible.builtin.lineinfile:
+        path: /var/log/maintenance.log
+        line: "{{ ansible_date_time.iso8601 }} - Maintenance reboot completed in {{ maintenance_reboot.elapsed }} seconds"
+
+    - name: Show maintenance reboot result
+      ansible.builtin.debug:
+        msg: "Scheduled maintenance reboot completed in {{ maintenance_reboot.elapsed }} seconds"

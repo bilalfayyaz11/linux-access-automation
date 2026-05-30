@@ -1,0 +1,50 @@
+---
+- name: Check system uptime
+  ansible.builtin.command: uptime
+  register: uptime_check
+  changed_when: false
+
+- name: Verify kernel version
+  ansible.builtin.command: uname -r
+  register: kernel_check
+  changed_when: false
+
+- name: Check memory usage
+  ansible.builtin.command: free -m
+  register: memory_check
+  changed_when: false
+
+- name: Check disk usage
+  ansible.builtin.command: df -h
+  register: disk_check
+  changed_when: false
+
+- name: Verify network interfaces
+  ansible.builtin.command: ip addr show
+  register: network_check
+  changed_when: false
+
+- name: Check running services
+  ansible.builtin.command: systemctl list-units --type=service --state=running
+  register: services_check
+  changed_when: false
+
+- name: Test DNS resolution
+  ansible.builtin.command: getent hosts google.com
+  register: dns_check
+  changed_when: false
+  failed_when: false
+
+- name: Compile health check results
+  ansible.builtin.set_fact:
+    health_check_results:
+      uptime: "{{ uptime_check.stdout }}"
+      kernel: "{{ kernel_check.stdout }}"
+      memory_status: "{{ 'OK' if memory_check.rc == 0 else 'FAILED' }}"
+      disk_status: "{{ 'OK' if disk_check.rc == 0 else 'FAILED' }}"
+      network_status: "{{ 'OK' if network_check.rc == 0 else 'FAILED' }}"
+      dns_status: "{{ 'OK' if dns_check.rc == 0 else 'FAILED' }}"
+
+- name: Display health check summary
+  ansible.builtin.debug:
+    var: health_check_results

@@ -1,0 +1,65 @@
+
+PLAY [Robust System Reboot with Error Handling] ********************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Verify system is accessible] *********************************************
+ok: [localhost]
+
+TASK [Check available disk space] **********************************************
+ok: [localhost]
+
+TASK [Fail if disk space is critical] ******************************************
+skipping: [localhost]
+
+TASK [Check system load] *******************************************************
+ok: [localhost]
+
+TASK [Warn if system load is high] *********************************************
+skipping: [localhost]
+
+TASK [Create local reports directory] ******************************************
+ok: [localhost]
+
+TASK [Create local outputs directory] ******************************************
+ok: [localhost]
+
+TASK [Backup critical files before reboot] *************************************
+changed: [localhost] => (item=/etc/fstab)
+changed: [localhost] => (item=/etc/hosts)
+
+TASK [Perform controlled reboot] ***********************************************
+fatal: [localhost]: FAILED! => {"changed": false, "elapsed": 0, "msg": "Running ansible.builtin.reboot with local connection would reboot the control node.", "rebooted": false}
+
+TASK [Set reboot error message] ************************************************
+ok: [localhost]
+
+TASK [Log reboot failure locally] **********************************************
+changed: [localhost]
+
+TASK [Attempt emergency recovery] **********************************************
+included: /home/centos/system-reboot-validation/playbooks/emergency-recovery.yml for localhost
+
+TASK [Try connecting with longer timeout] **************************************
+ok: [localhost]
+
+TASK [Check system status if connected] ****************************************
+ok: [localhost]
+
+TASK [Log system unresponsive state] *******************************************
+skipping: [localhost]
+
+TASK [Attempt basic service recovery if connected] *****************************
+changed: [localhost] => (item=sshd)
+changed: [localhost] => (item=NetworkManager)
+
+TASK [Fail host after recovery attempt] ****************************************
+fatal: [localhost]: FAILED! => {"changed": false, "msg": "Reboot failed or host did not reconnect within timeout"}
+
+TASK [Record reboot attempt locally] *******************************************
+changed: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=14   changed=4    unreachable=0    failed=1    skipped=3    rescued=1    ignored=0   
+

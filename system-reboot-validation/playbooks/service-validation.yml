@@ -1,0 +1,46 @@
+---
+- name: Detailed Service Validation After Reboot
+  hosts: managed_nodes
+  become: true
+  gather_facts: true
+
+  vars:
+    service_checks:
+      sshd:
+        process_name: sshd
+        config_file: /etc/ssh/sshd_config
+      NetworkManager:
+        process_name: NetworkManager
+        config_file: /etc/NetworkManager/NetworkManager.conf
+      chronyd:
+        process_name: chronyd
+        config_file: /etc/chrony.conf
+
+  tasks:
+    - name: Validate service processes are running
+      ansible.builtin.command: pgrep -f "{{ item.value.process_name }}"
+      register: process_check
+      loop: "{{ service_checks | dict2items }}"
+      changed_when: false
+      failed_when: process_check.rc != 0
+
+    - name: Verify service configuration files exist
+      ansible.builtin.stat:
+        path: "{{ item.value.config_file }}"
+      register: config_check
+      loop: "{{ service_checks | dict2items }}"
+
+    - name: Display configuration file status
+      ansible.builtin.debug:
+        msg: "Config file {{ item.item.value.config_file }} for {{ item.item.key }}: {{ 'EXISTS' if item.stat.exists else 'MISSING' }}"
+      loop: "{{ config_check.results }}"
+
+    - name: Test DNS resolution
+      ansible.builtin.command: getent hosts google.com
+      register: dns_test
+      changed_when: false
+      failed_when: false
+
+    - name: Display DNS test result
+      ansible.builtin.debug:
+        msg: "DNS resolution: {{ 'AVAILABLE' if dns_test.rc == 0 else 'UNAVAILABLE' }}"

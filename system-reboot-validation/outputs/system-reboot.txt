@@ -1,0 +1,20 @@
+
+PLAY [Controlled System Reboot and Basic Validation] ***************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Capture uptime before reboot] ********************************************
+ok: [localhost]
+
+TASK [Show uptime before reboot] ***********************************************
+ok: [localhost] => {
+    "msg": "System uptime before reboot:  14:52:47 up 7 min,  1 user,  load average: 0.26, 0.40, 0.26"
+}
+
+TASK [Perform controlled system reboot] ****************************************
+fatal: [localhost]: FAILED! => {"changed": false, "elapsed": 0, "msg": "Running ansible.builtin.reboot with local connection would reboot the control node.", "rebooted": false}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=3    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+

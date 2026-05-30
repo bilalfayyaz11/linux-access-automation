@@ -1,0 +1,39 @@
+
+PLAY [Scheduled Maintenance Reboot Workflow] ***********************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Refresh time facts] ******************************************************
+ok: [localhost]
+
+TASK [Check if current time is inside maintenance window] **********************
+ok: [localhost]
+
+TASK [Display maintenance window decision] *************************************
+ok: [localhost] => {
+    "msg": [
+        "Current hour: 14",
+        "Maintenance window: 0:00 - 23:00",
+        "Inside maintenance window: True"
+    ]
+}
+
+TASK [Stop host if outside maintenance window] *********************************
+skipping: [localhost]
+
+TASK [Create maintenance log entry] ********************************************
+changed: [localhost]
+
+TASK [Notify active terminal users] ********************************************
+changed: [localhost]
+
+TASK [Wait briefly before reboot] **********************************************
+ok: [localhost]
+
+TASK [Perform scheduled maintenance reboot] ************************************
+fatal: [localhost]: FAILED! => {"changed": false, "elapsed": 0, "msg": "Running ansible.builtin.reboot with local connection would reboot the control node.", "rebooted": false}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=7    changed=2    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+

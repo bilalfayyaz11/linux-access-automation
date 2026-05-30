@@ -1,0 +1,28 @@
+
+PLAY [System Reboot with Service and Health Validation] ************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Capture pre-reboot system information] ***********************************
+ok: [localhost] => {
+    "msg": [
+        "Hostname: ip-172-31-10-87",
+        "Kernel: 5.14.0-654.el9.x86_64",
+        "Uptime seconds: 478",
+        "Architecture: x86_64"
+    ]
+}
+
+TASK [Create reboot log directory] *********************************************
+changed: [localhost]
+
+TASK [Log reboot start] ********************************************************
+changed: [localhost]
+
+TASK [Perform controlled reboot] ***********************************************
+fatal: [localhost]: FAILED! => {"changed": false, "elapsed": 0, "msg": "Running ansible.builtin.reboot with local connection would reboot the control node.", "rebooted": false}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=4    changed=2    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+

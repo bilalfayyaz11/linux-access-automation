@@ -1,0 +1,28 @@
+
+PLAY [Rolling System Reboot Pattern] *******************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Show current host being processed] ***************************************
+ok: [localhost] => {
+    "msg": "Starting rolling reboot workflow for localhost"
+}
+
+TASK [Simulate connection draining window] *************************************
+ok: [localhost]
+
+TASK [Count active SSH connections] ********************************************
+ok: [localhost]
+
+TASK [Display active connection count] *****************************************
+ok: [localhost] => {
+    "msg": "Active SSH connections before reboot: 1"
+}
+
+TASK [Perform graceful rolling reboot] *****************************************
+fatal: [localhost]: FAILED! => {"changed": false, "elapsed": 0, "msg": "Running ansible.builtin.reboot with local connection would reboot the control node.", "rebooted": false}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=5    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+

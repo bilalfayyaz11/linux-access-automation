@@ -1,0 +1,32 @@
+---
+- name: Try connecting with longer timeout
+  ansible.builtin.wait_for_connection:
+    timeout: 120
+    delay: 10
+  register: connection_result
+  ignore_errors: true
+
+- name: Check system status if connected
+  ansible.builtin.command: systemctl is-system-running
+  register: system_status
+  changed_when: false
+  failed_when: false
+  when: connection_result is succeeded
+
+- name: Log system unresponsive state
+  ansible.builtin.lineinfile:
+    path: "{{ playbook_dir }}/../outputs/critical-failures.log"
+    line: "{{ ansible_date_time.iso8601 }} - CRITICAL: {{ inventory_hostname }} - system did not recover cleanly"
+    create: true
+  delegate_to: localhost
+  when: connection_result is failed
+
+- name: Attempt basic service recovery if connected
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    state: restarted
+  loop:
+    - sshd
+    - NetworkManager
+  ignore_errors: true
+  when: connection_result is succeeded
