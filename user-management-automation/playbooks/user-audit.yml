@@ -1,0 +1,40 @@
+---
+- name: Generate Linux user and group audit report
+  hosts: local
+  become: true
+  gather_facts: true
+
+  vars:
+    audit_report: "reports/user-audit-report.txt"
+
+  tasks:
+    - name: Generate local audit report
+      ansible.builtin.shell: |
+        {
+          echo "Linux User and Group Audit Report"
+          echo "Generated At: {{ ansible_date_time.iso8601 }}"
+          echo "Hostname: {{ ansible_hostname }}"
+          echo
+          echo "Managed Users"
+          for user in dev_user ops_user audit_user; do
+            id "$user" 2>/dev/null || true
+          done
+          echo
+          echo "Managed Groups"
+          for group in engineering operations security; do
+            getent group "$group" || true
+          done
+          echo
+          echo "Password Aging"
+          for user in dev_user ops_user audit_user; do
+            echo "===== $user ====="
+            chage -l "$user" 2>/dev/null || true
+          done
+        } > "{{ audit_report }}"
+      args:
+        chdir: "{{ playbook_dir }}/.."
+      changed_when: true
+
+    - name: Show audit report location
+      ansible.builtin.debug:
+        msg: "Audit report generated at {{ audit_report }}"

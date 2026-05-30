@@ -1,0 +1,50 @@
+
+PLAY [Automate Linux user and group management] ********************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Ensure managed groups exist] *********************************************
+changed: [localhost] => (item={'name': 'engineering', 'gid': 3101})
+changed: [localhost] => (item={'name': 'operations', 'gid': 3102})
+changed: [localhost] => (item={'name': 'security', 'gid': 3103})
+
+TASK [Ensure managed users exist] **********************************************
+changed: [localhost] => (item={'username': 'dev_user', 'full_name': 'Development User', 'primary_group': 'engineering', 'secondary_groups': ['operations'], 'shell': '/bin/bash'})
+changed: [localhost] => (item={'username': 'ops_user', 'full_name': 'Operations User', 'primary_group': 'operations', 'secondary_groups': ['security'], 'shell': '/bin/bash'})
+changed: [localhost] => (item={'username': 'audit_user', 'full_name': 'Audit User', 'primary_group': 'security', 'secondary_groups': [], 'shell': '/bin/bash'})
+
+TASK [Ensure SSH directories exist] ********************************************
+changed: [localhost] => (item={'username': 'dev_user', 'full_name': 'Development User', 'primary_group': 'engineering', 'secondary_groups': ['operations'], 'shell': '/bin/bash'})
+changed: [localhost] => (item={'username': 'ops_user', 'full_name': 'Operations User', 'primary_group': 'operations', 'secondary_groups': ['security'], 'shell': '/bin/bash'})
+changed: [localhost] => (item={'username': 'audit_user', 'full_name': 'Audit User', 'primary_group': 'security', 'secondary_groups': [], 'shell': '/bin/bash'})
+
+TASK [Ensure authorized_keys files exist] **************************************
+changed: [localhost] => (item={'username': 'dev_user', 'full_name': 'Development User', 'primary_group': 'engineering', 'secondary_groups': ['operations'], 'shell': '/bin/bash'})
+changed: [localhost] => (item={'username': 'ops_user', 'full_name': 'Operations User', 'primary_group': 'operations', 'secondary_groups': ['security'], 'shell': '/bin/bash'})
+changed: [localhost] => (item={'username': 'audit_user', 'full_name': 'Audit User', 'primary_group': 'security', 'secondary_groups': [], 'shell': '/bin/bash'})
+
+TASK [Apply password aging policy] *********************************************
+ok: [localhost] => (item={'username': 'dev_user', 'full_name': 'Development User', 'primary_group': 'engineering', 'secondary_groups': ['operations'], 'shell': '/bin/bash'})
+ok: [localhost] => (item={'username': 'ops_user', 'full_name': 'Operations User', 'primary_group': 'operations', 'secondary_groups': ['security'], 'shell': '/bin/bash'})
+ok: [localhost] => (item={'username': 'audit_user', 'full_name': 'Audit User', 'primary_group': 'security', 'secondary_groups': [], 'shell': '/bin/bash'})
+
+TASK [Verify managed users] ****************************************************
+ok: [localhost] => (item={'username': 'dev_user', 'full_name': 'Development User', 'primary_group': 'engineering', 'secondary_groups': ['operations'], 'shell': '/bin/bash'})
+ok: [localhost] => (item={'username': 'ops_user', 'full_name': 'Operations User', 'primary_group': 'operations', 'secondary_groups': ['security'], 'shell': '/bin/bash'})
+ok: [localhost] => (item={'username': 'audit_user', 'full_name': 'Audit User', 'primary_group': 'security', 'secondary_groups': [], 'shell': '/bin/bash'})
+
+TASK [Display user validation results] *****************************************
+ok: [localhost] => (item={'changed': False, 'stdout': 'uid=1002(dev_user) gid=3101(engineering) groups=3101(engineering),3102(operations)', 'stderr': '', 'rc': 0, 'cmd': ['id', 'dev_user'], 'start': '2026-05-30 12:00:21.186083', 'end': '2026-05-30 12:00:21.197077', 'delta': '0:00:00.010994', 'msg': '', 'invocation': {'module_args': {'_raw_params': 'id dev_user', '_uses_shell': False, 'stdin_add_newline': True, 'strip_empty_ends': True, 'argv': None, 'chdir': None, 'executable': None, 'creates': None, 'removes': None, 'stdin': None}}, 'stdout_lines': ['uid=1002(dev_user) gid=3101(engineering) groups=3101(engineering),3102(operations)'], 'stderr_lines': [], 'failed': False, 'item': {'username': 'dev_user', 'full_name': 'Development User', 'primary_group': 'engineering', 'secondary_groups': ['operations'], 'shell': '/bin/bash'}, 'ansible_loop_var': 'item'}) => {
+    "msg": "uid=1002(dev_user) gid=3101(engineering) groups=3101(engineering),3102(operations)"
+}
+ok: [localhost] => (item={'changed': False, 'stdout': 'uid=1003(ops_user) gid=3102(operations) groups=3102(operations),3103(security)', 'stderr': '', 'rc': 0, 'cmd': ['id', 'ops_user'], 'start': '2026-05-30 12:00:21.552017', 'end': '2026-05-30 12:00:21.562989', 'delta': '0:00:00.010972', 'msg': '', 'invocation': {'module_args': {'_raw_params': 'id ops_user', '_uses_shell': False, 'stdin_add_newline': True, 'strip_empty_ends': True, 'argv': None, 'chdir': None, 'executable': None, 'creates': None, 'removes': None, 'stdin': None}}, 'stdout_lines': ['uid=1003(ops_user) gid=3102(operations) groups=3102(operations),3103(security)'], 'stderr_lines': [], 'failed': False, 'item': {'username': 'ops_user', 'full_name': 'Operations User', 'primary_group': 'operations', 'secondary_groups': ['security'], 'shell': '/bin/bash'}, 'ansible_loop_var': 'item'}) => {
+    "msg": "uid=1003(ops_user) gid=3102(operations) groups=3102(operations),3103(security)"
+}
+ok: [localhost] => (item={'changed': False, 'stdout': 'uid=1004(audit_user) gid=3103(security) groups=3103(security)', 'stderr': '', 'rc': 0, 'cmd': ['id', 'audit_user'], 'start': '2026-05-30 12:00:21.939321', 'end': '2026-05-30 12:00:21.949201', 'delta': '0:00:00.009880', 'msg': '', 'invocation': {'module_args': {'_raw_params': 'id audit_user', '_uses_shell': False, 'stdin_add_newline': True, 'strip_empty_ends': True, 'argv': None, 'chdir': None, 'executable': None, 'creates': None, 'removes': None, 'stdin': None}}, 'stdout_lines': ['uid=1004(audit_user) gid=3103(security) groups=3103(security)'], 'stderr_lines': [], 'failed': False, 'item': {'username': 'audit_user', 'full_name': 'Audit User', 'primary_group': 'security', 'secondary_groups': [], 'shell': '/bin/bash'}, 'ansible_loop_var': 'item'}) => {
+    "msg": "uid=1004(audit_user) gid=3103(security) groups=3103(security)"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=8    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

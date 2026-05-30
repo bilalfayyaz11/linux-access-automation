@@ -1,0 +1,18 @@
+Linux User and Group Audit Report
+Generated At: 2026-05-30T12:00:39Z
+Hostname: ip-172-31-10-243
+
+Managed Users
+uid=1002(dev_user) gid=3101(engineering) groups=3101(engineering),3102(operations)
+uid=1003(ops_user) gid=3102(operations) groups=3102(operations),3103(security)
+uid=1004(audit_user) gid=3103(security) groups=3103(security)
+
+Managed Groups
+engineering:x:3101:
+operations:x:3102:dev_user
+security:x:3103:ops_user
+
+Password Aging
+===== dev_user =====
+===== ops_user =====
+===== audit_user =====

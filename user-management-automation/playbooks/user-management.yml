@@ -1,0 +1,61 @@
+---
+- name: Automate Linux user and group management
+  hosts: local
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Ensure managed groups exist
+      ansible.builtin.group:
+        name: "{{ item.name }}"
+        gid: "{{ item.gid }}"
+        state: present
+      loop: "{{ managed_groups }}"
+
+    - name: Ensure managed users exist
+      ansible.builtin.user:
+        name: "{{ item.username }}"
+        comment: "{{ item.full_name }}"
+        group: "{{ item.primary_group }}"
+        groups: "{{ item.secondary_groups | join(',') }}"
+        append: true
+        shell: "{{ item.shell }}"
+        create_home: true
+        state: present
+      loop: "{{ managed_users }}"
+
+    - name: Ensure SSH directories exist
+      ansible.builtin.file:
+        path: "/home/{{ item.username }}/.ssh"
+        state: directory
+        owner: "{{ item.username }}"
+        group: "{{ item.primary_group }}"
+        mode: "0700"
+      loop: "{{ managed_users }}"
+
+    - name: Ensure authorized_keys files exist
+      ansible.builtin.file:
+        path: "/home/{{ item.username }}/.ssh/authorized_keys"
+        state: touch
+        owner: "{{ item.username }}"
+        group: "{{ item.primary_group }}"
+        mode: "0600"
+      loop: "{{ managed_users }}"
+
+    - name: Apply password aging policy
+      ansible.builtin.command:
+        cmd: "chage -M 90 -m 1 -W 7 {{ item.username }}"
+      loop: "{{ managed_users }}"
+      changed_when: false
+
+    - name: Verify managed users
+      ansible.builtin.command:
+        cmd: "id {{ item.username }}"
+      loop: "{{ managed_users }}"
+      register: user_validation
+      changed_when: false
+
+    - name: Display user validation results
+      ansible.builtin.debug:
+        msg: "{{ item.stdout }}"
+      loop: "{{ user_validation.results }}"

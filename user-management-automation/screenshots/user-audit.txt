@@ -1,0 +1,17 @@
+
+PLAY [Generate Linux user and group audit report] ******************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Generate local audit report] *********************************************
+changed: [localhost]
+
+TASK [Show audit report location] **********************************************
+ok: [localhost] => {
+    "msg": "Audit report generated at reports/user-audit-report.txt"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=3    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

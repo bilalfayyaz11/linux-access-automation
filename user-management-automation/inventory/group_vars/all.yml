@@ -1,0 +1,29 @@
+---
+managed_groups:
+  - name: engineering
+    gid: 3101
+  - name: operations
+    gid: 3102
+  - name: security
+    gid: 3103
+
+managed_users:
+  - username: dev_user
+    full_name: "Development User"
+    primary_group: engineering
+    secondary_groups:
+      - operations
+    shell: /bin/bash
+
+  - username: ops_user
+    full_name: "Operations User"
+    primary_group: operations
+    secondary_groups:
+      - security
+    shell: /bin/bash
+
+  - username: audit_user
+    full_name: "Audit User"
+    primary_group: security
+    secondary_groups: []
+    shell: /bin/bash

@@ -1,0 +1,12 @@
+
+PLAY [Automate Linux user and group management] ********************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Ensure managed groups exist] *********************************************
+fatal: [localhost]: FAILED! => {"msg": "'managed_groups' is undefined. 'managed_groups' is undefined"}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=1    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+
