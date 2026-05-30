@@ -1,0 +1,12 @@
+
+PLAY [System Configuration Changes with Check Mode] ****************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Install htop package] ****************************************************
+fatal: [localhost]: FAILED! => {"changed": false, "failures": ["No package htop available."], "msg": "Failed to install some of the specified packages", "rc": 1, "results": []}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=1    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+

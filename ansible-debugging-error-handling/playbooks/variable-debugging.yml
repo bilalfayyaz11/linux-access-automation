@@ -1,0 +1,25 @@
+---
+- name: Variable Debugging Examples
+  hosts: local
+  gather_facts: false
+
+  vars:
+    defined_var: "I exist"
+
+  tasks:
+    - name: Safe variable access
+      ansible.builtin.debug:
+        msg: "Variable value: {{ defined_var | default('Not defined') }}"
+
+    - name: Check if variable is defined
+      ansible.builtin.debug:
+        msg: "undefined_var is {{ 'defined' if undefined_var is defined else 'not defined' }}"
+
+    - name: Conditional task based on variable existence
+      ansible.builtin.debug:
+        msg: "This runs only if variable exists"
+      when: undefined_var is defined
+
+    - name: Use default values safely
+      ansible.builtin.debug:
+        msg: "Value: {{ undefined_var | default('Default value used') }}"

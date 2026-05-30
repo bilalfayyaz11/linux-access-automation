@@ -1,0 +1,43 @@
+
+PLAY [Nested Error Handling and Recovery] **************************************
+
+TASK [Attempt primary method] **************************************************
+fatal: [localhost]: FAILED! => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"}, "changed": false, "cmd": "/usr/bin/nonexistent-command", "msg": "[Errno 2] No such file or directory: b'/usr/bin/nonexistent-command'", "rc": 2, "stderr": "", "stderr_lines": [], "stdout": "", "stdout_lines": []}
+
+TASK [Primary method failed, trying alternative] *******************************
+ok: [localhost] => {
+    "msg": "Primary method failed, attempting alternative approach"
+}
+
+TASK [Attempt alternative method] **********************************************
+fatal: [localhost]: FAILED! => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"}, "changed": false, "cmd": ["/bin/false"], "delta": "0:00:00.005400", "end": "2026-05-30 15:17:48.468566", "msg": "non-zero return code", "rc": 1, "start": "2026-05-30 15:17:48.463166", "stderr": "", "stderr_lines": [], "stdout": "", "stdout_lines": []}
+
+TASK [Alternative method also failed] ******************************************
+ok: [localhost] => {
+    "msg": "Alternative method failed, using fallback"
+}
+
+TASK [Fallback operation] ******************************************************
+ok: [localhost] => {
+    "msg": "Executing fallback procedure"
+}
+
+TASK [Set success flag for fallback] *******************************************
+ok: [localhost]
+
+TASK [Report final status] *****************************************************
+ok: [localhost] => {
+    "msg": "Operation status: SUCCESS"
+}
+
+TASK [Continue when recovery succeeded] ****************************************
+ok: [localhost] => {
+    "msg": "Continuing with next phase of operations"
+}
+
+TASK [Error notification simulation] *******************************************
+skipping: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=6    changed=0    unreachable=0    failed=0    skipped=1    rescued=2    ignored=0   
+

@@ -1,0 +1,29 @@
+
+PLAY [Basic Error Handling with Block and Rescue] ******************************
+
+TASK [Task that intentionally fails] *******************************************
+fatal: [localhost]: FAILED! => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"}, "changed": false, "cmd": ["/bin/false"], "delta": "0:00:00.004305", "end": "2026-05-30 15:17:34.411174", "msg": "non-zero return code", "rc": 1, "start": "2026-05-30 15:17:34.406869", "stderr": "", "stderr_lines": [], "stdout": "", "stdout_lines": []}
+
+TASK [Handle the error gracefully] *********************************************
+ok: [localhost] => {
+    "msg": "An error occurred, but rescue handled it gracefully"
+}
+
+TASK [Log error details] *******************************************************
+ok: [localhost] => {
+    "msg": "Error handling activated for failed task"
+}
+
+TASK [Always run cleanup or final actions] *************************************
+ok: [localhost] => {
+    "msg": "Cleanup or final actions go here"
+}
+
+TASK [Continue after handled error] ********************************************
+ok: [localhost] => {
+    "msg": "Playbook continues after error handling"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=1    ignored=0   
+

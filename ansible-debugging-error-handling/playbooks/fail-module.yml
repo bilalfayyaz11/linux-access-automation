@@ -1,0 +1,30 @@
+---
+- name: Fail Module Implementation
+  hosts: local
+  gather_facts: true
+
+  vars:
+    required_memory_gb: 4
+    package_installed: false
+
+  tasks:
+    - name: Check if system has enough memory
+      ansible.builtin.fail:
+        msg: "System has insufficient memory. Required: {{ required_memory_gb }}GB"
+      when: (ansible_memtotal_mb / 1024) < required_memory_gb
+
+    - name: Validate environment variable when present
+      ansible.builtin.fail:
+        msg: "ENVIRONMENT variable must be set to production or development"
+      when:
+        - ansible_env.ENVIRONMENT is defined
+        - ansible_env.ENVIRONMENT not in ['production', 'development']
+
+    - name: Fail if required package is missing
+      ansible.builtin.fail:
+        msg: "Critical package is not installed. Please install before proceeding."
+      when: not package_installed
+
+    - name: This task should not execute after controlled failure
+      ansible.builtin.debug:
+        msg: "This message should not appear"

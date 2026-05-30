@@ -1,0 +1,70 @@
+ansible-playbook [core 2.14.18]
+  config file = /home/centos/ansible-debugging-error-handling/ansible.cfg
+  configured module search path = ['/home/centos/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/lib/python3.9/site-packages/ansible
+  ansible collection location = /home/centos/.ansible/collections:/usr/share/ansible/collections
+  executable location = /usr/bin/ansible-playbook
+  python version = 3.9.25 (main, Nov 10 2025, 00:00:00) [GCC 11.5.0 20240719 (Red Hat 11.5.0-14)] (/usr/bin/python3)
+  jinja version = 3.1.2
+  libyaml = True
+Using /home/centos/ansible-debugging-error-handling/ansible.cfg as config file
+Skipping callback 'default', as we already have a stdout callback.
+Skipping callback 'minimal', as we already have a stdout callback.
+Skipping callback 'oneline', as we already have a stdout callback.
+
+PLAYBOOK: advanced-debug.yml ***************************************************
+1 plays in playbooks/advanced-debug.yml
+
+PLAY [Advanced Debug Techniques] ***********************************************
+
+TASK [Gathering Facts] *********************************************************
+task path: /home/centos/ansible-debugging-error-handling/playbooks/advanced-debug.yml:2
+ok: [localhost]
+
+TASK [Debug only when debug mode is enabled] ***********************************
+task path: /home/centos/ansible-debugging-error-handling/playbooks/advanced-debug.yml:18
+ok: [localhost] => {
+    "msg": "Debug mode is active - Environment: []"
+}
+
+TASK [Display complex data structures] *****************************************
+task path: /home/centos/ansible-debugging-error-handling/playbooks/advanced-debug.yml:23
+ok: [localhost] => {
+    "services": [
+        {
+            "name": "web",
+            "port": 80,
+            "status": "running"
+        },
+        {
+            "name": "database",
+            "port": 3306,
+            "status": "stopped"
+        }
+    ]
+}
+
+TASK [Loop through services with debug] ****************************************
+task path: /home/centos/ansible-debugging-error-handling/playbooks/advanced-debug.yml:27
+ok: [localhost] => (item={'name': 'web', 'port': 80, 'status': 'running'}) => {
+    "msg": "Service web on port 80 is running"
+}
+ok: [localhost] => (item={'name': 'database', 'port': 3306, 'status': 'stopped'}) => {
+    "msg": "Service database on port 3306 is stopped"
+}
+
+TASK [Debug with verbosity level one] ******************************************
+task path: /home/centos/ansible-debugging-error-handling/playbooks/advanced-debug.yml:32
+ok: [localhost] => {
+    "msg": "This message appears only with -v flag"
+}
+
+TASK [Debug with verbosity level two] ******************************************
+task path: /home/centos/ansible-debugging-error-handling/playbooks/advanced-debug.yml:37
+ok: [localhost] => {
+    "msg": "This message appears only with -vv flag"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=6    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

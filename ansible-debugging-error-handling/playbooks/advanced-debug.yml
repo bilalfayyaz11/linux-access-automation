@@ -1,0 +1,40 @@
+---
+- name: Advanced Debug Techniques
+  hosts: local
+  gather_facts: true
+
+  vars:
+    debug_mode: true
+    environment: "development"
+    services:
+      - name: "web"
+        port: 80
+        status: "running"
+      - name: "database"
+        port: 3306
+        status: "stopped"
+
+  tasks:
+    - name: Debug only when debug mode is enabled
+      ansible.builtin.debug:
+        msg: "Debug mode is active - Environment: {{ environment }}"
+      when: debug_mode
+
+    - name: Display complex data structures
+      ansible.builtin.debug:
+        var: services
+
+    - name: Loop through services with debug
+      ansible.builtin.debug:
+        msg: "Service {{ item.name }} on port {{ item.port }} is {{ item.status }}"
+      loop: "{{ services }}"
+
+    - name: Debug with verbosity level one
+      ansible.builtin.debug:
+        msg: "This message appears only with -v flag"
+        verbosity: 1
+
+    - name: Debug with verbosity level two
+      ansible.builtin.debug:
+        msg: "This message appears only with -vv flag"
+        verbosity: 2

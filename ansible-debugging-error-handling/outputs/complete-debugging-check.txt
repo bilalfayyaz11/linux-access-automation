@@ -1,0 +1,38 @@
+Using /home/centos/ansible-debugging-error-handling/ansible.cfg as config file
+
+PLAY [Complete Debugging and Error Handling Workflow] **************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Display environment information] *****************************************
+ok: [localhost] => {
+    "msg": "Environment: []\nHostname: ip-172-31-10-47\nOS: CentOS 9\nMemory: 15.2GB\n"
+}
+
+TASK [Validate environment setting] ********************************************
+fatal: [localhost]: FAILED! => {"changed": false, "msg": "Invalid environment '[]'. Must be development, staging, or production"}
+
+TASK [Handle validation errors] ************************************************
+ok: [localhost] => {
+    "msg": "Validation failed, implementing recovery procedures"
+}
+
+TASK [Log error details] *******************************************************
+ok: [localhost] => {
+    "msg": "Error occurred during environment validation"
+}
+
+TASK [Generate validation report] **********************************************
+ok: [localhost] => {
+    "msg": "Validation Summary:\n- Environment: []\n- Optimized Config: False\n- Timestamp: 2026-05-30T15:19:24Z\n"
+}
+
+TASK [Final status check] ******************************************************
+ok: [localhost] => {
+    "msg": "Workflow completed successfully. Debugging and error handling techniques demonstrated."
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=6    changed=0    unreachable=0    failed=0    skipped=0    rescued=1    ignored=0   
+

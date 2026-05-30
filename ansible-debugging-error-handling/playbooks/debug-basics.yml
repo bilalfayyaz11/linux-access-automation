@@ -1,0 +1,29 @@
+---
+- name: Debug Module Basics
+  hosts: local
+  gather_facts: true
+
+  vars:
+    custom_message: "Hello from Ansible debugging workflow"
+    server_count: 3
+
+  tasks:
+    - name: Display a simple debug message
+      ansible.builtin.debug:
+        msg: "This is a basic debug message"
+
+    - name: Display variable content
+      ansible.builtin.debug:
+        var: custom_message
+
+    - name: Display multiple variables
+      ansible.builtin.debug:
+        msg: "Server count is {{ server_count }} and message is {{ custom_message }}"
+
+    - name: Display system facts
+      ansible.builtin.debug:
+        var: ansible_hostname
+
+    - name: Display facts with custom formatting
+      ansible.builtin.debug:
+        msg: "Running on {{ ansible_hostname }} with {{ ansible_processor_cores | default('unknown') }} CPU cores"

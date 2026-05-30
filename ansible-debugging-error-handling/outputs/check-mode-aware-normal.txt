@@ -1,0 +1,27 @@
+
+PLAY [Check Mode Aware Playbook] ***********************************************
+
+TASK [Display current execution mode] ******************************************
+ok: [localhost] => {
+    "msg": "Running in NORMAL mode"
+}
+
+TASK [Show planned backup operation in check mode] *****************************
+skipping: [localhost]
+
+TASK [Create production file in normal mode only] ******************************
+changed: [localhost]
+
+TASK [Always run this task regardless of mode] *********************************
+ok: [localhost] => {
+    "msg": "This task always runs"
+}
+
+TASK [Normal mode only message] ************************************************
+ok: [localhost] => {
+    "msg": "This only runs in normal mode"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=4    changed=1    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+

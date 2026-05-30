@@ -1,0 +1,18 @@
+
+PLAY [Fail Module Implementation] **********************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Check if system has enough memory] ***************************************
+skipping: [localhost]
+
+TASK [Validate environment variable when present] ******************************
+skipping: [localhost]
+
+TASK [Fail if required package is missing] *************************************
+fatal: [localhost]: FAILED! => {"changed": false, "msg": "Critical package is not installed. Please install before proceeding."}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=1    changed=0    unreachable=0    failed=1    skipped=2    rescued=0    ignored=0   
+

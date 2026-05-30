@@ -1,0 +1,63 @@
+---
+- name: Nested Error Handling and Recovery
+  hosts: local
+  gather_facts: false
+
+  tasks:
+    - name: Multi-level error handling
+      block:
+        - name: Primary operation block
+          block:
+            - name: Attempt primary method
+              ansible.builtin.command: /usr/bin/nonexistent-command
+              register: primary_result
+              changed_when: false
+
+          rescue:
+            - name: Primary method failed, trying alternative
+              ansible.builtin.debug:
+                msg: "Primary method failed, attempting alternative approach"
+
+            - name: Alternative operation block
+              block:
+                - name: Attempt alternative method
+                  ansible.builtin.command: /bin/false
+                  register: alternative_result
+                  changed_when: false
+
+              rescue:
+                - name: Alternative method also failed
+                  ansible.builtin.debug:
+                    msg: "Alternative method failed, using fallback"
+
+                - name: Fallback operation
+                  ansible.builtin.debug:
+                    msg: "Executing fallback procedure"
+
+                - name: Set success flag for fallback
+                  ansible.builtin.set_fact:
+                    operation_successful: true
+
+      rescue:
+        - name: All methods failed
+          ansible.builtin.debug:
+            msg: "All recovery attempts failed, logging error"
+
+        - name: Set failure flag
+          ansible.builtin.set_fact:
+            operation_successful: false
+
+      always:
+        - name: Report final status
+          ansible.builtin.debug:
+            msg: "Operation status: {{ 'SUCCESS' if operation_successful | default(false) else 'FAILED' }}"
+
+    - name: Continue when recovery succeeded
+      ansible.builtin.debug:
+        msg: "Continuing with next phase of operations"
+      when: operation_successful | default(false)
+
+    - name: Error notification simulation
+      ansible.builtin.debug:
+        msg: "Sending error notification to administrators"
+      when: not (operation_successful | default(false))

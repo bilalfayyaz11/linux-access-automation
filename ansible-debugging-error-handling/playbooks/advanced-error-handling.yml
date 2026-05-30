@@ -1,0 +1,69 @@
+---
+- name: Advanced Error Handling Scenarios
+  hosts: local
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: File operations with recovery
+      block:
+        - name: Attempt to read a non-existent file
+          ansible.builtin.slurp:
+            src: /tmp/nonexistent_file.txt
+          register: file_content
+
+        - name: Process file content
+          ansible.builtin.debug:
+            msg: "File content: {{ file_content.content | b64decode }}"
+
+      rescue:
+        - name: Handle missing file
+          ansible.builtin.debug:
+            msg: "File not found, creating default file"
+
+        - name: Create missing file
+          ansible.builtin.copy:
+            content: "Default configuration content"
+            dest: /tmp/nonexistent_file.txt
+            mode: '0644'
+
+        - name: Retry reading the file
+          ansible.builtin.slurp:
+            src: /tmp/nonexistent_file.txt
+          register: file_content_retry
+
+        - name: Display recovered content
+          ansible.builtin.debug:
+            msg: "Recovered content: {{ file_content_retry.content | b64decode }}"
+
+      always:
+        - name: Cleanup temporary file
+          ansible.builtin.file:
+            path: /tmp/nonexistent_file.txt
+            state: absent
+
+    - name: Service management with fallback
+      block:
+        - name: Attempt to start a non-existent service
+          ansible.builtin.systemd:
+            name: fake-service
+            state: started
+
+      rescue:
+        - name: Handle service error
+          ansible.builtin.debug:
+            msg: "Service operation failed, implementing fallback"
+
+        - name: Check available active services
+          ansible.builtin.command: systemctl list-units --type=service --state=active
+          register: active_services
+          changed_when: false
+
+        - name: Display active service count
+          ansible.builtin.debug:
+            msg: "Found {{ active_services.stdout_lines | length }} active service lines"
+
+      always:
+        - name: Log service operation attempt
+          ansible.builtin.debug:
+            msg: "Service operation completed with error handling"

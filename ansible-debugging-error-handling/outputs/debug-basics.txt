@@ -1,0 +1,34 @@
+
+PLAY [Debug Module Basics] *****************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Display a simple debug message] ******************************************
+ok: [localhost] => {
+    "msg": "This is a basic debug message"
+}
+
+TASK [Display variable content] ************************************************
+ok: [localhost] => {
+    "custom_message": "Hello from Ansible debugging workflow"
+}
+
+TASK [Display multiple variables] **********************************************
+ok: [localhost] => {
+    "msg": "Server count is 3 and message is Hello from Ansible debugging workflow"
+}
+
+TASK [Display system facts] ****************************************************
+ok: [localhost] => {
+    "ansible_hostname": "ip-172-31-10-47"
+}
+
+TASK [Display facts with custom formatting] ************************************
+ok: [localhost] => {
+    "msg": "Running on ip-172-31-10-47 with 2 CPU cores"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=6    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

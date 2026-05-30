@@ -1,0 +1,49 @@
+
+PLAY [Advanced Error Handling Scenarios] ***************************************
+
+TASK [Attempt to read a non-existent file] *************************************
+fatal: [localhost]: FAILED! => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"}, "changed": false, "msg": "file not found: /tmp/nonexistent_file.txt"}
+
+TASK [Handle missing file] *****************************************************
+ok: [localhost] => {
+    "msg": "File not found, creating default file"
+}
+
+TASK [Create missing file] *****************************************************
+changed: [localhost]
+
+TASK [Retry reading the file] **************************************************
+ok: [localhost]
+
+TASK [Display recovered content] ***********************************************
+ok: [localhost] => {
+    "msg": "Recovered content: Default configuration content"
+}
+
+TASK [Cleanup temporary file] **************************************************
+changed: [localhost]
+
+TASK [Attempt to start a non-existent service] *********************************
+fatal: [localhost]: FAILED! => {"changed": false, "msg": "Could not find the requested service fake-service: host"}
+
+TASK [Handle service error] ****************************************************
+ok: [localhost] => {
+    "msg": "Service operation failed, implementing fallback"
+}
+
+TASK [Check available active services] *****************************************
+ok: [localhost]
+
+TASK [Display active service count] ********************************************
+ok: [localhost] => {
+    "msg": "Found 65 active service lines"
+}
+
+TASK [Log service operation attempt] *******************************************
+ok: [localhost] => {
+    "msg": "Service operation completed with error handling"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=9    changed=2    unreachable=0    failed=0    skipped=0    rescued=2    ignored=0   
+

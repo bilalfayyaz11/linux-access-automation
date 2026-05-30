@@ -1,0 +1,34 @@
+---
+- name: Basic Error Handling with Block and Rescue
+  hosts: local
+  gather_facts: false
+
+  tasks:
+    - name: Error handling example
+      block:
+        - name: Task that intentionally fails
+          ansible.builtin.command: /bin/false
+          register: result
+          changed_when: false
+
+        - name: This will not execute after failure
+          ansible.builtin.debug:
+            msg: "This message should not appear"
+
+      rescue:
+        - name: Handle the error gracefully
+          ansible.builtin.debug:
+            msg: "An error occurred, but rescue handled it gracefully"
+
+        - name: Log error details
+          ansible.builtin.debug:
+            msg: "Error handling activated for failed task"
+
+      always:
+        - name: Always run cleanup or final actions
+          ansible.builtin.debug:
+            msg: "Cleanup or final actions go here"
+
+    - name: Continue after handled error
+      ansible.builtin.debug:
+        msg: "Playbook continues after error handling"

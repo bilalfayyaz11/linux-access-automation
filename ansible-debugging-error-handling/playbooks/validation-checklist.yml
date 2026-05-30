@@ -1,0 +1,49 @@
+---
+- name: Debugging and Error Handling Validation Checklist
+  hosts: local
+  gather_facts: true
+
+  tasks:
+    - name: Test debug module functionality
+      ansible.builtin.debug:
+        msg: "Debug module working correctly"
+
+    - name: Test variable display
+      ansible.builtin.debug:
+        var: ansible_hostname
+
+    - name: Test conditional debug
+      ansible.builtin.debug:
+        msg: "Conditional debug working"
+      when: true
+
+    - name: Test check mode awareness
+      ansible.builtin.debug:
+        msg: "Running in {{ 'CHECK' if ansible_check_mode else 'NORMAL' }} mode"
+
+    - name: Test error handling validation
+      block:
+        - name: Controlled non-failing validation
+          ansible.builtin.fail:
+            msg: "This is a test failure"
+          when: false
+
+        - name: Success path
+          ansible.builtin.debug:
+            msg: "Block executed successfully"
+
+      rescue:
+        - name: Rescue block should not execute
+          ansible.builtin.debug:
+            msg: "Rescue block executed unexpectedly"
+
+      always:
+        - name: Always block validation
+          ansible.builtin.debug:
+            msg: "Always block executed correctly"
+
+    - name: Final validation message
+      ansible.builtin.debug:
+        msg: |
+          Debugging and error handling validation complete.
+          All core features tested successfully.

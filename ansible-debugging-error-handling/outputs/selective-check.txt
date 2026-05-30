@@ -1,0 +1,26 @@
+Using /home/centos/ansible-debugging-error-handling/ansible.cfg as config file
+
+PLAY [Selective Check Mode Example] ********************************************
+
+TASK [Always gather information] ***********************************************
+ok: [localhost]
+
+TASK [Display system information] **********************************************
+ok: [localhost] => {
+    "msg": "System: ip-172-31-10-47, OS: CentOS"
+}
+
+TASK [Simulate file creation] **************************************************
+changed: [localhost] => {"changed": true, "dest": "/tmp/test_file.txt"}
+
+TASK [Check if file exists] ****************************************************
+ok: [localhost] => {"changed": false, "stat": {"exists": false}}
+
+TASK [Report file status] ******************************************************
+ok: [localhost] => {
+    "msg": "File exists: False"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=5    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

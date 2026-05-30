@@ -1,0 +1,36 @@
+
+PLAY [Practical Error Handling for Web Server Setup] ***************************
+
+TASK [Install Apache web server] ***********************************************
+changed: [localhost]
+
+TASK [Start Apache service] ****************************************************
+changed: [localhost]
+
+TASK [Create Apache web content] ***********************************************
+changed: [localhost]
+
+TASK [Set web server type] *****************************************************
+ok: [localhost]
+
+TASK [Display web server status] ***********************************************
+ok: [localhost] => {
+    "msg": "Web server setup completed using: apache"
+}
+
+TASK [Check web server process] ************************************************
+ok: [localhost]
+
+TASK [Display process information] *********************************************
+ok: [localhost] => {
+    "web_process.stdout_lines": [
+        "apache      8088  0.0  0.0  26064  8460 ?        S    15:18   0:00 /usr/sbin/httpd -DFOREGROUND",
+        "apache      8089  0.0  0.0 2361804 10732 ?       Sl   15:18   0:00 /usr/sbin/httpd -DFOREGROUND",
+        "apache      8090  0.0  0.0 2165132 10496 ?       Sl   15:18   0:00 /usr/sbin/httpd -DFOREGROUND",
+        "apache      8091  0.0  0.0 2230668 10500 ?       Sl   15:18   0:00 /usr/sbin/httpd -DFOREGROUND"
+    ]
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=7    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

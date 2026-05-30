@@ -1,0 +1,31 @@
+---
+- name: Selective Check Mode Example
+  hosts: local
+  gather_facts: false
+
+  tasks:
+    - name: Always gather information
+      ansible.builtin.setup:
+      check_mode: false
+
+    - name: Display system information
+      ansible.builtin.debug:
+        msg: "System: {{ ansible_hostname }}, OS: {{ ansible_distribution }}"
+      check_mode: false
+
+    - name: Simulate file creation
+      ansible.builtin.file:
+        path: /tmp/test_file.txt
+        state: touch
+        mode: '0644'
+
+    - name: Check if file exists
+      ansible.builtin.stat:
+        path: /tmp/test_file.txt
+      register: file_check
+      check_mode: false
+
+    - name: Report file status
+      ansible.builtin.debug:
+        msg: "File exists: {{ file_check.stat.exists }}"
+      check_mode: false

@@ -1,0 +1,86 @@
+---
+- name: Practical Error Handling for Web Server Setup
+  hosts: local
+  become: true
+  gather_facts: false
+
+  vars:
+    web_packages:
+      - httpd
+      - mod_ssl
+    backup_packages:
+      - nginx
+
+  tasks:
+    - name: Web server installation with fallback
+      block:
+        - name: Install Apache web server
+          ansible.builtin.dnf:
+            name: "{{ web_packages }}"
+            state: present
+
+        - name: Start Apache service
+          ansible.builtin.systemd:
+            name: httpd
+            state: started
+            enabled: true
+
+        - name: Create Apache web content
+          ansible.builtin.copy:
+            content: |
+              <html>
+                <head><title>Apache Server</title></head>
+                <body><h1>Apache is running successfully.</h1></body>
+              </html>
+            dest: /var/www/html/index.html
+            mode: '0644'
+
+        - name: Set web server type
+          ansible.builtin.set_fact:
+            web_server: "apache"
+
+      rescue:
+        - name: Apache installation failed, trying Nginx
+          ansible.builtin.debug:
+            msg: "Apache installation failed, falling back to Nginx"
+
+        - name: Install Nginx fallback
+          ansible.builtin.dnf:
+            name: "{{ backup_packages }}"
+            state: present
+
+        - name: Start Nginx service
+          ansible.builtin.systemd:
+            name: nginx
+            state: started
+            enabled: true
+
+        - name: Create Nginx web content
+          ansible.builtin.copy:
+            content: |
+              <html>
+                <head><title>Nginx Server</title></head>
+                <body><h1>Nginx is running as fallback.</h1></body>
+              </html>
+            dest: /usr/share/nginx/html/index.html
+            mode: '0644'
+
+        - name: Set web server type
+          ansible.builtin.set_fact:
+            web_server: "nginx"
+
+      always:
+        - name: Display web server status
+          ansible.builtin.debug:
+            msg: "Web server setup completed using: {{ web_server | default('none') }}"
+
+        - name: Check web server process
+          ansible.builtin.shell: "ps aux | grep {{ web_server | default('http') }} | grep -v grep"
+          register: web_process
+          changed_when: false
+          failed_when: false
+
+        - name: Display process information
+          ansible.builtin.debug:
+            var: web_process.stdout_lines
+          when: web_process.rc == 0

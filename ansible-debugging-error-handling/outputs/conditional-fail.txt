@@ -1,0 +1,12 @@
+
+PLAY [Conditional Fail Examples] ***********************************************
+
+TASK [Compare versions] ********************************************************
+ok: [localhost]
+
+TASK [Fail if version is too old] **********************************************
+fatal: [localhost]: FAILED! => {"changed": false, "msg": "Application version 1.2.3 is below minimum required version 1.3.0.\nPlease upgrade before continuing.\n"}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=1    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+
