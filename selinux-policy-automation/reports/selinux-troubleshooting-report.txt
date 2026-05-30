@@ -1,0 +1,66 @@
+SELinux Troubleshooting Report
+Generated At: 2026-05-30T12:31:03Z
+Hostname: ip-172-31-10-91
+
+=== SELinux Status ===
+SELinux status:                 enabled
+SELinuxfs mount:                /sys/fs/selinux
+SELinux root directory:         /etc/selinux
+Loaded policy name:             targeted
+Current mode:                   enforcing
+Mode from config file:          enforcing
+Policy MLS status:              enabled
+Policy deny_unknown status:     allowed
+Memory protection checking:     actual (secure)
+Max kernel policy version:      33
+
+=== Important Booleans ===
+httpd_can_network_connect --> off
+httpd_can_network_connect_cobbler --> off
+httpd_can_network_connect_db --> off
+httpd_enable_homedirs --> off
+httpd_execmem --> off
+
+=== Wrong Context Captured ===
+system_u:object_r:admin_home_t:s0 /var/test-secure-web/index.html
+
+=== Expected Context ===
+/var/test-secure-web/index.html	system_u:object_r:httpd_sys_content_t:s0
+
+=== Restorecon Output ===
+Relabeled /var/test-secure-web/index.html from system_u:object_r:admin_home_t:s0 to system_u:object_r:httpd_sys_content_t:s0
+
+=== Fixed Context ===
+system_u:object_r:httpd_sys_content_t:s0 /var/test-secure-web/index.html
+
+=== Monitoring Script Output ===
+=== SELinux Status ===
+SELinux status:                 enabled
+SELinuxfs mount:                /sys/fs/selinux
+SELinux root directory:         /etc/selinux
+Loaded policy name:             targeted
+Current mode:                   enforcing
+Mode from config file:          enforcing
+Policy MLS status:              enabled
+Policy deny_unknown status:     allowed
+Memory protection checking:     actual (secure)
+Max kernel policy version:      33
+
+=== Current Mode ===
+Enforcing
+
+=== Recent AVC Denials ===
+
+=== Important HTTPD Booleans ===
+httpd_can_network_connect --> on
+httpd_can_network_connect_cobbler --> off
+httpd_can_network_connect_db --> on
+httpd_enable_homedirs --> off
+httpd_execmem --> off
+
+=== Custom File Context Rules ===
+SELinux fcontext                                   type               Context
+
+/opt/secure-web(/.*)?                              all files          system_u:object_r:httpd_sys_content_t:s0 
+/var/log/secure-web(/.*)?                          all files          system_u:object_r:httpd_log_t:s0 
+/var/test-secure-web(/.*)?                         all files          system_u:object_r:httpd_sys_content_t:s0 

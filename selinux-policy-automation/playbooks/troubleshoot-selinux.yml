@@ -1,0 +1,173 @@
+---
+- name: Troubleshoot and remediate SELinux issues
+  hosts: managed_nodes
+  become: true
+  gather_facts: true
+
+  vars:
+    test_web_dir: /var/test-secure-web
+    test_web_file: /var/test-secure-web/index.html
+    selinux_booleans:
+      - name: httpd_can_network_connect
+        state: true
+      - name: httpd_can_network_connect_db
+        state: true
+      - name: httpd_execmem
+        state: false
+      - name: httpd_enable_homedirs
+        state: false
+
+  tasks:
+    - name: Ensure SELinux troubleshooting packages are installed
+      ansible.builtin.package:
+        name:
+          - setroubleshoot-server
+          - setroubleshoot
+          - policycoreutils-python-utils
+          - setools-console
+          - audit
+        state: present
+
+    - name: Check SELinux status
+      ansible.builtin.command:
+        cmd: sestatus
+      register: selinux_status
+      changed_when: false
+
+    - name: Check AVC denials from today
+      ansible.builtin.shell: ausearch -m avc -ts today
+      register: avc_denials
+      changed_when: false
+      failed_when: false
+
+    - name: Display AVC denial count
+      ansible.builtin.debug:
+        msg: "AVC denial lines found today: {{ avc_denials.stdout_lines | length }}"
+
+    - name: Check important SELinux booleans
+      ansible.builtin.shell: getsebool -a | grep -E '^(httpd_can_network_connect|httpd_can_network_connect_db|httpd_execmem|httpd_enable_homedirs)'
+      register: important_booleans
+      changed_when: false
+      failed_when: false
+
+    - name: Create test web directory
+      ansible.builtin.file:
+        path: "{{ test_web_dir }}"
+        state: directory
+        owner: apache
+        group: apache
+        mode: "0755"
+
+    - name: Create test web file
+      ansible.builtin.copy:
+        content: "<h1>SELinux diagnostic test page</h1>"
+        dest: "{{ test_web_file }}"
+        owner: apache
+        group: apache
+        mode: "0644"
+
+    - name: Define correct SELinux context rule for test web directory
+      community.general.sefcontext:
+        target: "{{ test_web_dir }}(/.*)?"
+        setype: httpd_sys_content_t
+        state: present
+
+    - name: Intentionally apply wrong SELinux context for troubleshooting demonstration
+      ansible.builtin.command:
+        cmd: chcon -t admin_home_t {{ test_web_file }}
+      changed_when: true
+
+    - name: Capture wrong SELinux context
+      ansible.builtin.command:
+        cmd: ls -Z {{ test_web_file }}
+      register: wrong_context
+      changed_when: false
+
+    - name: Check expected SELinux context
+      ansible.builtin.command:
+        cmd: matchpathcon {{ test_web_file }}
+      register: expected_context
+      changed_when: false
+      failed_when: false
+
+    - name: Fix SELinux context using restorecon
+      ansible.builtin.command:
+        cmd: restorecon -v {{ test_web_file }}
+      register: context_fix
+      changed_when: "'restorecon reset' in context_fix.stdout"
+
+    - name: Capture fixed SELinux context
+      ansible.builtin.command:
+        cmd: ls -Z {{ test_web_file }}
+      register: fixed_context
+      changed_when: false
+
+    - name: Configure common SELinux booleans persistently
+      ansible.posix.seboolean:
+        name: "{{ item.name }}"
+        state: "{{ item.state }}"
+        persistent: true
+      loop: "{{ selinux_booleans }}"
+
+    - name: Create SELinux monitoring script
+      ansible.builtin.copy:
+        content: |
+          #!/bin/bash
+          echo "=== SELinux Status ==="
+          sestatus
+          echo
+          echo "=== Current Mode ==="
+          getenforce
+          echo
+          echo "=== Recent AVC Denials ==="
+          ausearch -m avc -ts recent 2>/dev/null | tail -10 || true
+          echo
+          echo "=== Important HTTPD Booleans ==="
+          getsebool -a | grep -E '^(httpd_can_network_connect|httpd_can_network_connect_db|httpd_execmem|httpd_enable_homedirs)'
+          echo
+          echo "=== Custom File Context Rules ==="
+          semanage fcontext -l -C
+        dest: /usr/local/bin/selinux-security-monitor
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Run SELinux monitoring script
+      ansible.builtin.command:
+        cmd: /usr/local/bin/selinux-security-monitor
+      register: monitoring_output
+      changed_when: false
+
+    - name: Save SELinux troubleshooting report
+      ansible.builtin.copy:
+        content: |
+          SELinux Troubleshooting Report
+          Generated At: {{ ansible_date_time.iso8601 }}
+          Hostname: {{ ansible_hostname }}
+
+          === SELinux Status ===
+          {{ selinux_status.stdout }}
+
+          === Important Booleans ===
+          {{ important_booleans.stdout }}
+
+          === Wrong Context Captured ===
+          {{ wrong_context.stdout }}
+
+          === Expected Context ===
+          {{ expected_context.stdout }}
+
+          === Restorecon Output ===
+          {{ context_fix.stdout }}
+
+          === Fixed Context ===
+          {{ fixed_context.stdout }}
+
+          === Monitoring Script Output ===
+          {{ monitoring_output.stdout }}
+        dest: "{{ playbook_dir }}/../reports/selinux-troubleshooting-report.txt"
+        mode: "0644"
+
+    - name: Display fixed SELinux context
+      ansible.builtin.debug:
+        msg: "Fixed context: {{ fixed_context.stdout }}"

@@ -1,0 +1,47 @@
+---
+- name: Enforce SELinux security mode
+  hosts: managed_nodes
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Check current SELinux mode
+      ansible.builtin.command:
+        cmd: getenforce
+      register: current_selinux_mode
+      changed_when: false
+
+    - name: Display current SELinux mode
+      ansible.builtin.debug:
+        msg: "Current SELinux mode is {{ current_selinux_mode.stdout }}"
+
+    - name: Ensure SELinux management packages are installed
+      ansible.builtin.package:
+        name:
+          - policycoreutils
+          - policycoreutils-python-utils
+          - selinux-policy
+          - selinux-policy-targeted
+          - setroubleshoot-server
+          - setools-console
+        state: present
+
+    - name: Configure SELinux policy and mode
+      ansible.posix.selinux:
+        policy: "{{ selinux_policy }}"
+        state: "{{ selinux_mode }}"
+      register: selinux_configuration
+
+    - name: Display SELinux reboot requirement
+      ansible.builtin.debug:
+        msg: "Reboot required: {{ selinux_configuration.reboot_required | default(false) }}"
+
+    - name: Verify SELinux status
+      ansible.builtin.command:
+        cmd: sestatus
+      register: selinux_status
+      changed_when: false
+
+    - name: Display SELinux status
+      ansible.builtin.debug:
+        var: selinux_status.stdout_lines

@@ -1,0 +1,115 @@
+---
+- name: Manage SELinux file contexts
+  hosts: managed_nodes
+  become: true
+  gather_facts: true
+
+  vars:
+    custom_web_dir: /opt/secure-web
+    custom_log_dir: /var/log/secure-web
+
+  handlers:
+    - name: restore secure web contexts
+      ansible.builtin.command:
+        cmd: restorecon -Rv {{ custom_web_dir }}
+
+    - name: restore secure log contexts
+      ansible.builtin.command:
+        cmd: restorecon -Rv {{ custom_log_dir }}
+
+  tasks:
+    - name: Ensure Apache user and group exist through httpd package
+      ansible.builtin.package:
+        name: httpd
+        state: present
+
+    - name: Create custom web directory
+      ansible.builtin.file:
+        path: "{{ custom_web_dir }}"
+        state: directory
+        owner: apache
+        group: apache
+        mode: "0755"
+
+    - name: Create custom log directory
+      ansible.builtin.file:
+        path: "{{ custom_log_dir }}"
+        state: directory
+        owner: apache
+        group: apache
+        mode: "0755"
+
+    - name: Define SELinux context for custom web content
+      community.general.sefcontext:
+        target: "{{ custom_web_dir }}(/.*)?"
+        setype: httpd_sys_content_t
+        state: present
+      notify: restore secure web contexts
+
+    - name: Define SELinux context for custom application logs
+      community.general.sefcontext:
+        target: "{{ custom_log_dir }}(/.*)?"
+        setype: httpd_log_t
+        state: present
+      notify: restore secure log contexts
+
+    - name: Create sample secure web content
+      ansible.builtin.copy:
+        content: |
+          <h1>SELinux managed web content</h1>
+          <p>This file is labeled through automated SELinux context management.</p>
+        dest: "{{ custom_web_dir }}/index.html"
+        owner: apache
+        group: apache
+        mode: "0644"
+
+    - name: Create sample application log file
+      ansible.builtin.copy:
+        content: |
+          [{{ ansible_date_time.iso8601 }}] SELinux context automation initialized
+        dest: "{{ custom_log_dir }}/application.log"
+        owner: apache
+        group: apache
+        mode: "0644"
+
+    - name: Apply SELinux contexts immediately to web directory
+      ansible.builtin.command:
+        cmd: restorecon -Rv {{ custom_web_dir }}
+      register: web_restorecon
+      changed_when: "'Relabeled' in web_restorecon.stdout or 'restorecon reset' in web_restorecon.stdout"
+
+    - name: Apply SELinux contexts immediately to log directory
+      ansible.builtin.command:
+        cmd: restorecon -Rv {{ custom_log_dir }}
+      register: log_restorecon
+      changed_when: "'Relabeled' in log_restorecon.stdout or 'restorecon reset' in log_restorecon.stdout"
+
+    - name: Verify web directory SELinux context
+      ansible.builtin.command:
+        cmd: ls -laZ {{ custom_web_dir }}
+      register: web_context
+      changed_when: false
+
+    - name: Verify log directory SELinux context
+      ansible.builtin.command:
+        cmd: ls -laZ {{ custom_log_dir }}
+      register: log_context
+      changed_when: false
+
+    - name: Show web SELinux context
+      ansible.builtin.debug:
+        var: web_context.stdout_lines
+
+    - name: Show log SELinux context
+      ansible.builtin.debug:
+        var: log_context.stdout_lines
+
+    - name: List custom SELinux file context rules
+      ansible.builtin.command:
+        cmd: semanage fcontext -l -C
+      register: custom_context_rules
+      changed_when: false
+
+    - name: Show custom SELinux file context rules
+      ansible.builtin.debug:
+        var: custom_context_rules.stdout_lines

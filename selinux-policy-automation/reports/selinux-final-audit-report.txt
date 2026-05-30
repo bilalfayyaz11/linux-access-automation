@@ -1,0 +1,49 @@
+SELinux Automation Audit Report
+Generated At: 2026-05-30T12:32:56Z
+Hostname: ip-172-31-10-91
+
+=== SELinux Status ===
+SELinux status:                 enabled
+SELinuxfs mount:                /sys/fs/selinux
+SELinux root directory:         /etc/selinux
+Loaded policy name:             targeted
+Current mode:                   enforcing
+Mode from config file:          enforcing
+Policy MLS status:              enabled
+Policy deny_unknown status:     allowed
+Memory protection checking:     actual (secure)
+Max kernel policy version:      33
+
+=== Current Enforcement Mode ===
+Enforcing
+
+=== Custom SELinux File Context Rules ===
+SELinux fcontext                                   type               Context
+
+/opt/secure-web(/.*)?                              all files          system_u:object_r:httpd_sys_content_t:s0 
+/var/log/secure-web(/.*)?                          all files          system_u:object_r:httpd_log_t:s0 
+/var/test-secure-web(/.*)?                         all files          system_u:object_r:httpd_sys_content_t:s0 
+
+=== Secure Web Directory Context ===
+total 4
+drwxr-xr-x. 2 apache apache unconfined_u:object_r:httpd_sys_content_t:s0  24 May 30 12:27 .
+drwxr-xr-x. 4 root   root   system_u:object_r:usr_t:s0                    35 May 30 12:27 ..
+-rw-r--r--. 1 apache apache system_u:object_r:httpd_sys_content_t:s0     111 May 30 12:27 index.html
+
+=== Secure Log Directory Context ===
+total 8
+drwxr-xr-x.  2 apache apache unconfined_u:object_r:httpd_log_t:s0   29 May 30 12:27 .
+drwxr-xr-x. 18 root   root   system_u:object_r:var_log_t:s0       4096 May 30 12:27 ..
+-rw-r--r--.  1 apache apache system_u:object_r:httpd_log_t:s0       62 May 30 12:27 application.log
+
+=== Troubleshooting Test File Context ===
+system_u:object_r:httpd_sys_content_t:s0 /var/test-secure-web/index.html
+
+=== Important HTTPD SELinux Booleans ===
+httpd_can_network_connect --> on
+httpd_can_network_connect_cobbler --> off
+httpd_can_network_connect_db --> on
+httpd_enable_homedirs --> off
+httpd_execmem --> off
+
+=== Recent AVC Denials Sample ===

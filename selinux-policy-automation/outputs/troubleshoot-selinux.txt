@@ -1,0 +1,70 @@
+
+PLAY [Troubleshoot and remediate SELinux issues] *******************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Ensure SELinux troubleshooting packages are installed] *******************
+changed: [localhost]
+
+TASK [Check SELinux status] ****************************************************
+ok: [localhost]
+
+TASK [Check AVC denials from today] ********************************************
+ok: [localhost]
+
+TASK [Display AVC denial count] ************************************************
+ok: [localhost] => {
+    "msg": "AVC denial lines found today: 0"
+}
+
+TASK [Check important SELinux booleans] ****************************************
+ok: [localhost]
+
+TASK [Create test web directory] ***********************************************
+changed: [localhost]
+
+TASK [Create test web file] ****************************************************
+changed: [localhost]
+
+TASK [Define correct SELinux context rule for test web directory] **************
+changed: [localhost]
+
+TASK [Intentionally apply wrong SELinux context for troubleshooting demonstration] ***
+changed: [localhost]
+
+TASK [Capture wrong SELinux context] *******************************************
+ok: [localhost]
+
+TASK [Check expected SELinux context] ******************************************
+ok: [localhost]
+
+TASK [Fix SELinux context using restorecon] ************************************
+ok: [localhost]
+
+TASK [Capture fixed SELinux context] *******************************************
+ok: [localhost]
+
+TASK [Configure common SELinux booleans persistently] **************************
+changed: [localhost] => (item={'name': 'httpd_can_network_connect', 'state': True})
+changed: [localhost] => (item={'name': 'httpd_can_network_connect_db', 'state': True})
+ok: [localhost] => (item={'name': 'httpd_execmem', 'state': False})
+ok: [localhost] => (item={'name': 'httpd_enable_homedirs', 'state': False})
+
+TASK [Create SELinux monitoring script] ****************************************
+changed: [localhost]
+
+TASK [Run SELinux monitoring script] *******************************************
+ok: [localhost]
+
+TASK [Save SELinux troubleshooting report] *************************************
+changed: [localhost]
+
+TASK [Display fixed SELinux context] *******************************************
+ok: [localhost] => {
+    "msg": "Fixed context: system_u:object_r:httpd_sys_content_t:s0 /var/test-secure-web/index.html"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=19   changed=8    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

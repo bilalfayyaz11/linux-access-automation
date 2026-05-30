@@ -1,0 +1,81 @@
+
+PLAY [Manage SELinux file contexts] ********************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Ensure Apache user and group exist through httpd package] ****************
+changed: [localhost]
+
+TASK [Create custom web directory] *********************************************
+changed: [localhost]
+
+TASK [Create custom log directory] *********************************************
+changed: [localhost]
+
+TASK [Define SELinux context for custom web content] ***************************
+changed: [localhost]
+
+TASK [Define SELinux context for custom application logs] **********************
+changed: [localhost]
+
+TASK [Create sample secure web content] ****************************************
+changed: [localhost]
+
+TASK [Create sample application log file] **************************************
+changed: [localhost]
+
+TASK [Apply SELinux contexts immediately to web directory] *********************
+changed: [localhost]
+
+TASK [Apply SELinux contexts immediately to log directory] *********************
+changed: [localhost]
+
+TASK [Verify web directory SELinux context] ************************************
+ok: [localhost]
+
+TASK [Verify log directory SELinux context] ************************************
+ok: [localhost]
+
+TASK [Show web SELinux context] ************************************************
+ok: [localhost] => {
+    "web_context.stdout_lines": [
+        "total 4",
+        "drwxr-xr-x. 2 apache apache unconfined_u:object_r:httpd_sys_content_t:s0  24 May 30 12:27 .",
+        "drwxr-xr-x. 4 root   root   system_u:object_r:usr_t:s0                    35 May 30 12:27 ..",
+        "-rw-r--r--. 1 apache apache system_u:object_r:httpd_sys_content_t:s0     111 May 30 12:27 index.html"
+    ]
+}
+
+TASK [Show log SELinux context] ************************************************
+ok: [localhost] => {
+    "log_context.stdout_lines": [
+        "total 8",
+        "drwxr-xr-x.  2 apache apache unconfined_u:object_r:httpd_log_t:s0   29 May 30 12:27 .",
+        "drwxr-xr-x. 18 root   root   system_u:object_r:var_log_t:s0       4096 May 30 12:27 ..",
+        "-rw-r--r--.  1 apache apache system_u:object_r:httpd_log_t:s0       62 May 30 12:27 application.log"
+    ]
+}
+
+TASK [List custom SELinux file context rules] **********************************
+ok: [localhost]
+
+TASK [Show custom SELinux file context rules] **********************************
+ok: [localhost] => {
+    "custom_context_rules.stdout_lines": [
+        "SELinux fcontext                                   type               Context",
+        "",
+        "/opt/secure-web(/.*)?                              all files          system_u:object_r:httpd_sys_content_t:s0 ",
+        "/var/log/secure-web(/.*)?                          all files          system_u:object_r:httpd_log_t:s0 "
+    ]
+}
+
+RUNNING HANDLER [restore secure web contexts] **********************************
+changed: [localhost]
+
+RUNNING HANDLER [restore secure log contexts] **********************************
+changed: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=18   changed=11   unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

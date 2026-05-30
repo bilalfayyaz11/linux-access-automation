@@ -1,0 +1,43 @@
+---
+- name: Generate final SELinux automation audit report
+  hosts: managed_nodes
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Collect final SELinux evidence
+      ansible.builtin.shell: |
+        {
+          echo "SELinux Automation Audit Report"
+          echo "Generated At: {{ ansible_date_time.iso8601 }}"
+          echo "Hostname: {{ ansible_hostname }}"
+          echo
+          echo "=== SELinux Status ==="
+          sestatus
+          echo
+          echo "=== Current Enforcement Mode ==="
+          getenforce
+          echo
+          echo "=== Custom SELinux File Context Rules ==="
+          semanage fcontext -l -C
+          echo
+          echo "=== Secure Web Directory Context ==="
+          ls -laZ /opt/secure-web
+          echo
+          echo "=== Secure Log Directory Context ==="
+          ls -laZ /var/log/secure-web
+          echo
+          echo "=== Troubleshooting Test File Context ==="
+          ls -Z /var/test-secure-web/index.html
+          echo
+          echo "=== Important HTTPD SELinux Booleans ==="
+          getsebool -a | grep -E '^(httpd_can_network_connect|httpd_can_network_connect_db|httpd_execmem|httpd_enable_homedirs)'
+          echo
+          echo "=== Recent AVC Denials Sample ==="
+          ausearch -m avc -ts recent 2>/dev/null | tail -10 || true
+        } > "{{ playbook_dir }}/../reports/selinux-final-audit-report.txt"
+      changed_when: true
+
+    - name: Display final audit report location
+      ansible.builtin.debug:
+        msg: "Final audit report generated at reports/selinux-final-audit-report.txt"
