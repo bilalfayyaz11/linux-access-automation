@@ -1,0 +1,84 @@
+---
+- name: Complex Handler Scenarios
+  hosts: webservers
+  become: yes
+
+  vars:
+    web_service: httpd
+    backup_dir: /opt/ansible-backups
+    httpd_config: /etc/httpd/conf/httpd.conf
+
+  tasks:
+    - name: Create backup directory
+      file:
+        path: "{{ backup_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Backup current configuration
+      copy:
+        src: "{{ httpd_config }}"
+        dest: "{{ backup_dir }}/httpd-{{ ansible_date_time.epoch }}.conf"
+        remote_src: yes
+      notify: log backup creation
+
+    - name: Update service configuration - ServerTokens
+      lineinfile:
+        path: "{{ httpd_config }}"
+        regexp: '^#?ServerTokens'
+        line: 'ServerTokens Prod'
+        backup: yes
+      notify:
+        - validate configuration
+        - restart web service
+        - send notification
+
+    - name: Update service configuration - ServerSignature
+      lineinfile:
+        path: "{{ httpd_config }}"
+        regexp: '^#?ServerSignature'
+        line: 'ServerSignature Off'
+        backup: yes
+      notify:
+        - validate configuration
+        - restart web service
+        - send notification
+
+    - name: Create monitoring script
+      copy:
+        content: |
+          #!/bin/bash
+          SERVICE="{{ web_service }}"
+          if systemctl is-active --quiet "$SERVICE"; then
+              echo "$(date): $SERVICE is running" >> /var/log/service-monitor.log
+          else
+              echo "$(date): $SERVICE is NOT running" >> /var/log/service-monitor.log
+          fi
+        dest: /usr/local/bin/monitor-service.sh
+        mode: '0755'
+      notify: setup monitoring
+
+  handlers:
+    - name: validate configuration
+      command: httpd -t
+
+    - name: restart web service
+      systemd:
+        name: "{{ web_service }}"
+        state: restarted
+
+    - name: send notification
+      debug:
+        msg: "Configuration updated and service restarted on {{ inventory_hostname }}"
+
+    - name: log backup creation
+      lineinfile:
+        path: /var/log/ansible-backups.log
+        line: "{{ ansible_date_time.iso8601 }}: Backup created for {{ web_service }} on {{ inventory_hostname }}"
+        create: yes
+
+    - name: setup monitoring
+      cron:
+        name: "Monitor {{ web_service }}"
+        minute: "*/5"
+        job: "/usr/local/bin/monitor-service.sh"

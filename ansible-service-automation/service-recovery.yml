@@ -1,0 +1,27 @@
+---
+- name: Service Recovery
+  hosts: webservers
+  become: yes
+
+  vars:
+    web_service: httpd
+
+  tasks:
+    - name: Check service
+      systemd:
+        name: "{{ web_service }}"
+      register: service_status
+
+    - name: Start service if stopped
+      systemd:
+        name: "{{ web_service }}"
+        state: started
+      when: service_status.status.ActiveState != "active"
+
+    - name: Final status
+      systemd:
+        name: "{{ web_service }}"
+      register: final_status
+
+    - debug:
+        msg: "{{ web_service }} status => {{ final_status.status.ActiveState }}"

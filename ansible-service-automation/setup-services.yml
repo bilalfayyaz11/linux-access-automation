@@ -1,0 +1,34 @@
+---
+- name: Setup Services for Service Management
+  hosts: webservers
+  become: yes
+
+  tasks:
+    - name: Install Apache HTTP Server
+      package:
+        name:
+          - httpd
+          - mod_ssl
+        state: present
+
+    - name: Create custom web content directory
+      file:
+        path: /var/www/html/custom
+        state: directory
+        mode: '0755'
+
+    - name: Start and enable firewalld
+      service:
+        name: firewalld
+        state: started
+        enabled: yes
+
+    - name: Open HTTP service in firewall
+      command: firewall-cmd --permanent --add-service=http
+      register: firewall_http
+      changed_when: "'success' in firewall_http.stdout or firewall_http.rc == 0"
+      failed_when: firewall_http.rc not in [0]
+
+    - name: Reload firewall
+      command: firewall-cmd --reload
+      changed_when: true

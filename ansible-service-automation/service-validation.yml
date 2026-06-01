@@ -1,0 +1,27 @@
+---
+- name: Service Validation
+  hosts: webservers
+  become: yes
+
+  vars:
+    services_to_check:
+      - httpd
+      - crond
+      - sshd
+
+  tasks:
+    - service_facts:
+
+    - name: Verify services
+      debug:
+        msg: "{{ item }} => {{ ansible_facts.services[item + '.service'].state }}"
+      loop: "{{ services_to_check }}"
+
+    - name: Test web service
+      uri:
+        url: http://127.0.0.1
+        status_code: 200
+      register: web_response
+
+    - debug:
+        msg: "Web service status {{ web_response.status }}"

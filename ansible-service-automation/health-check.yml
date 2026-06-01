@@ -1,0 +1,24 @@
+---
+- name: Health Check
+  hosts: webservers
+  become: yes
+
+  tasks:
+    - name: Apache config test
+      command: httpd -t
+      register: config_test
+      changed_when: false
+
+    - name: Memory usage
+      shell: ps aux | grep httpd | grep -v grep | awk '{sum+=$6} END {print sum/1024 " MB"}'
+      register: memory_usage
+      changed_when: false
+
+    - name: Create report
+      copy:
+        content: |
+          Service Health Report
+          =====================
+          Config Test: {{ config_test.stdout }}
+          Memory Usage: {{ memory_usage.stdout }}
+        dest: /tmp/service-health-localhost.txt

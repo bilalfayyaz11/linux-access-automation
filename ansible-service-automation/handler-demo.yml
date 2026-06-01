@@ -1,0 +1,57 @@
+---
+- name: Demonstrating Handlers for Service Management
+  hosts: webservers
+  become: yes
+
+  vars:
+    web_service: httpd
+    config_path: /etc/httpd/conf.d
+
+  tasks:
+    - name: Create custom Apache security configuration
+      copy:
+        content: |
+          # Custom configuration managed by Ansible
+          ServerTokens Prod
+          ServerSignature Off
+        dest: "{{ config_path }}/ansible-security.conf"
+        mode: '0644'
+      notify:
+        - restart web service
+        - validate web service
+
+    - name: Update main index page
+      copy:
+        content: |
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <title>Ansible Handler Demo - {{ inventory_hostname }}</title>
+          </head>
+          <body>
+              <h1>Handler Demonstration</h1>
+              <p>Server: {{ inventory_hostname }}</p>
+              <p>This page triggers a handler only when content changes.</p>
+          </body>
+          </html>
+        dest: /var/www/html/index.html
+        mode: '0644'
+      notify: restart web service
+
+    - name: Ensure web service is running
+      systemd:
+        name: "{{ web_service }}"
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: restart web service
+      systemd:
+        name: "{{ web_service }}"
+        state: restarted
+
+    - name: validate web service
+      uri:
+        url: "http://127.0.0.1"
+        method: GET
+        status_code: 200

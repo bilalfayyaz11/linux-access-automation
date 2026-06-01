@@ -1,0 +1,69 @@
+---
+- name: Comprehensive Service Management with Ansible
+  hosts: webservers
+  become: yes
+
+  vars:
+    web_service_name: httpd
+    web_port: 80
+    custom_index_content: |
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <title>Ansible Managed Server</title>
+      </head>
+      <body>
+          <h1>Welcome to {{ inventory_hostname }}</h1>
+          <p>This server is managed by Ansible</p>
+          <p>Service: {{ web_service_name }}</p>
+          <p>Last updated: {{ ansible_date_time.iso8601 }}</p>
+      </body>
+      </html>
+
+  tasks:
+    - name: Ensure web service is installed
+      package:
+        name: "{{ web_service_name }}"
+        state: present
+
+    - name: Create custom index.html
+      copy:
+        content: "{{ custom_index_content }}"
+        dest: /var/www/html/index.html
+        mode: '0644'
+      notify: restart web service
+
+    - name: Ensure firewalld is started and enabled
+      systemd:
+        name: firewalld
+        state: started
+        enabled: yes
+
+    - name: Configure firewall for HTTP traffic
+      command: firewall-cmd --permanent --add-service=http
+      register: firewall_result
+      changed_when: "'success' in firewall_result.stdout"
+      failed_when: firewall_result.rc != 0 and 'ALREADY_ENABLED' not in firewall_result.stderr
+
+    - name: Reload firewall rules
+      command: firewall-cmd --reload
+      changed_when: true
+
+    - name: Ensure web service is started and enabled
+      systemd:
+        name: "{{ web_service_name }}"
+        state: started
+        enabled: yes
+        daemon_reload: yes
+
+    - name: Check if web service is listening on port {{ web_port }}
+      wait_for:
+        port: "{{ web_port }}"
+        host: "127.0.0.1"
+        timeout: 30
+
+  handlers:
+    - name: restart web service
+      systemd:
+        name: "{{ web_service_name }}"
+        state: restarted

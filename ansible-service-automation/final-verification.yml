@@ -1,0 +1,20 @@
+---
+- name: Final Verification
+  hosts: webservers
+  become: yes
+
+  tasks:
+    - name: Verify httpd
+      systemd:
+        name: httpd
+      register: httpd_status
+
+    - name: Verify sshd
+      systemd:
+        name: sshd
+      register: sshd_status
+
+    - debug:
+        msg:
+          - "HTTPD => {{ httpd_status.status.ActiveState }}"
+          - "SSHD => {{ sshd_status.status.ActiveState }}"
