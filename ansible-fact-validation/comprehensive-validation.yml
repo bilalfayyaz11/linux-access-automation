@@ -1,0 +1,66 @@
+---
+- name: Comprehensive System State Validation
+  hosts: all
+  gather_facts: yes
+  become: yes
+
+  vars:
+    performance_thresholds:
+      max_memory_usage: 90
+      min_disk_free_percent: 10
+
+  tasks:
+    - name: Gather package facts
+      package_facts:
+        manager: auto
+
+    - name: Gather service facts
+      service_facts:
+
+    - name: Create validation report directory
+      file:
+        path: "/tmp/validation_reports"
+        state: directory
+        mode: '0755'
+
+    - name: Calculate memory usage percentage
+      set_fact:
+        memory_usage_percent: "{{ ((ansible_memory_mb.real.total - ansible_memory_mb.real.free) / ansible_memory_mb.real.total * 100) | round(2) }}"
+
+    - name: Calculate root disk usage
+      set_fact:
+        root_disk_usage: "{{ (((ansible_mounts | selectattr('mount', 'equalto', '/') | first).size_total - (ansible_mounts | selectattr('mount', 'equalto', '/') | first).size_available) / (ansible_mounts | selectattr('mount', 'equalto', '/') | first).size_total * 100) | round(2) }}"
+
+    - name: Check SELinux status
+      command: getenforce
+      register: selinux_status
+      changed_when: false
+
+    - name: Generate validation report
+      template:
+        src: templates/validation_report.j2
+        dest: "/tmp/validation_reports/{{ ansible_hostname }}_validation_report.txt"
+
+      vars:
+        validation_timestamp: "{{ ansible_date_time.iso8601 }}"
+        system_info:
+          hostname: "{{ ansible_hostname }}"
+          ip_address: "{{ ansible_default_ipv4.address | default('localhost') }}"
+          os: "{{ ansible_distribution }} {{ ansible_distribution_version }}"
+          kernel: "{{ ansible_kernel }}"
+          architecture: "{{ ansible_architecture }}"
+          memory_total: "{{ ansible_memory_mb.real.total }}MB"
+          memory_usage: "{{ memory_usage_percent }}%"
+          cpu_count: "{{ ansible_processor_vcpus }}"
+          uptime: "{{ ansible_uptime_seconds // 3600 }} hours"
+
+    - name: Display validation summary
+      debug:
+        msg: |
+          Validation Summary for {{ ansible_hostname }}
+          OS: {{ ansible_distribution }} {{ ansible_distribution_version }}
+          Memory: {{ ansible_memory_mb.real.total }}MB
+          Memory Usage: {{ memory_usage_percent }}%
+          Disk Usage: {{ root_disk_usage }}%
+          Packages: {{ ansible_facts.packages | length }}
+          Services: {{ ansible_facts.services | length }}
