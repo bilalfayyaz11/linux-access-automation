@@ -1,0 +1,68 @@
+---
+- name: Environment-Specific Secure Deployment
+  hosts: localhost
+  gather_facts: true
+
+  vars:
+    target_env: "{{ env | default('dev') }}"
+    secrets_file_map:
+      dev: "dev_secrets.yml"
+      staging: "staging_secrets.yml"
+      production: "db_secrets.yml"
+
+  vars_files:
+    - "{{ secrets_file_map[target_env] }}"
+
+  tasks:
+    - name: Validate selected environment
+      assert:
+        that:
+          - target_env in secrets_file_map.keys()
+        fail_msg: "Invalid environment. Use one of: dev, staging, production"
+        success_msg: "Valid environment selected: {{ target_env }}"
+
+    - name: Display current environment
+      debug:
+        msg: "Deploying to {{ target_env }} environment"
+
+    - name: Show safe database configuration
+      debug:
+        msg: |
+          Environment: {{ target_env }}
+          Database Host: {{ db_host }}
+          Database Name: {{ db_name }}
+          Database Port: {{ db_port }}
+
+    - name: Create environment-specific protected configuration
+      copy:
+        content: |
+          # {{ target_env | upper }} ENVIRONMENT CONFIGURATION
+          # Generated on {{ ansible_date_time.iso8601 }}
+
+          [database]
+          host={{ db_host }}
+          port={{ db_port }}
+          username={{ db_username }}
+          password={{ db_password }}
+          database={{ db_name }}
+
+          [api]
+          key={{ api_key }}
+          token={{ secret_token }}
+
+          [environment]
+          name={{ target_env }}
+          deployment_time={{ ansible_date_time.iso8601 }}
+        dest: "/tmp/{{ target_env }}_config.ini"
+        mode: '0600'
+      no_log: true
+
+    - name: Validate configuration file
+      stat:
+        path: "/tmp/{{ target_env }}_config.ini"
+      register: env_config
+
+    - name: Confirm deployment success
+      debug:
+        msg: "{{ target_env | title }} configuration deployed successfully!"
+      when: env_config.stat.exists
