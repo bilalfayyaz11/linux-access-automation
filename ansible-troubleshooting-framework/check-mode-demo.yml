@@ -1,0 +1,23 @@
+---
+- name: System Configuration Demo
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install required packages
+      yum:
+        name:
+          - vim
+          - git
+        state: present
+
+    - name: Create user account
+      user:
+        name: testuser1
+        state: present
+
+    - name: Create application directory
+      file:
+        path: /opt/myapp
+        state: directory
+        mode: '0755'
