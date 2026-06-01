@@ -1,0 +1,5 @@
+---
+environment: staging
+app_version: 1.0.0-rc
+debug_mode: false
+log_level: info

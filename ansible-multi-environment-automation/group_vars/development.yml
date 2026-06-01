@@ -1,0 +1,5 @@
+---
+environment: development
+app_version: 1.0.0-dev
+debug_mode: true
+log_level: debug

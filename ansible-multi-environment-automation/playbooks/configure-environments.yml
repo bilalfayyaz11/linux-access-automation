@@ -1,0 +1,16 @@
+---
+- name: Configure Environments
+  hosts: all
+  become: yes
+
+  tasks:
+
+    - name: Create config directory
+      file:
+        path: /etc/scalable-web-app
+        state: directory
+
+    - name: Deploy environment config
+      template:
+        src: ../templates/app-config.j2
+        dest: /etc/scalable-web-app/app.conf

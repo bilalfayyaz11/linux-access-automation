@@ -1,0 +1,5 @@
+---
+environment: production
+app_version: 1.0.0
+debug_mode: false
+log_level: warning

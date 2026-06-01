@@ -1,0 +1,42 @@
+---
+- name: Deploy Web Application
+  hosts: webservers
+  become: yes
+
+  vars:
+    app_name: scalable-web-app
+    web_root: /var/www/html
+
+  tasks:
+
+    - name: Install Apache
+      dnf:
+        name: httpd
+        state: present
+
+    - name: Start Apache
+      systemd:
+        name: httpd
+        state: started
+        enabled: yes
+
+    - name: Create application directory
+      file:
+        path: "{{ web_root }}/{{ app_name }}"
+        state: directory
+        mode: '0755'
+
+    - name: Deploy application page
+      copy:
+        content: |
+          <h1>{{ inventory_hostname }}</h1>
+          <p>Ansible Scaling Demo</p>
+        dest: "{{ web_root }}/{{ app_name }}/index.html"
+
+    - name: Configure firewall
+      ansible.posix.firewalld:
+        service: http
+        permanent: yes
+        state: enabled
+        immediate: yes
+      ignore_errors: true
