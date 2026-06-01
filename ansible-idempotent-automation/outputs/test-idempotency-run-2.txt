@@ -1,0 +1,32 @@
+
+PLAY [Comprehensive Idempotency Test] ******************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Ensure test directory structure] *****************************************
+ok: [localhost] => (item=/opt/test-app)
+ok: [localhost] => (item=/opt/test-app/config)
+ok: [localhost] => (item=/opt/test-app/logs)
+ok: [localhost] => (item=/opt/test-app/data)
+
+TASK [Ensure application user exists] ******************************************
+ok: [localhost]
+
+TASK [Create application configuration files] **********************************
+ok: [localhost] => (item={'name': 'database', 'content': 'host=localhost\nport=5432\ndb=testdb'})
+ok: [localhost] => (item={'name': 'cache', 'content': 'host=localhost\nport=6379\nttl=3600'})
+ok: [localhost] => (item={'name': 'logging', 'content': 'level=info\nfile=/opt/test-app/logs/app.log'})
+
+TASK [Set proper ownership on application directories] *************************
+ok: [localhost]
+
+TASK [Create systemd service file] *********************************************
+ok: [localhost]
+
+TASK [Ensure service is enabled but not started] *******************************
+ok: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=7    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

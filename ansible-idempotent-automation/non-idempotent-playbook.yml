@@ -1,0 +1,16 @@
+---
+- name: Non-Idempotent Configuration Example
+  hosts: managed
+  become: yes
+  tasks:
+    - name: Add a line to /etc/hosts using shell
+      shell: echo "192.168.1.100 custom-server" >> /etc/hosts
+
+    - name: Create a user using shell
+      shell: useradd -m testuser
+
+    - name: Install wget using shell
+      shell: dnf install -y wget
+
+    - name: Start httpd using shell
+      shell: systemctl start httpd

@@ -1,0 +1,21 @@
+
+PLAY [Non-Idempotent Configuration Example] ************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Add a line to /etc/hosts using shell] ************************************
+changed: [localhost]
+
+TASK [Create a user using shell] ***********************************************
+changed: [localhost]
+
+TASK [Install wget using shell] ************************************************
+changed: [localhost]
+
+TASK [Start httpd using shell] *************************************************
+changed: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=5    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

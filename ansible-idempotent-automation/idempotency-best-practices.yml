@@ -1,0 +1,111 @@
+---
+- name: Idempotency Best Practices Demonstration
+  hosts: managed
+  become: yes
+  vars:
+    app_version: "2.1.0"
+
+  tasks:
+    - name: Ensure application user exists
+      user:
+        name: appuser
+        system: yes
+        home: "/opt/app-{{ app_version }}"
+        shell: /bin/bash
+        state: present
+
+    - name: Ensure application directory exists
+      file:
+        path: "/opt/app-{{ app_version }}"
+        state: directory
+        owner: appuser
+        group: appuser
+        mode: '0755'
+
+    - name: Ensure application config directory exists
+      file:
+        path: "/opt/app-{{ app_version }}/config"
+        state: directory
+        owner: appuser
+        group: appuser
+        mode: '0755'
+
+    - name: Create application executable only if missing
+      copy:
+        content: |
+          #!/bin/bash
+          echo "MyApp {{ app_version }} running"
+          while true; do sleep 60; done
+        dest: "/usr/local/bin/myapp-{{ app_version }}"
+        mode: '0755'
+        owner: root
+        group: root
+
+    - name: Check if application is already configured
+      stat:
+        path: "/opt/app-{{ app_version }}/configured.flag"
+      register: app_configured
+
+    - name: Run application setup only if not configured
+      shell: |
+        echo "configured=true" > /opt/app-{{ app_version }}/configured.flag
+        chown appuser:appuser /opt/app-{{ app_version }}/configured.flag
+      when: not app_configured.stat.exists
+
+    - name: Ensure version configuration exists
+      lineinfile:
+        path: "/opt/app-{{ app_version }}/config/app.conf"
+        regexp: '^version='
+        line: "version={{ app_version }}"
+        create: yes
+        owner: appuser
+        group: appuser
+        mode: '0644'
+
+    - name: Ensure logging configuration block exists
+      blockinfile:
+        path: "/opt/app-{{ app_version }}/config/logging.conf"
+        block: |
+          log.level=INFO
+          log.file=/var/log/myapp.log
+          log.rotation=daily
+          log.retention=30
+        marker: "# {mark} ANSIBLE MANAGED LOGGING BLOCK"
+        create: yes
+        owner: appuser
+        group: appuser
+        mode: '0644'
+
+    - name: Check application status without reporting change
+      command: "/usr/local/bin/myapp-{{ app_version }}"
+      register: app_status
+      changed_when: false
+      failed_when: false
+      async: 1
+      poll: 0
+
+    - name: Ensure application service file exists
+      template:
+        src: templates/app.service.j2
+        dest: /etc/systemd/system/myapp.service
+        mode: '0644'
+      notify:
+        - reload systemd
+        - restart myapp
+
+    - name: Ensure application service is enabled and started
+      systemd:
+        name: myapp
+        enabled: yes
+        state: started
+        daemon_reload: yes
+
+  handlers:
+    - name: reload systemd
+      systemd:
+        daemon_reload: yes
+
+    - name: restart myapp
+      systemd:
+        name: myapp
+        state: restarted

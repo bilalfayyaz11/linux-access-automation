@@ -1,0 +1,16 @@
+=== Ansible Idempotency Validation ===
+Testing playbook: conditional-idempotent-playbook.yml
+
+Running playbook first time...
+
+Running playbook second time...
+
+Analyzing results...
+
+=== RESULTS ===
+First run  - Exit code: 0, Changed tasks: 0, Failed tasks: 0
+Second run - Exit code: 0, Changed tasks: 0, Failed tasks: 0
+IDEMPOTENCY TEST PASSED
+The playbook is idempotent: no changes on the second run.
+
+Detailed logs available in: /tmp/idempotency-test-1780320334

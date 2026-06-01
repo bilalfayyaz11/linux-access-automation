@@ -1,0 +1,24 @@
+
+PLAY [Idempotent Configuration Example] ****************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Ensure custom server entry exists once in /etc/hosts] ********************
+changed: [localhost]
+
+TASK [Ensure testuser exists] **************************************************
+changed: [localhost]
+
+TASK [Ensure wget package is installed] ****************************************
+ok: [localhost]
+
+TASK [Ensure httpd package is installed] ***************************************
+ok: [localhost]
+
+TASK [Ensure httpd service is started and enabled] *****************************
+changed: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=6    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

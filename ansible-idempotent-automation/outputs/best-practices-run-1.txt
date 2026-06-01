@@ -1,0 +1,48 @@
+
+PLAY [Idempotency Best Practices Demonstration] ********************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Ensure application user exists] ******************************************
+changed: [localhost]
+
+TASK [Ensure application directory exists] *************************************
+ok: [localhost]
+
+TASK [Ensure application config directory exists] ******************************
+changed: [localhost]
+
+TASK [Create application executable only if missing] ***************************
+changed: [localhost]
+
+TASK [Check if application is already configured] ******************************
+ok: [localhost]
+
+TASK [Run application setup only if not configured] ****************************
+changed: [localhost]
+
+TASK [Ensure version configuration exists] *************************************
+changed: [localhost]
+
+TASK [Ensure logging configuration block exists] *******************************
+changed: [localhost]
+
+TASK [Check application status without reporting change] ***********************
+ok: [localhost]
+
+TASK [Ensure application service file exists] **********************************
+changed: [localhost]
+
+TASK [Ensure application service is enabled and started] ***********************
+changed: [localhost]
+
+RUNNING HANDLER [reload systemd] ***********************************************
+ok: [localhost]
+
+RUNNING HANDLER [restart myapp] ************************************************
+changed: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=14   changed=9    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

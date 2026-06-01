@@ -1,0 +1,24 @@
+
+PLAY [Conditional Idempotent Operations] ***************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Check if custom configuration exists] ************************************
+ok: [localhost]
+
+TASK [Create initial configuration only if it does not exist] ******************
+changed: [localhost]
+
+TASK [Ensure log level line exists] ********************************************
+changed: [localhost]
+
+TASK [Ensure debug is disabled] ************************************************
+ok: [localhost]
+
+TASK [Create backup only if config exists] *************************************
+skipping: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=5    changed=2    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+

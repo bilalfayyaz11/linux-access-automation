@@ -1,0 +1,27 @@
+
+PLAY [Advanced Idempotent Web Server Configuration] ****************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Ensure httpd package is installed] ***************************************
+ok: [localhost]
+
+TASK [Ensure custom web directory exists] **************************************
+ok: [localhost]
+
+TASK [Create custom httpd configuration] ***************************************
+ok: [localhost]
+
+TASK [Ensure index.html exists with specific content] **************************
+ok: [localhost]
+
+TASK [Ensure firewall allows custom web port] **********************************
+ok: [localhost]
+
+TASK [Ensure httpd service is running and enabled] *****************************
+ok: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=7    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

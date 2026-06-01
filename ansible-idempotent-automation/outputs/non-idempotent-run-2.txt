@@ -1,0 +1,15 @@
+
+PLAY [Non-Idempotent Configuration Example] ************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Add a line to /etc/hosts using shell] ************************************
+changed: [localhost]
+
+TASK [Create a user using shell] ***********************************************
+fatal: [localhost]: FAILED! => {"changed": true, "cmd": "useradd -m testuser", "delta": "0:00:00.010733", "end": "2026-06-01 13:13:49.992820", "msg": "non-zero return code", "rc": 9, "start": "2026-06-01 13:13:49.982087", "stderr": "useradd: user 'testuser' already exists", "stderr_lines": ["useradd: user 'testuser' already exists"], "stdout": "", "stdout_lines": []}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=2    changed=1    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+
