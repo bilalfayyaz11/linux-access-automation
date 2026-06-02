@@ -2,85 +2,116 @@
 
 ## What This Does
 
-This implementation builds a reusable Ansible role-based automation framework for Linux system administration. It separates user management, service management, and file management into clean reusable roles that can be applied consistently across servers. The structure improves maintainability, reduces repeated playbook logic, and creates a scalable foundation for infrastructure automation.
+This implementation builds a reusable Ansible role-based automation framework for Linux system administration. User management, service configuration, and file management are separated into dedicated roles that can be reused across multiple systems and environments.
+
+The automation framework follows Ansible best practices by using role defaults, handlers, variable precedence, conditional execution, verification playbooks, and performance testing. This approach improves maintainability, scalability, and operational consistency across infrastructure deployments.
 
 ## Architecture
 
 ```text
 Control Node
-    |
-    |-- site.yml
-    |-- variable_precedence_demo.yml
-    |-- conditional_roles.yml
-    |-- verify_roles.yml
-    |-- performance_test.yml
-    |
-    +-- roles/
-        |
-        +-- user_management/
-        |   |-- defaults/
-        |   |-- tasks/
-        |   |-- handlers/
-        |
-        +-- service_config/
-        |   |-- defaults/
-        |   |-- tasks/
-        |   |-- handlers/
-        |
-        +-- file_management/
-            |-- defaults/
-            |-- tasks/
-            |-- handlers/
-Prerequisites
-CentOS Stream, RHEL, Rocky Linux, or compatible Linux system
-Python 3
-Ansible Core
-Git
-sudo privileges
-ansible.posix collection
-Setup & Installation
+│
+├── site.yml
+├── variable_precedence_demo.yml
+├── conditional_roles.yml
+├── verify_roles.yml
+├── performance_test.yml
+│
+└── roles
+    │
+    ├── user_management
+    │   ├── defaults
+    │   ├── tasks
+    │   └── handlers
+    │
+    ├── service_config
+    │   ├── defaults
+    │   ├── tasks
+    │   └── handlers
+    │
+    └── file_management
+        ├── defaults
+        ├── tasks
+        └── handlers
+```
+
+## Prerequisites
+
+* CentOS Stream 9, RHEL 9, Rocky Linux, or compatible Linux distribution
+* Python 3
+* Git
+* Ansible Core
+* Sudo privileges
+* ansible.posix collection
+
+## Setup & Installation
+
+```bash
 sudo dnf install -y git ansible-core tree
+
 ansible-galaxy collection install ansible.posix
-How to Reproduce
+```
+
+## How to Reproduce
+
+```bash
 cd ansible-role-based-system-automation
 
 ansible-playbook site.yml --syntax-check
+
 ansible-playbook site.yml -v
 
 ansible-playbook variable_precedence_demo.yml -v
+
 ansible-playbook conditional_roles.yml -v
+
 ansible-playbook verify_roles.yml
+
 ansible-playbook performance_test.yml
-Tools Used
-Ansible Core
-Ansible Galaxy
-ansible.posix
-YAML
-Linux user management
-Linux service management
-Linux file permissions
-Git
-Key Skills Demonstrated
-Reusable infrastructure automation using Ansible roles
-Role defaults, handlers, task separation, and clean structure
-Idempotent Linux user, group, service, and file management
-Variable precedence handling across role and playbook scope
-Conditional role execution
-Verification automation after configuration changes
-Performance testing for reusable automation workflows
-Real-World Use Case
+```
 
-This type of role-based automation is used by platform engineering and operations teams to standardize server configuration across multiple environments. Instead of writing separate playbooks for every server, teams define reusable roles for common responsibilities such as user provisioning, service configuration, and file deployment, then apply them consistently across development, staging, and production systems.
+## Tools Used
 
-Lessons Learned
-Role-based structure makes automation easier to reuse and maintain.
-Handler naming should be specific to avoid collisions across roles.
-Local execution is useful when validating automation before expanding to remote inventory.
-Verification playbooks make infrastructure changes easier to audit.
-Idempotent execution is critical because automation may run repeatedly in real environments.
-Troubleshooting Log
-Replaced generic role workspace naming with a professional automation-focused directory.
-Installed missing Git and Ansible Core packages on CentOS Stream 9.
-Installed the missing ansible.posix collection required for SSH key management.
-Adjusted execution from remote node assumptions to localhost validation because the active environment was single-node.
-Improved handler naming from generic service restart logic to clearer managed service restart behavior.
+* Ansible Core
+* Ansible Galaxy
+* ansible.posix
+* YAML
+* Linux User Management
+* Linux Service Management
+* Linux File Management
+* Git
+
+## Key Skills Demonstrated
+
+* Reusable infrastructure automation using Ansible Roles
+* Idempotent Linux administration workflows
+* User and group lifecycle management
+* Service deployment and lifecycle management
+* File and directory automation
+* Variable precedence implementation
+* Conditional role execution
+* Handler-driven configuration updates
+* Verification and validation automation
+* Infrastructure testing and performance measurement
+
+## Real-World Use Case
+
+Large organizations often manage hundreds or thousands of Linux systems. Maintaining separate playbooks for every environment quickly becomes difficult and error-prone. By creating reusable Ansible roles, operations and platform engineering teams can standardize user provisioning, service management, and file deployment across development, testing, and production environments while reducing maintenance overhead and improving consistency.
+
+## Lessons Learned
+
+* Role-based design significantly improves automation reusability.
+* Separating responsibilities into dedicated roles simplifies maintenance.
+* Verification playbooks provide confidence after infrastructure changes.
+* Variable precedence must be carefully managed to avoid unexpected behavior.
+* Idempotent automation is essential because infrastructure code executes repeatedly throughout a system lifecycle.
+
+## Troubleshooting Log
+
+* Installed missing Git and Ansible Core packages on CentOS Stream 9.
+* Installed the ansible.posix collection required for SSH key management.
+* Adapted execution to localhost because the environment provided a single-node deployment instead of multiple managed hosts.
+* Improved handler naming to avoid ambiguity across roles.
+* Validated syntax before execution to prevent runtime failures.
+* Verified role execution using dedicated verification playbooks.
+* Confirmed successful idempotent execution through repeated playbook runs.
