@@ -1,0 +1,10 @@
+---
+- name: restart sshd
+  ansible.builtin.service:
+    name: sshd
+    state: restarted
+  become: true
+
+- name: reload user database
+  ansible.builtin.command: /usr/bin/getent passwd
+  changed_when: false

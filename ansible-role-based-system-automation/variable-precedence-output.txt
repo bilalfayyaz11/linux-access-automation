@@ -1,0 +1,46 @@
+Using /etc/ansible/ansible.cfg as config file
+
+PLAY [Demonstrate Variable Precedence in Roles] ********************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [user_management : Ensure required groups exist] **************************
+skipping: [localhost] => {"changed": false, "skipped_reason": "No items in the list"}
+
+TASK [user_management : Create users] ******************************************
+changed: [localhost] => (item=None) => {"censored": "the output has been hidden due to the fact that 'no_log: true' was specified for this result", "changed": true}
+changed: [localhost] => {"censored": "the output has been hidden due to the fact that 'no_log: true' was specified for this result", "changed": true}
+
+TASK [user_management : Set up SSH keys for users] *****************************
+skipping: [localhost] => (item={'name': 'demo_user', 'shell': '/bin/bash', 'groups': ['wheel']})  => {"ansible_loop_var": "item", "changed": false, "item": {"groups": ["wheel"], "name": "demo_user", "shell": "/bin/bash"}, "skip_reason": "Conditional result was False"}
+skipping: [localhost] => {"changed": false, "msg": "All items skipped"}
+
+TASK [user_management : Remove users] ******************************************
+skipping: [localhost] => {"changed": false, "skipped_reason": "No items in the list"}
+
+TASK [user_management : Display user management summary] ***********************
+ok: [localhost] => {
+    "msg": "User management completed. Created 1 users, removed 0 users."
+}
+
+TASK [file_management : Create directories] ************************************
+skipping: [localhost] => {"changed": false, "skipped_reason": "No items in the list"}
+
+TASK [file_management : Create files from templates] ***************************
+skipping: [localhost] => (item={'dest': '/tmp/role_demo.txt', 'content': 'This file was created by the file_management role.\nDefault shell setting: /bin/bash\nCurrent automation user: root\n', 'owner': 'root', 'group': 'root', 'mode': '0644'})  => {"ansible_loop_var": "item", "changed": false, "item": {"content": "This file was created by the file_management role.\nDefault shell setting: /bin/bash\nCurrent automation user: root\n", "dest": "/tmp/role_demo.txt", "group": "root", "mode": "0644", "owner": "root"}, "skip_reason": "Conditional result was False"}
+skipping: [localhost] => {"changed": false, "msg": "All items skipped"}
+
+TASK [file_management : Create files with inline content] **********************
+changed: [localhost] => (item={'dest': '/tmp/role_demo.txt', 'content': 'This file was created by the file_management role.\nDefault shell setting: /bin/bash\nCurrent automation user: root\n', 'owner': 'root', 'group': 'root', 'mode': '0644'}) => {"ansible_loop_var": "item", "changed": true, "checksum": "5b2095d18c28017e9dada11f833b02235ef88e10", "dest": "/tmp/role_demo.txt", "gid": 0, "group": "root", "item": {"content": "This file was created by the file_management role.\nDefault shell setting: /bin/bash\nCurrent automation user: root\n", "dest": "/tmp/role_demo.txt", "group": "root", "mode": "0644", "owner": "root"}, "md5sum": "9c78adf275118be46b32853281b8f6ee", "mode": "0644", "owner": "root", "secontext": "unconfined_u:object_r:user_home_t:s0", "size": 114, "src": "/home/centos/.ansible/tmp/ansible-tmp-1780426917.6239605-8399-250594272105390/source", "state": "file", "uid": 0}
+
+TASK [file_management : Copy static files] *************************************
+skipping: [localhost] => (item={'dest': '/tmp/role_demo.txt', 'content': 'This file was created by the file_management role.\nDefault shell setting: /bin/bash\nCurrent automation user: root\n', 'owner': 'root', 'group': 'root', 'mode': '0644'})  => {"ansible_loop_var": "item", "changed": false, "item": {"content": "This file was created by the file_management role.\nDefault shell setting: /bin/bash\nCurrent automation user: root\n", "dest": "/tmp/role_demo.txt", "group": "root", "mode": "0644", "owner": "root"}, "skip_reason": "Conditional result was False"}
+skipping: [localhost] => {"changed": false, "msg": "All items skipped"}
+
+TASK [file_management : Remove unwanted files] *********************************
+skipping: [localhost] => {"changed": false, "skipped_reason": "No items in the list"}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=4    changed=2    unreachable=0    failed=0    skipped=7    rescued=0    ignored=0   
+

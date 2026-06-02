@@ -1,0 +1,36 @@
+---
+- name: Verify Role Execution Results
+  hosts: localhost
+  connection: local
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Check if users were created
+      ansible.builtin.getent:
+        database: passwd
+        key: "{{ item }}"
+      register: user_check
+      failed_when: false
+      loop:
+        - developer
+        - operator
+
+    - name: Display user creation results
+      ansible.builtin.debug:
+        msg: "User {{ item.item }} exists: {{ item.failed == false }}"
+      loop: "{{ user_check.results }}"
+
+    - name: Check if generated files exist
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      register: file_check
+      loop:
+        - /opt/scripts/system_info.sh
+        - /tmp/role_demo.txt
+        - /tmp/conditional_role_result.txt
+
+    - name: Display file creation results
+      ansible.builtin.debug:
+        msg: "File {{ item.item }} exists: {{ item.stat.exists }}"
+      loop: "{{ file_check.results }}"

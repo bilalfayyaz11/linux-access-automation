@@ -1,0 +1,53 @@
+---
+- name: Install required packages
+  ansible.builtin.package:
+    name: "{{ item.package }}"
+    state: present
+  loop: "{{ services_to_manage }}"
+  when:
+    - services_to_manage is defined
+    - item.package is defined
+  become: true
+
+- name: Backup existing configuration files
+  ansible.builtin.copy:
+    src: "{{ item.dest }}"
+    dest: "{{ item.dest }}.backup.{{ ansible_date_time.epoch }}"
+    remote_src: true
+  loop: "{{ service_config_files }}"
+  when:
+    - service_config_files is defined
+    - backup_configs | bool
+  become: true
+  ignore_errors: true
+
+- name: Deploy service configuration files
+  ansible.builtin.template:
+    src: "{{ item.template }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+    mode: "{{ item.mode | default('0644') }}"
+    backup: "{{ backup_configs | bool }}"
+  loop: "{{ service_config_files }}"
+  when: service_config_files is defined
+  become: true
+  notify: restart managed services
+
+- name: Ensure services are in desired state
+  ansible.builtin.service:
+    name: "{{ item.name }}"
+    state: "{{ item.state | default(default_service_state) }}"
+    enabled: "{{ item.enabled | default(default_service_enabled) }}"
+  loop: "{{ services_to_manage }}"
+  when: services_to_manage is defined
+  become: true
+
+- name: Gather service facts
+  ansible.builtin.service_facts:
+
+- name: Display service status
+  ansible.builtin.debug:
+    msg: "Service {{ item.name }} is {{ ansible_facts.services[item.name + '.service'].state | default('not found') }}"
+  loop: "{{ services_to_manage }}"
+  when: services_to_manage is defined

@@ -1,0 +1,51 @@
+Using /etc/ansible/ansible.cfg as config file
+
+PLAY [Conditional Role Execution] **********************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [user_management : Ensure required groups exist] **************************
+skipping: [localhost] => {"changed": false, "skipped_reason": "No items in the list"}
+
+TASK [user_management : Create users] ******************************************
+ok: [localhost] => (item=None) => {"censored": "the output has been hidden due to the fact that 'no_log: true' was specified for this result", "changed": false}
+ok: [localhost] => {"censored": "the output has been hidden due to the fact that 'no_log: true' was specified for this result", "changed": false}
+
+TASK [user_management : Set up SSH keys for users] *****************************
+skipping: [localhost] => (item={'name': 'conditional_user', 'groups': ['wheel'], 'shell': '/bin/bash'})  => {"ansible_loop_var": "item", "changed": false, "item": {"groups": ["wheel"], "name": "conditional_user", "shell": "/bin/bash"}, "skip_reason": "Conditional result was False"}
+skipping: [localhost] => {"changed": false, "msg": "All items skipped"}
+
+TASK [user_management : Remove users] ******************************************
+skipping: [localhost] => {"changed": false, "skipped_reason": "No items in the list"}
+
+TASK [user_management : Display user management summary] ***********************
+ok: [localhost] => {
+    "msg": "User management completed. Created 1 users, removed 0 users."
+}
+
+TASK [file_management : Create directories] ************************************
+skipping: [localhost] => {"changed": false, "skipped_reason": "No items in the list"}
+
+TASK [file_management : Create files from templates] ***************************
+skipping: [localhost] => (item={'dest': '/tmp/conditional_role_result.txt', 'content': 'Conditional role execution completed on localhost.\nUser management enabled: True\n', 'owner': 'root', 'group': 'root', 'mode': '0644'})  => {"ansible_loop_var": "item", "changed": false, "item": {"content": "Conditional role execution completed on localhost.\nUser management enabled: True\n", "dest": "/tmp/conditional_role_result.txt", "group": "root", "mode": "0644", "owner": "root"}, "skip_reason": "Conditional result was False"}
+skipping: [localhost] => {"changed": false, "msg": "All items skipped"}
+
+TASK [file_management : Create files with inline content] **********************
+ok: [localhost] => (item={'dest': '/tmp/conditional_role_result.txt', 'content': 'Conditional role execution completed on localhost.\nUser management enabled: True\n', 'owner': 'root', 'group': 'root', 'mode': '0644'}) => {"ansible_loop_var": "item", "changed": false, "checksum": "3bf59affc7677bec6abb2d1c80fc8923dcf4a0e2", "dest": "/tmp/conditional_role_result.txt", "gid": 0, "group": "root", "item": {"content": "Conditional role execution completed on localhost.\nUser management enabled: True\n", "dest": "/tmp/conditional_role_result.txt", "group": "root", "mode": "0644", "owner": "root"}, "mode": "0644", "owner": "root", "path": "/tmp/conditional_role_result.txt", "secontext": "unconfined_u:object_r:user_home_t:s0", "size": 81, "state": "file", "uid": 0}
+
+TASK [file_management : Copy static files] *************************************
+skipping: [localhost] => (item={'dest': '/tmp/conditional_role_result.txt', 'content': 'Conditional role execution completed on localhost.\nUser management enabled: True\n', 'owner': 'root', 'group': 'root', 'mode': '0644'})  => {"ansible_loop_var": "item", "changed": false, "item": {"content": "Conditional role execution completed on localhost.\nUser management enabled: True\n", "dest": "/tmp/conditional_role_result.txt", "group": "root", "mode": "0644", "owner": "root"}, "skip_reason": "Conditional result was False"}
+skipping: [localhost] => {"changed": false, "msg": "All items skipped"}
+
+TASK [file_management : Remove unwanted files] *********************************
+skipping: [localhost] => {"changed": false, "skipped_reason": "No items in the list"}
+
+TASK [Display configuration summary] *******************************************
+ok: [localhost] => {
+    "msg": "Conditional execution completed. manage_users=True, install_web_server=False"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=5    changed=0    unreachable=0    failed=0    skipped=7    rescued=0    ignored=0   
+

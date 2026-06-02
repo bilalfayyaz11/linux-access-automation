@@ -1,0 +1,34 @@
+---
+- name: Demonstrate Variable Precedence in Roles
+  hosts: localhost
+  connection: local
+  become: true
+  gather_facts: true
+
+  vars:
+    default_shell: /bin/bash
+
+  roles:
+    - role: user_management
+      vars:
+        users_to_create:
+          - name: demo_user
+            shell: /bin/bash
+            groups:
+              - wheel
+      tags:
+        - users
+
+    - role: file_management
+      vars:
+        files_to_create:
+          - dest: /tmp/role_demo.txt
+            content: |
+              This file was created by the file_management role.
+              Default shell setting: {{ default_shell }}
+              Current automation user: {{ ansible_user_id }}
+            owner: root
+            group: root
+            mode: '0644'
+      tags:
+        - files

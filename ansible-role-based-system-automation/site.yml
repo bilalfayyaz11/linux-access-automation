@@ -1,0 +1,60 @@
+---
+- name: System Configuration with Roles
+  hosts: localhost
+  connection: local
+  become: true
+  gather_facts: true
+
+  vars:
+
+    users_to_create:
+      - name: developer
+        groups:
+          - wheel
+          - developers
+        shell: /bin/bash
+        create_home: true
+
+      - name: operator
+        groups:
+          - operators
+        shell: /bin/bash
+        create_home: true
+
+    default_groups:
+      - developers
+      - operators
+
+    services_to_manage:
+      - name: firewalld
+        state: started
+        enabled: true
+
+    directories_to_create:
+      - path: /opt/scripts
+        owner: root
+        group: root
+        mode: '0755'
+
+    files_to_create:
+      - dest: /opt/scripts/system_info.sh
+        content: |
+          #!/bin/bash
+          echo "System Information"
+          echo "=================="
+          hostname
+          uptime
+          free -h
+        owner: root
+        group: root
+        mode: '0755'
+
+  roles:
+    - user_management
+    - service_config
+    - file_management
+
+  post_tasks:
+    - name: Verify role execution
+      ansible.builtin.debug:
+        msg: "All roles executed successfully."

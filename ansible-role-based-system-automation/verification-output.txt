@@ -1,0 +1,34 @@
+
+PLAY [Verify Role Execution Results] *******************************************
+
+TASK [Check if users were created] *********************************************
+ok: [localhost] => (item=developer)
+ok: [localhost] => (item=operator)
+
+TASK [Display user creation results] *******************************************
+ok: [localhost] => (item={'ansible_facts': {'getent_passwd': {'developer': ['x', '1002', '1004', '', '/home/developer', '/bin/bash']}}, 'invocation': {'module_args': {'database': 'passwd', 'key': 'developer', 'fail_key': True, 'service': None, 'split': None}}, 'failed': False, 'changed': False, 'failed_when_result': False, 'item': 'developer', 'ansible_loop_var': 'item'}) => {
+    "msg": "User developer exists: True"
+}
+ok: [localhost] => (item={'ansible_facts': {'getent_passwd': {'operator': ['x', '11', '0', 'operator', '/root', '/bin/bash']}}, 'invocation': {'module_args': {'database': 'passwd', 'key': 'operator', 'fail_key': True, 'service': None, 'split': None}}, 'failed': False, 'changed': False, 'failed_when_result': False, 'item': 'operator', 'ansible_loop_var': 'item'}) => {
+    "msg": "User operator exists: True"
+}
+
+TASK [Check if generated files exist] ******************************************
+ok: [localhost] => (item=/opt/scripts/system_info.sh)
+ok: [localhost] => (item=/tmp/role_demo.txt)
+ok: [localhost] => (item=/tmp/conditional_role_result.txt)
+
+TASK [Display file creation results] *******************************************
+ok: [localhost] => (item={'changed': False, 'stat': {'exists': True, 'path': '/opt/scripts/system_info.sh', 'mode': '0755', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 88, 'inode': 41969152, 'dev': 66309, 'nlink': 1, 'atime': 1780426560.9602048, 'mtime': 1780426542.8385298, 'ctime': 1780426543.4005198, 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': False, 'rgrp': True, 'xgrp': True, 'woth': False, 'roth': True, 'xoth': True, 'isuid': False, 'isgid': False, 'blocks': 8, 'block_size': 4096, 'device_type': 0, 'readable': True, 'writeable': True, 'executable': True, 'pw_name': 'root', 'gr_name': 'root', 'checksum': 'd23438b0b0e5b0ca49ffe3b6b281cc55e63114e3', 'mimetype': 'text/x-shellscript', 'charset': 'us-ascii', 'version': '3689710988', 'attributes': [], 'attr_flags': ''}, 'invocation': {'module_args': {'path': '/opt/scripts/system_info.sh', 'follow': False, 'get_md5': False, 'get_checksum': True, 'get_mime': True, 'get_attributes': True, 'checksum_algorithm': 'sha1'}}, 'failed': False, 'item': '/opt/scripts/system_info.sh', 'ansible_loop_var': 'item'}) => {
+    "msg": "File /opt/scripts/system_info.sh exists: True"
+}
+ok: [localhost] => (item={'changed': False, 'stat': {'exists': True, 'path': '/tmp/role_demo.txt', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 114, 'inode': 10564820, 'dev': 66309, 'nlink': 1, 'atime': 1780426926.8368711, 'mtime': 1780426918.16, 'ctime': 1780426918.7179918, 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False, 'blocks': 8, 'block_size': 4096, 'device_type': 0, 'readable': True, 'writeable': True, 'executable': False, 'pw_name': 'root', 'gr_name': 'root', 'checksum': '5b2095d18c28017e9dada11f833b02235ef88e10', 'mimetype': 'text/plain', 'charset': 'us-ascii', 'version': '1849173444', 'attributes': [], 'attr_flags': ''}, 'invocation': {'module_args': {'path': '/tmp/role_demo.txt', 'follow': False, 'get_md5': False, 'get_checksum': True, 'get_mime': True, 'get_attributes': True, 'checksum_algorithm': 'sha1'}}, 'failed': False, 'item': '/tmp/role_demo.txt', 'ansible_loop_var': 'item'}) => {
+    "msg": "File /tmp/role_demo.txt exists: True"
+}
+ok: [localhost] => (item={'changed': False, 'stat': {'exists': True, 'path': '/tmp/conditional_role_result.txt', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 81, 'inode': 37755361, 'dev': 66309, 'nlink': 1, 'atime': 1780426927.1958656, 'mtime': 1780426923.2529244, 'ctime': 1780426923.7949164, 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False, 'blocks': 8, 'block_size': 4096, 'device_type': 0, 'readable': True, 'writeable': True, 'executable': False, 'pw_name': 'root', 'gr_name': 'root', 'checksum': '3bf59affc7677bec6abb2d1c80fc8923dcf4a0e2', 'mimetype': 'text/plain', 'charset': 'us-ascii', 'version': '1027558837', 'attributes': [], 'attr_flags': ''}, 'invocation': {'module_args': {'path': '/tmp/conditional_role_result.txt', 'follow': False, 'get_md5': False, 'get_checksum': True, 'get_mime': True, 'get_attributes': True, 'checksum_algorithm': 'sha1'}}, 'failed': False, 'item': '/tmp/conditional_role_result.txt', 'ansible_loop_var': 'item'}) => {
+    "msg": "File /tmp/conditional_role_result.txt exists: True"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

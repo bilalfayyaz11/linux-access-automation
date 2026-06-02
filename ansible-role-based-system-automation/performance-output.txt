@@ -1,0 +1,61 @@
+
+PLAY [Role Performance Testing] ************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Record start time] *******************************************************
+ok: [localhost]
+
+TASK [Execute selected roles with timing] **************************************
+
+TASK [user_management : Ensure required groups exist] **************************
+skipping: [localhost]
+
+TASK [user_management : Create users] ******************************************
+ok: [localhost] => (item=None)
+ok: [localhost]
+
+TASK [user_management : Set up SSH keys for users] *****************************
+skipping: [localhost] => (item={'name': 'perftest', 'groups': ['wheel']}) 
+skipping: [localhost]
+
+TASK [user_management : Remove users] ******************************************
+skipping: [localhost]
+
+TASK [user_management : Display user management summary] ***********************
+ok: [localhost] => {
+    "msg": "User management completed. Created 1 users, removed 0 users."
+}
+
+TASK [file_management : Create directories] ************************************
+skipping: [localhost]
+
+TASK [file_management : Create files from templates] ***************************
+skipping: [localhost] => (item={'dest': '/tmp/perftest.txt', 'content': 'Performance test file created by reusable roles.', 'owner': 'root', 'group': 'root', 'mode': '0644'}) 
+skipping: [localhost]
+
+TASK [file_management : Create files with inline content] **********************
+ok: [localhost] => (item={'dest': '/tmp/perftest.txt', 'content': 'Performance test file created by reusable roles.', 'owner': 'root', 'group': 'root', 'mode': '0644'})
+
+TASK [file_management : Copy static files] *************************************
+skipping: [localhost] => (item={'dest': '/tmp/perftest.txt', 'content': 'Performance test file created by reusable roles.', 'owner': 'root', 'group': 'root', 'mode': '0644'}) 
+skipping: [localhost]
+
+TASK [file_management : Remove unwanted files] *********************************
+skipping: [localhost]
+
+TASK [Refresh facts after execution] *******************************************
+ok: [localhost]
+
+TASK [Record end time] *********************************************************
+ok: [localhost]
+
+TASK [Calculate execution time] ************************************************
+ok: [localhost] => {
+    "msg": "Total execution time: 4 seconds"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=8    changed=0    unreachable=0    failed=0    skipped=7    rescued=0    ignored=0   
+

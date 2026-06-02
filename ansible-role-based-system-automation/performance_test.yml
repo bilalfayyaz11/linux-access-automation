@@ -1,0 +1,40 @@
+---
+- name: Role Performance Testing
+  hosts: localhost
+  connection: local
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Record start time
+      ansible.builtin.set_fact:
+        start_time: "{{ ansible_date_time.epoch }}"
+
+    - name: Execute selected roles with timing
+      ansible.builtin.include_role:
+        name: "{{ item }}"
+      loop:
+        - user_management
+        - file_management
+      vars:
+        users_to_create:
+          - name: perftest
+            groups:
+              - wheel
+        files_to_create:
+          - dest: /tmp/perftest.txt
+            content: "Performance test file created by reusable roles."
+            owner: root
+            group: root
+            mode: '0644'
+
+    - name: Refresh facts after execution
+      ansible.builtin.setup:
+
+    - name: Record end time
+      ansible.builtin.set_fact:
+        end_time: "{{ ansible_date_time.epoch }}"
+
+    - name: Calculate execution time
+      ansible.builtin.debug:
+        msg: "Total execution time: {{ end_time | int - start_time | int }} seconds"

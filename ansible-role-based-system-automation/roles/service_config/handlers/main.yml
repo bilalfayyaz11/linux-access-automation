@@ -1,0 +1,8 @@
+---
+- name: restart managed services
+  ansible.builtin.service:
+    name: "{{ item.name }}"
+    state: restarted
+  loop: "{{ services_to_manage }}"
+  when: services_to_manage is defined
+  become: true

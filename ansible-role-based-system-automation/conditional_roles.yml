@@ -1,0 +1,37 @@
+---
+- name: Conditional Role Execution
+  hosts: localhost
+  connection: local
+  become: true
+  gather_facts: true
+
+  vars:
+    install_web_server: false
+    manage_users: true
+
+  roles:
+    - role: user_management
+      when: manage_users | bool
+      vars:
+        users_to_create:
+          - name: conditional_user
+            groups:
+              - wheel
+            shell: /bin/bash
+
+    - role: file_management
+      when: manage_users | bool
+      vars:
+        files_to_create:
+          - dest: /tmp/conditional_role_result.txt
+            content: |
+              Conditional role execution completed on {{ inventory_hostname }}.
+              User management enabled: {{ manage_users }}
+            owner: root
+            group: root
+            mode: '0644'
+
+  post_tasks:
+    - name: Display configuration summary
+      ansible.builtin.debug:
+        msg: "Conditional execution completed. manage_users={{ manage_users }}, install_web_server={{ install_web_server }}"
