@@ -1,0 +1,22 @@
+Starting Nmap 7.92 ( https://nmap.org ) at 2026-06-02 13:37 UTC
+Nmap scan report for ip-172-31-10-37.ec2.internal (172.31.10.37)
+Host is up (0.0011s latency).
+Nmap scan report for ip-172-31-10-41.ec2.internal (172.31.10.41)
+Host is up (0.00051s latency).
+Nmap scan report for ip-172-31-10-59.ec2.internal (172.31.10.59)
+Host is up (0.0017s latency).
+Nmap scan report for ip-172-31-10-77.ec2.internal (172.31.10.77)
+Host is up (0.0021s latency).
+Nmap scan report for ip-172-31-10-204.ec2.internal (172.31.10.204)
+Host is up (0.0011s latency).
+Nmap scan report for ip-172-31-10-219.ec2.internal (172.31.10.219)
+Host is up (0.00086s latency).
+Nmap scan report for ip-172-31-10-222.ec2.internal (172.31.10.222)
+Host is up (0.0012s latency).
+Nmap scan report for ip-172-31-10-232.ec2.internal (172.31.10.232)
+Host is up (0.00099s latency).
+Nmap scan report for ip-172-31-10-247.ec2.internal (172.31.10.247)
+Host is up (0.00018s latency).
+Nmap scan report for ip-172-31-10-250.ec2.internal (172.31.10.250)
+Host is up (0.00083s latency).
+Nmap done: 256 IP addresses (10 hosts up) scanned in 6.11 seconds

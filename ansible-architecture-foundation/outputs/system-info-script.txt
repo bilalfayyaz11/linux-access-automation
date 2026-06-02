@@ -1,0 +1,6 @@
+control1 | CHANGED | rc=0 >>
+System Information:
+Hostname: ip-172-31-10-247.ec2.internal
+OS: PRETTY_NAME="CentOS Stream 9"
+Memory: Mem:            15Gi       1.4Gi        11Gi        19Mi       2.6Gi        13Gi
+Disk: /dev/nvme0n1p4   29G  7.9G   21G  28% /

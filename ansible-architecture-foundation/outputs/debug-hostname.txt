@@ -1,0 +1,3 @@
+control1 | SUCCESS => {
+    "ansible_hostname": "VARIABLE IS NOT DEFINED!"
+}

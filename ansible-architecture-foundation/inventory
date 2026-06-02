@@ -1,0 +1,14 @@
+[control]
+control1 ansible_connection=local
+
+[webservers]
+control1 ansible_connection=local
+
+[databases]
+control1 ansible_connection=local
+
+[frontend:children]
+webservers
+
+[backend:children]
+databases

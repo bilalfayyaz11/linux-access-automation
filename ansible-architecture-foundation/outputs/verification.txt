@@ -1,0 +1,74 @@
+=== Ansible Version ===
+ansible [core 2.14.18]
+  config file = /home/centos/ansible/ansible.cfg
+  configured module search path = ['/home/centos/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/lib/python3.9/site-packages/ansible
+  ansible collection location = /home/centos/.ansible/collections:/usr/share/ansible/collections
+  executable location = /usr/bin/ansible
+  python version = 3.9.25 (main, Nov 10 2025, 00:00:00) [GCC 11.5.0 20240719 (Red Hat 11.5.0-14)] (/usr/bin/python3)
+  jinja version = 3.1.2
+  libyaml = True
+
+=== Inventory Validation ===
+{
+    "_meta": {
+        "hostvars": {
+            "control1": {
+                "ansible_connection": "local"
+            }
+        }
+    },
+    "all": {
+        "children": [
+            "ungrouped",
+            "control",
+            "frontend",
+            "backend"
+        ]
+    },
+    "backend": {
+        "children": [
+            "databases"
+        ]
+    },
+    "control": {
+        "hosts": [
+            "control1"
+        ]
+    },
+    "databases": {
+        "hosts": [
+            "control1"
+        ]
+    },
+    "frontend": {
+        "children": [
+            "webservers"
+        ]
+    },
+    "webservers": {
+        "hosts": [
+            "control1"
+        ]
+    }
+}
+
+=== Connectivity Test ===
+control1 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+
+=== Hostname Facts ===
+control1 | SUCCESS => {
+    "ansible_facts": {
+        "ansible_hostname": "ip-172-31-10-247",
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false
+}
+
+=== Verification Complete ===

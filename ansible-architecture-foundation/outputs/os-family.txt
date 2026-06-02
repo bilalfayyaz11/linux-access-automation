@@ -1,0 +1,7 @@
+control1 | SUCCESS => {
+    "ansible_facts": {
+        "ansible_os_family": "RedHat",
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false
+}

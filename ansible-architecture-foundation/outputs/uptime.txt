@@ -1,0 +1,2 @@
+control1 | CHANGED | rc=0 >>
+ 13:39:43 up 7 min,  3 users,  load average: 0.75, 0.66, 0.32

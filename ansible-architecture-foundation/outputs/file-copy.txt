@@ -1,0 +1,18 @@
+control1 | CHANGED => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": true,
+    "checksum": "9b02adc484350380842c4c735d57a1ad071ff0a1",
+    "dest": "/tmp/ansible-test.txt",
+    "gid": 0,
+    "group": "root",
+    "md5sum": "914d64e550abfbc035d79d50e214e47d",
+    "mode": "0644",
+    "owner": "root",
+    "secontext": "unconfined_u:object_r:user_home_t:s0",
+    "size": 19,
+    "src": "/home/centos/.ansible/tmp/ansible-tmp-1780407621.763799-8383-279992709458871/source",
+    "state": "file",
+    "uid": 0
+}

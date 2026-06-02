@@ -1,0 +1,15 @@
+control1 | CHANGED => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": true,
+    "gid": 0,
+    "group": "root",
+    "mode": "0644",
+    "owner": "testuser",
+    "path": "/tmp/ansible-test.txt",
+    "secontext": "unconfined_u:object_r:user_home_t:s0",
+    "size": 19,
+    "state": "file",
+    "uid": 1002
+}

@@ -1,0 +1,10 @@
+web1 | UNREACHABLE! => {
+    "changed": false,
+    "msg": "Failed to connect to the host via ssh: centos@172.31.10.37: Permission denied (publickey).",
+    "unreachable": true
+}
+web2 | UNREACHABLE! => {
+    "changed": false,
+    "msg": "Failed to connect to the host via ssh: centos@172.31.10.59: Permission denied (publickey).",
+    "unreachable": true
+}

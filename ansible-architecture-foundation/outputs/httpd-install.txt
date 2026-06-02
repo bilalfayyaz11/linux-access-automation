@@ -1,0 +1,21 @@
+control1 | CHANGED => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": true,
+    "msg": "",
+    "rc": 0,
+    "results": [
+        "Installed: apr-util-1.6.1-23.el9.x86_64",
+        "Installed: httpd-filesystem-2.4.62-13.el9.noarch",
+        "Installed: apr-util-bdb-1.6.1-23.el9.x86_64",
+        "Installed: httpd-core-2.4.62-13.el9.x86_64",
+        "Installed: httpd-tools-2.4.62-13.el9.x86_64",
+        "Installed: mod_http2-2.0.26-6.el9.x86_64",
+        "Installed: apr-util-openssl-1.6.1-23.el9.x86_64",
+        "Installed: httpd-2.4.62-13.el9.x86_64",
+        "Installed: centos-logos-httpd-90.9-1.el9.noarch",
+        "Installed: apr-1.7.0-12.el9.x86_64",
+        "Installed: mod_lua-2.4.62-13.el9.x86_64"
+    ]
+}

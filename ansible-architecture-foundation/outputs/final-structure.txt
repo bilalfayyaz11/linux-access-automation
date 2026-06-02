@@ -1,0 +1,33 @@
+.
+├── ansible.cfg
+├── group_vars
+├── host_vars
+├── inventories
+│   └── production
+├── inventory
+├── outputs
+│   ├── app-directory.txt
+│   ├── debug-hostname.txt
+│   ├── disk-usage.txt
+│   ├── file-copy.txt
+│   ├── file-permissions.txt
+│   ├── hostname-facts.txt
+│   ├── httpd-install.txt
+│   ├── inventory-validation.json
+│   ├── network-discovery.txt
+│   ├── os-family.txt
+│   ├── ping-all.txt
+│   ├── ping-local-fallback.txt
+│   ├── ping-webservers.txt
+│   ├── script-copy.txt
+│   ├── ssh-discovery.txt
+│   ├── sshd-service.txt
+│   ├── system-info-script.txt
+│   ├── uptime.txt
+│   └── user-create.txt
+├── playbooks
+├── roles
+└── scripts
+    └── system-info.sh
+
+7 directories, 23 files

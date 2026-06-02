@@ -1,0 +1,32 @@
+[webservers]
+web1 ansible_host=172.31.10.37 http_port=80
+web2 ansible_host=172.31.10.59 http_port=8080
+
+[databases]
+db1 ansible_host=172.31.10.77 mysql_port=3306
+
+[loadbalancers]
+lb1 ansible_host=172.31.10.204
+
+[frontend:children]
+webservers
+loadbalancers
+
+[backend:children]
+databases
+
+[webservers:vars]
+server_type=web
+environment=production
+
+[databases:vars]
+server_type=database
+environment=production
+
+[loadbalancers:vars]
+server_type=loadbalancer
+environment=production
+
+[all:vars]
+ansible_user=centos
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'

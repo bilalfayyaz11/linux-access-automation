@@ -1,0 +1,42 @@
+{
+    "_meta": {
+        "hostvars": {
+            "control1": {
+                "ansible_connection": "local"
+            }
+        }
+    },
+    "all": {
+        "children": [
+            "ungrouped",
+            "control",
+            "frontend",
+            "backend"
+        ]
+    },
+    "backend": {
+        "children": [
+            "databases"
+        ]
+    },
+    "control": {
+        "hosts": [
+            "control1"
+        ]
+    },
+    "databases": {
+        "hosts": [
+            "control1"
+        ]
+    },
+    "frontend": {
+        "children": [
+            "webservers"
+        ]
+    },
+    "webservers": {
+        "hosts": [
+            "control1"
+        ]
+    }
+}
