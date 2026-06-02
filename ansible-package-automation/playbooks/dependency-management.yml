@@ -1,0 +1,26 @@
+---
+- name: Dependency Management
+  hosts: managed
+  become: yes
+
+  vars:
+    dependency_packages:
+      - python3-pip
+      - gcc
+      - make
+
+  tasks:
+    - name: Install dependency packages
+      dnf:
+        name: "{{ dependency_packages }}"
+        state: present
+
+    - name: Verify dependency integrity
+      command: dnf check
+      register: dependency_check
+      changed_when: false
+      failed_when: false
+
+    - name: Display dependency results
+      debug:
+        var: dependency_check.stdout_lines

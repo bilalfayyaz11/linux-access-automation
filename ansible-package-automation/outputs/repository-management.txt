@@ -1,0 +1,31 @@
+
+PLAY [Repository Management] ***************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Install EPEL repository] *************************************************
+changed: [localhost]
+
+TASK [Refresh package cache] ***************************************************
+ok: [localhost]
+
+TASK [Show enabled repositories] ***********************************************
+ok: [localhost]
+
+TASK [Display repositories] ****************************************************
+ok: [localhost] => {
+    "repo_list.stdout_lines": [
+        "repo id             repo name",
+        "appstream           CentOS Stream 9 - AppStream",
+        "baseos              CentOS Stream 9 - BaseOS",
+        "epel                Extra Packages for Enterprise Linux 9 - x86_64",
+        "epel-cisco-openh264 Extra Packages for Enterprise Linux 9 openh264 (From Cisco) - x86_64",
+        "epel-next           Extra Packages for Enterprise Linux 9 - Next - x86_64",
+        "extras-common       CentOS Stream 9 - Extras packages"
+    ]
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=5    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

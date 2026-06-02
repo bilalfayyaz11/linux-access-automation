@@ -1,0 +1,23 @@
+---
+- name: Repository Management
+  hosts: managed
+  become: yes
+
+  tasks:
+    - name: Install EPEL repository
+      dnf:
+        name: epel-release
+        state: present
+
+    - name: Refresh package cache
+      dnf:
+        update_cache: yes
+
+    - name: Show enabled repositories
+      command: dnf repolist
+      register: repo_list
+      changed_when: false
+
+    - name: Display repositories
+      debug:
+        var: repo_list.stdout_lines

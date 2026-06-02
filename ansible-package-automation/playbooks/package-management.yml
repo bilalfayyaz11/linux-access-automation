@@ -1,0 +1,26 @@
+---
+- name: Basic Package Management
+  hosts: managed
+  become: yes
+
+  vars:
+    packages_to_install:
+      - git
+      - wget
+      - curl
+      - vim
+
+  tasks:
+    - name: Update package cache
+      dnf:
+        update_cache: yes
+
+    - name: Install required packages
+      dnf:
+        name: "{{ packages_to_install }}"
+        state: present
+
+    - name: Verify packages
+      command: rpm -q {{ item }}
+      loop: "{{ packages_to_install }}"
+      changed_when: false

@@ -1,0 +1,21 @@
+
+PLAY [Basic Package Management] ************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Update package cache] ****************************************************
+ok: [localhost]
+
+TASK [Install required packages] ***********************************************
+changed: [localhost]
+
+TASK [Verify packages] *********************************************************
+ok: [localhost] => (item=git)
+ok: [localhost] => (item=wget)
+ok: [localhost] => (item=curl)
+failed: [localhost] (item=vim) => {"ansible_loop_var": "item", "changed": false, "cmd": ["rpm", "-q", "vim"], "delta": "0:00:00.018864", "end": "2026-06-02 16:02:58.959413", "item": "vim", "msg": "non-zero return code", "rc": 1, "start": "2026-06-02 16:02:58.940549", "stderr": "", "stderr_lines": [], "stdout": "package vim is not installed", "stdout_lines": ["package vim is not installed"]}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=3    changed=1    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+
