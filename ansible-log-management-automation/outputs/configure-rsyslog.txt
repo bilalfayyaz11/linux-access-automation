@@ -1,0 +1,26 @@
+
+PLAY [Configure Local System Logging] ******************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Ensure rsyslog is installed] *********************************************
+ok: [localhost]
+
+TASK [Create custom log files] *************************************************
+changed: [localhost] => (item=/var/log/application.log)
+changed: [localhost] => (item=/var/log/security.log)
+changed: [localhost] => (item=/var/log/custom-audit.log)
+
+TASK [Configure custom rsyslog rules] ******************************************
+changed: [localhost]
+
+TASK [Enable and start rsyslog] ************************************************
+ok: [localhost]
+
+RUNNING HANDLER [restart rsyslog] **********************************************
+changed: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=6    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

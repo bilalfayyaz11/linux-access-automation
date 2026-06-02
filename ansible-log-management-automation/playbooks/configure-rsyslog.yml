@@ -1,0 +1,47 @@
+---
+- name: Configure Local System Logging
+  hosts: logging_servers
+  become: yes
+
+  tasks:
+    - name: Ensure rsyslog is installed
+      ansible.builtin.package:
+        name: rsyslog
+        state: present
+
+    - name: Create custom log files
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: touch
+        owner: root
+        group: root
+        mode: '0640'
+      loop:
+        - /var/log/application.log
+        - /var/log/security.log
+        - /var/log/custom-audit.log
+
+    - name: Configure custom rsyslog rules
+      ansible.builtin.copy:
+        content: |
+          # Custom logging rules managed by Ansible
+          local0.*    /var/log/application.log
+          local1.*    /var/log/security.log
+          local2.*    /var/log/custom-audit.log
+        dest: /etc/rsyslog.d/50-custom-logging.conf
+        owner: root
+        group: root
+        mode: '0644'
+      notify: restart rsyslog
+
+    - name: Enable and start rsyslog
+      ansible.builtin.systemd:
+        name: rsyslog
+        enabled: yes
+        state: started
+
+  handlers:
+    - name: restart rsyslog
+      ansible.builtin.systemd:
+        name: rsyslog
+        state: restarted

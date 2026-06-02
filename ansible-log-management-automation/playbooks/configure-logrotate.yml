@@ -1,0 +1,61 @@
+---
+- name: Configure Log Rotation and Retention
+  hosts: logging_servers
+  become: yes
+
+  tasks:
+    - name: Ensure logrotate is installed
+      ansible.builtin.package:
+        name: logrotate
+        state: present
+
+    - name: Configure custom log rotation policy
+      ansible.builtin.copy:
+        content: |
+          /var/log/application.log
+          /var/log/security.log
+          /var/log/custom-audit.log {
+              daily
+              rotate 14
+              missingok
+              notifempty
+              compress
+              delaycompress
+              create 0640 root root
+              sharedscripts
+              postrotate
+                  /bin/systemctl reload rsyslog.service > /dev/null 2>&1 || true
+              endscript
+          }
+        dest: /etc/logrotate.d/custom-logging
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Create log monitoring script
+      ansible.builtin.copy:
+        content: |
+          #!/bin/bash
+          echo "===== LOG HEALTH REPORT ====="
+          echo "Date: $(date)"
+          echo
+          echo "===== LOG FILE SIZES ====="
+          ls -lh /var/log/application.log /var/log/security.log /var/log/custom-audit.log 2>/dev/null
+          echo
+          echo "===== LOG DISK USAGE ====="
+          df -h /var/log
+          echo
+          echo "===== RSYSLOG STATUS ====="
+          systemctl is-active rsyslog
+        dest: /usr/local/bin/log-health-check.sh
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Schedule daily log health check
+      ansible.builtin.cron:
+        name: "Daily log health check"
+        minute: "0"
+        hour: "3"
+        job: "/usr/local/bin/log-health-check.sh >> /var/log/log-health-check.log 2>&1"
+        user: root

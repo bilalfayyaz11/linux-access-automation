@@ -1,0 +1,21 @@
+
+PLAY [Configure Log Rotation and Retention] ************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Ensure logrotate is installed] *******************************************
+ok: [localhost]
+
+TASK [Configure custom log rotation policy] ************************************
+changed: [localhost]
+
+TASK [Create log monitoring script] ********************************************
+changed: [localhost]
+
+TASK [Schedule daily log health check] *****************************************
+changed: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=5    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

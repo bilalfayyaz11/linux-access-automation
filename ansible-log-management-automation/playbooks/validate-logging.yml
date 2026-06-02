@@ -1,0 +1,41 @@
+---
+- name: Validate Logging Configuration
+  hosts: logging_servers
+  become: yes
+
+  tasks:
+    - name: Test rsyslog syntax
+      ansible.builtin.command: rsyslogd -N1
+      register: rsyslog_syntax
+      changed_when: false
+
+    - name: Generate application test log
+      ansible.builtin.command: logger -p local0.info "Application logging validation from Ansible"
+      changed_when: false
+
+    - name: Generate security test log
+      ansible.builtin.command: logger -p local1.warning "Security logging validation from Ansible"
+      changed_when: false
+
+    - name: Generate audit test log
+      ansible.builtin.command: logger -p local2.notice "Audit logging validation from Ansible"
+      changed_when: false
+
+    - name: Reload rsyslog after test messages
+      ansible.builtin.systemd:
+        name: rsyslog
+        state: reloaded
+
+    - name: Test logrotate configuration
+      ansible.builtin.command: logrotate -d /etc/logrotate.conf
+      register: logrotate_debug
+      changed_when: false
+
+    - name: Run log health check
+      ansible.builtin.command: /usr/local/bin/log-health-check.sh
+      register: health_report
+      changed_when: false
+
+    - name: Display health report
+      ansible.builtin.debug:
+        msg: "{{ health_report.stdout_lines }}"

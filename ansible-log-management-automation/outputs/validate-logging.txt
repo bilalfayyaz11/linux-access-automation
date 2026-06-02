@@ -1,0 +1,50 @@
+
+PLAY [Validate Logging Configuration] ******************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Test rsyslog syntax] *****************************************************
+ok: [localhost]
+
+TASK [Generate application test log] *******************************************
+ok: [localhost]
+
+TASK [Generate security test log] **********************************************
+ok: [localhost]
+
+TASK [Generate audit test log] *************************************************
+ok: [localhost]
+
+TASK [Reload rsyslog after test messages] **************************************
+changed: [localhost]
+
+TASK [Test logrotate configuration] ********************************************
+ok: [localhost]
+
+TASK [Run log health check] ****************************************************
+ok: [localhost]
+
+TASK [Display health report] ***************************************************
+ok: [localhost] => {
+    "msg": [
+        "===== LOG HEALTH REPORT =====",
+        "Date: Tue Jun  2 17:25:00 UTC 2026",
+        "",
+        "===== LOG FILE SIZES =====",
+        "-rw-r-----. 1 root root 89 Jun  2 17:24 /var/log/application.log",
+        "-rw-r-----. 1 root root 83 Jun  2 17:24 /var/log/custom-audit.log",
+        "-rw-r-----. 1 root root 86 Jun  2 17:24 /var/log/security.log",
+        "",
+        "===== LOG DISK USAGE =====",
+        "Filesystem      Size  Used Avail Use% Mounted on",
+        "/dev/nvme0n1p4   29G  7.2G   22G  26% /",
+        "",
+        "===== RSYSLOG STATUS =====",
+        "active"
+    ]
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=9    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

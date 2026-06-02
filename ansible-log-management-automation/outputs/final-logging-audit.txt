@@ -1,0 +1,59 @@
+===== PROJECT TREE =====
+.
+├── ansible.cfg
+├── inventory
+│   └── hosts
+├── outputs
+│   ├── configure-logrotate.txt
+│   ├── configure-rsyslog.txt
+│   ├── final-logging-audit.txt
+│   └── validate-logging.txt
+├── playbooks
+│   ├── configure-logrotate.yml
+│   ├── configure-rsyslog.yml
+│   └── validate-logging.yml
+├── reports
+├── scripts
+└── templates
+
+6 directories, 9 files
+===== RSYSLOG STATUS =====
+● rsyslog.service - System Logging Service
+     Loaded: loaded (/usr/lib/systemd/system/rsyslog.service; enabled; preset: enabled)
+     Active: active (running) since Tue 2026-06-02 17:24:40 UTC; 36s ago
+       Docs: man:rsyslogd(8)
+             https://www.rsyslog.com/doc/
+    Process: 6761 ExecReload=/usr/bin/kill -HUP $MAINPID (code=exited, status=0/SUCCESS)
+   Main PID: 6435 (rsyslogd)
+      Tasks: 3 (limit: 98000)
+     Memory: 1.2M (peak: 2.4M)
+        CPU: 115ms
+     CGroup: /system.slice/rsyslog.service
+             └─6435 /usr/sbin/rsyslogd -n
+
+Jun 02 17:24:40 ip-172-31-10-160.ec2.internal systemd[1]: Starting System Logging Service...
+Jun 02 17:24:40 ip-172-31-10-160.ec2.internal rsyslogd[6435]: [origin software="rsyslogd" swVersion="8.2510.0-2.el9" x-pid="6435" x-info="https://www.rsyslog.com"] start
+===== RSYSLOG SYNTAX =====
+===== CUSTOM LOG FILES =====
+-rw-r-----. 1 root root 89 Jun  2 17:24 /var/log/application.log
+-rw-r-----. 1 root root 83 Jun  2 17:24 /var/log/custom-audit.log
+-rw-r-----. 1 root root 86 Jun  2 17:24 /var/log/security.log
+===== LOGROTATE CONFIG =====
+===== CRON JOBS =====
+#Ansible: Daily log health check
+0 3 * * * /usr/local/bin/log-health-check.sh >> /var/log/log-health-check.log 2>&1
+===== LOG HEALTH CHECK =====
+===== LOG HEALTH REPORT =====
+Date: Tue Jun  2 17:25:17 UTC 2026
+
+===== LOG FILE SIZES =====
+-rw-r-----. 1 root root 89 Jun  2 17:24 /var/log/application.log
+-rw-r-----. 1 root root 83 Jun  2 17:24 /var/log/custom-audit.log
+-rw-r-----. 1 root root 86 Jun  2 17:24 /var/log/security.log
+
+===== LOG DISK USAGE =====
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/nvme0n1p4   29G  7.2G   22G  26% /
+
+===== RSYSLOG STATUS =====
+active
