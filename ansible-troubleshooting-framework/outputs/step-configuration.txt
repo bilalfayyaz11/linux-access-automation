@@ -1,0 +1,13 @@
+
+PLAY [Complex Web Application Deployment] **************************************
+Perform task: TASK: Gathering Facts (N)o/(y)es/(c)ontinue: 
+Perform task: TASK: Gathering Facts (N)o/(y)es/(c)ontinue: *********************
+Perform task: TASK: Configure Apache virtual host (N)o/(y)es/(c)ontinue: 
+Perform task: TASK: Configure Apache virtual host (N)o/(y)es/(c)ontinue: *******
+
+TASK [Configure Apache virtual host] *******************************************
+ok: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

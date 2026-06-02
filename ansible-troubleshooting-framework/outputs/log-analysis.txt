@@ -1,0 +1,32 @@
+
+PLAY [Advanced Log Analysis and Troubleshooting] *******************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Create remote log analysis directory] ************************************
+changed: [localhost]
+
+TASK [Analyze system logs for critical events] *********************************
+ok: [localhost]
+
+TASK [Analyze Apache error patterns] *******************************************
+ok: [localhost]
+
+TASK [Analyze authentication logs] *********************************************
+ok: [localhost]
+
+TASK [Generate summary troubleshooting report] *********************************
+ok: [localhost]
+
+TASK [Fetch analysis report] ***************************************************
+changed: [localhost]
+
+TASK [Display report location] *************************************************
+ok: [localhost] => {
+    "msg": "Troubleshooting report saved to: ./reports/localhost-troubleshooting-report.log"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=8    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

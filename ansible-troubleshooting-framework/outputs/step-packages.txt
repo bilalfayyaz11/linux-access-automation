@@ -1,0 +1,9 @@
+
+PLAY [Complex Web Application Deployment] **************************************
+Perform task: TASK: Gathering Facts (N)o/(y)es/(c)ontinue: 
+Perform task: TASK: Gathering Facts (N)o/(y)es/(c)ontinue: *********************
+Perform task: TASK: Install required packages (N)o/(y)es/(c)ontinue: 
+Perform task: TASK: Install required packages (N)o/(y)es/(c)ontinue: ***********
+
+PLAY RECAP *********************************************************************
+

@@ -1,0 +1,48 @@
+---
+- name: Problematic Playbook for Troubleshooting Practice
+  hosts: web_servers
+  become: yes
+
+  vars:
+    app_name: "{{ undefined_variable }}"
+    web_port: "eight-zero-eight-zero"
+
+  tasks:
+    - name: Install packages with typo
+      dnf:
+        name:
+          - httpd
+          - php
+          - php-mysqll
+        state: present
+
+    - name: Create directory with wrong owner
+      file:
+        path: "/opt/{{ app_name }}"
+        state: directory
+        owner: nonexistent_user
+        group: apache
+        mode: '0755'
+
+    - name: Download from invalid URL
+      get_url:
+        url: "https://invalid-domain-12345.com/app.zip"
+        dest: "/tmp/app.zip"
+        timeout: 5
+
+    - name: Use incorrect template parameter
+      template:
+        source: templates/vhost.conf.j2
+        dest: "/etc/httpd/conf.d/app.conf"
+
+    - name: Reference non-existent handler
+      systemd:
+        name: httpd
+        state: started
+      notify: restart_apache_server
+
+  handlers:
+    - name: restart apache
+      systemd:
+        name: httpd
+        state: restarted

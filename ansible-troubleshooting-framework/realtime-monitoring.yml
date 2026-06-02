@@ -1,0 +1,59 @@
+---
+- name: Setup Real-time Log Monitoring
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install log monitoring dependencies
+      dnf:
+        name:
+          - rsyslog
+          - logrotate
+        state: present
+
+    - name: Configure custom rsyslog rules
+      blockinfile:
+        path: /etc/rsyslog.conf
+        block: |
+          # Custom log monitoring rules
+          *.emerg                                                 /var/log/emergency.log
+          *.alert                                                 /var/log/alerts.log
+          *.crit                                                  /var/log/critical.log
+          local0.*                                                /var/log/applications.log
+          local1.*                                                /var/log/custom-app.log
+        marker: "# {mark} ANSIBLE MANAGED BLOCK - Log Monitoring"
+      notify: restart rsyslog
+
+    - name: Create log monitoring script
+      copy:
+        content: |
+          #!/bin/bash
+
+          LOG_DIR="/var/log"
+
+          case "$1" in
+              check)
+                  find "$LOG_DIR" -name "*.log" -mmin -15 -exec grep -l -iE "critical|emergency|panic|failed" {} \; 2>/dev/null
+                  ;;
+              status)
+                  systemctl status rsyslog --no-pager
+                  ;;
+              *)
+                  echo "Usage: $0 {check|status}"
+                  exit 1
+                  ;;
+          esac
+        dest: /usr/local/bin/log-monitor.sh
+        mode: '0755'
+
+    - name: Create scheduled critical log check
+      cron:
+        name: "Critical log check"
+        minute: "*/15"
+        job: "/usr/local/bin/log-monitor.sh check > /tmp/critical-check.log 2>&1"
+
+  handlers:
+    - name: restart rsyslog
+      systemd:
+        name: rsyslog
+        state: restarted

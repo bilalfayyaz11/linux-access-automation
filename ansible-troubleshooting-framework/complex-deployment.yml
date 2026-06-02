@@ -1,0 +1,55 @@
+---
+- name: Complex Web Application Deployment
+  hosts: web_servers
+  become: yes
+
+  vars:
+    app_name: "mywebapp"
+    app_version: "2.1.0"
+    web_port: 8080
+    db_host: "127.0.0.1"
+
+  tasks:
+
+    - name: Install required packages
+      dnf:
+        name:
+          - httpd
+          - php
+          - wget
+          - unzip
+        state: present
+      tags: packages
+
+    - name: Create application directory
+      file:
+        path: "/opt/{{ app_name }}"
+        state: directory
+        mode: '0755'
+      tags: directories
+
+    - name: Create application file
+      copy:
+        content: "Ansible Troubleshooting Demo"
+        dest: "/opt/{{ app_name }}/index.html"
+      tags: deploy
+
+    - name: Configure Apache virtual host
+      template:
+        src: templates/vhost.conf.j2
+        dest: "/etc/httpd/conf.d/{{ app_name }}.conf"
+      notify: restart apache
+      tags: configuration
+
+    - name: Start Apache
+      systemd:
+        name: httpd
+        state: started
+        enabled: yes
+      tags: services
+
+  handlers:
+    - name: restart apache
+      systemd:
+        name: httpd
+        state: restarted

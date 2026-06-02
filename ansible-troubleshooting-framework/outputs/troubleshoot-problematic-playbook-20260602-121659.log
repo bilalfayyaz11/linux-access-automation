@@ -1,0 +1,62 @@
+=== ANSIBLE TROUBLESHOOTING METHODOLOGY ===
+Playbook: problematic-playbook.yml
+Timestamp: Tue Jun  2 12:16:59 UTC 2026
+============================================
+Step 1: Syntax Check...
+
+playbook: problematic-playbook.yml
+Step 2: Task Listing...
+
+playbook: problematic-playbook.yml
+
+  play #1 (web_servers): Problematic Playbook for Troubleshooting Practice	TAGS: []
+    tasks:
+      Install packages with typo	TAGS: []
+      Create directory with wrong owner	TAGS: []
+      Download from invalid URL	TAGS: []
+      Use incorrect template parameter	TAGS: []
+      Reference non-existent handler	TAGS: []
+Step 3: Dry Run...
+
+PLAY [Problematic Playbook for Troubleshooting Practice] ***********************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Install packages with typo] **********************************************
+fatal: [localhost]: FAILED! => {"changed": false, "failures": ["No package php-mysqll available."], "msg": "Failed to install some of the specified packages", "rc": 1, "results": []}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=1    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+
+Step 4: Verbose Dry Run...
+ansible-playbook [core 2.14.18]
+  config file = /etc/ansible/ansible.cfg
+  configured module search path = ['/home/centos/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/lib/python3.9/site-packages/ansible
+  ansible collection location = /home/centos/.ansible/collections:/usr/share/ansible/collections
+  executable location = /usr/bin/ansible-playbook
+  python version = 3.9.25 (main, Nov 10 2025, 00:00:00) [GCC 11.5.0 20240719 (Red Hat 11.5.0-14)] (/usr/bin/python3)
+  jinja version = 3.1.2
+  libyaml = True
+Using /etc/ansible/ansible.cfg as config file
+Skipping callback 'default', as we already have a stdout callback.
+Skipping callback 'minimal', as we already have a stdout callback.
+Skipping callback 'oneline', as we already have a stdout callback.
+
+PLAYBOOK: problematic-playbook.yml *********************************************
+1 plays in problematic-playbook.yml
+
+PLAY [Problematic Playbook for Troubleshooting Practice] ***********************
+
+TASK [Gathering Facts] *********************************************************
+task path: /home/centos/ansible-troubleshooting-automation/problematic-playbook.yml:2
+ok: [localhost]
+
+TASK [Install packages with typo] **********************************************
+task path: /home/centos/ansible-troubleshooting-automation/problematic-playbook.yml:11
+fatal: [localhost]: FAILED! => {"changed": false, "failures": ["No package php-mysqll available."], "msg": "Failed to install some of the specified packages", "rc": 1, "results": []}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=1    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+

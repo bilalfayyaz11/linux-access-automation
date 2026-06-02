@@ -1,0 +1,18 @@
+<VirtualHost *:{{ web_port }}>
+    ServerName localhost
+    DocumentRoot /opt/{{ app_name }}
+
+    <Directory /opt/{{ app_name }}>
+        AllowOverride All
+        Require all granted
+        Options -Indexes +FollowSymLinks
+    </Directory>
+
+    ErrorLog /var/log/httpd/{{ app_name }}_error.log
+    CustomLog /var/log/httpd/{{ app_name }}_access.log combined
+    LogLevel warn
+
+    KeepAlive On
+    MaxKeepAliveRequests 100
+    KeepAliveTimeout 15
+</VirtualHost>

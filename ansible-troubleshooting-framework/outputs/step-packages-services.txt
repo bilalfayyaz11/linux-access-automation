@@ -1,0 +1,21 @@
+
+PLAY [Complex Web Application Deployment] **************************************
+Perform task: TASK: Gathering Facts (N)o/(y)es/(c)ontinue: 
+Perform task: TASK: Gathering Facts (N)o/(y)es/(c)ontinue: *********************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+Perform task: TASK: Install required packages (N)o/(y)es/(c)ontinue: 
+Perform task: TASK: Install required packages (N)o/(y)es/(c)ontinue: ***********
+
+TASK [Install required packages] ***********************************************
+ok: [localhost]
+Perform task: TASK: Start Apache (N)o/(y)es/(c)ontinue: 
+Perform task: TASK: Start Apache (N)o/(y)es/(c)ontinue: ************************
+
+TASK [Start Apache] ************************************************************
+ok: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

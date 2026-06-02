@@ -1,0 +1,52 @@
+
+PLAY [Service Troubleshooting and Log Analysis] ********************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Check service status] ****************************************************
+ok: [localhost] => (item=httpd)
+ok: [localhost] => (item=firewalld)
+ok: [localhost] => (item=sshd)
+
+TASK [Display service status summary] ******************************************
+ok: [localhost] => {
+    "msg": "Service Status Summary:\n- httpd: active\n- firewalld: active\n- sshd: active\n"
+}
+
+TASK [Identify failed services] ************************************************
+ok: [localhost]
+
+TASK [Get failed service details] **********************************************
+skipping: [localhost]
+
+TASK [Display failed service details] ******************************************
+skipping: [localhost]
+
+TASK [Check recent log entries for errors] *************************************
+ok: [localhost] => (item=/var/log/messages)
+ok: [localhost] => (item=/var/log/httpd/error_log)
+ok: [localhost] => (item=/var/log/secure)
+
+TASK [Display log error summary] ***********************************************
+ok: [localhost] => (item={'changed': False, 'stdout': 'No recent errors found', 'stderr': '', 'rc': 0, 'cmd': 'if [ -f "/var/log/messages" ]; then\n  tail -50 "/var/log/messages" | grep -iE "error|failed|critical|panic" || echo "No recent errors found"\nelse\n  echo "Log file not found"\nfi\n', 'start': '2026-06-02 12:16:21.570014', 'end': '2026-06-02 12:16:21.580910', 'delta': '0:00:00.010896', 'msg': '', 'invocation': {'module_args': {'_raw_params': 'if [ -f "/var/log/messages" ]; then\n  tail -50 "/var/log/messages" | grep -iE "error|failed|critical|panic" || echo "No recent errors found"\nelse\n  echo "Log file not found"\nfi\n', '_uses_shell': True, 'stdin_add_newline': True, 'strip_empty_ends': True, 'argv': None, 'chdir': None, 'executable': None, 'creates': None, 'removes': None, 'stdin': None}}, 'stdout_lines': ['No recent errors found'], 'stderr_lines': [], 'failed': False, 'item': '/var/log/messages', 'ansible_loop_var': 'item'}) => {
+    "msg": "Log File: /var/log/messages\nRecent Findings:\nNo recent errors found\n"
+}
+ok: [localhost] => (item={'changed': False, 'stdout': 'No recent errors found', 'stderr': '', 'rc': 0, 'cmd': 'if [ -f "/var/log/httpd/error_log" ]; then\n  tail -50 "/var/log/httpd/error_log" | grep -iE "error|failed|critical|panic" || echo "No recent errors found"\nelse\n  echo "Log file not found"\nfi\n', 'start': '2026-06-02 12:16:21.968226', 'end': '2026-06-02 12:16:21.980861', 'delta': '0:00:00.012635', 'msg': '', 'invocation': {'module_args': {'_raw_params': 'if [ -f "/var/log/httpd/error_log" ]; then\n  tail -50 "/var/log/httpd/error_log" | grep -iE "error|failed|critical|panic" || echo "No recent errors found"\nelse\n  echo "Log file not found"\nfi\n', '_uses_shell': True, 'stdin_add_newline': True, 'strip_empty_ends': True, 'argv': None, 'chdir': None, 'executable': None, 'creates': None, 'removes': None, 'stdin': None}}, 'stdout_lines': ['No recent errors found'], 'stderr_lines': [], 'failed': False, 'item': '/var/log/httpd/error_log', 'ansible_loop_var': 'item'}) => {
+    "msg": "Log File: /var/log/httpd/error_log\nRecent Findings:\nNo recent errors found\n"
+}
+ok: [localhost] => (item={'changed': False, 'stdout': 'No recent errors found', 'stderr': '', 'rc': 0, 'cmd': 'if [ -f "/var/log/secure" ]; then\n  tail -50 "/var/log/secure" | grep -iE "error|failed|critical|panic" || echo "No recent errors found"\nelse\n  echo "Log file not found"\nfi\n', 'start': '2026-06-02 12:16:22.386246', 'end': '2026-06-02 12:16:22.395891', 'delta': '0:00:00.009645', 'msg': '', 'invocation': {'module_args': {'_raw_params': 'if [ -f "/var/log/secure" ]; then\n  tail -50 "/var/log/secure" | grep -iE "error|failed|critical|panic" || echo "No recent errors found"\nelse\n  echo "Log file not found"\nfi\n', '_uses_shell': True, 'stdin_add_newline': True, 'strip_empty_ends': True, 'argv': None, 'chdir': None, 'executable': None, 'creates': None, 'removes': None, 'stdin': None}}, 'stdout_lines': ['No recent errors found'], 'stderr_lines': [], 'failed': False, 'item': '/var/log/secure', 'ansible_loop_var': 'item'}) => {
+    "msg": "Log File: /var/log/secure\nRecent Findings:\nNo recent errors found\n"
+}
+
+TASK [Analyze system resource usage] *******************************************
+ok: [localhost]
+
+TASK [Display system resource analysis] ****************************************
+ok: [localhost] => {
+    "msg": "System Resource Analysis:\n=== CPU Usage ===\n%Cpu(s):  3.2 us,  7.4 sy,  0.0 ni, 86.3 id,  0.0 wa,  1.1 hi,  0.0 si,  2.1 st\n=== Memory Usage ===\n               total        used        free      shared  buff/cache   available\nMem:           15571        1101       13801          22         980       14469\nSwap:              0           0           0\n=== Load Average ===\n 12:16:23 up 6 min,  1 user,  load average: 0.69, 0.42, 0.20\n"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=8    changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
+

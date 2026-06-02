@@ -1,0 +1,41 @@
+
+PLAY [Complex Web Application Deployment] **************************************
+Perform task: TASK: Gathering Facts (N)o/(y)es/(c)ontinue: 
+Perform task: TASK: Gathering Facts (N)o/(y)es/(c)ontinue: *********************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+Perform task: TASK: Install required packages (N)o/(y)es/(c)ontinue: 
+Perform task: TASK: Install required packages (N)o/(y)es/(c)ontinue: ***********
+
+TASK [Install required packages] ***********************************************
+changed: [localhost]
+Perform task: TASK: Create application directory (N)o/(y)es/(c)ontinue: 
+Perform task: TASK: Create application directory (N)o/(y)es/(c)ontinue: ********
+
+TASK [Create application directory] ********************************************
+changed: [localhost]
+Perform task: TASK: Create application file (N)o/(y)es/(c)ontinue: 
+Perform task: TASK: Create application file (N)o/(y)es/(c)ontinue: *************
+
+TASK [Create application file] *************************************************
+changed: [localhost]
+Perform task: TASK: Configure Apache virtual host (N)o/(y)es/(c)ontinue: 
+Perform task: TASK: Configure Apache virtual host (N)o/(y)es/(c)ontinue: *******
+
+TASK [Configure Apache virtual host] *******************************************
+changed: [localhost]
+Perform task: TASK: Start Apache (N)o/(y)es/(c)ontinue: 
+Perform task: TASK: Start Apache (N)o/(y)es/(c)ontinue: ************************
+
+TASK [Start Apache] ************************************************************
+changed: [localhost]
+Perform task: HANDLER: restart apache (N)o/(y)es/(c)ontinue: 
+Perform task: HANDLER: restart apache (N)o/(y)es/(c)ontinue: *******************
+
+RUNNING HANDLER [restart apache] ***********************************************
+changed: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=7    changed=6    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

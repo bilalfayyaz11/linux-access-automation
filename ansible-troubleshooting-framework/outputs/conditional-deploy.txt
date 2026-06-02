@@ -1,0 +1,39 @@
+
+PLAY [Conditional Deployment with Check Mode Support] **************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Display deployment mode] *************************************************
+ok: [localhost] => {
+    "msg": "Running in deploy mode"
+}
+
+TASK [Check if application already exists] *************************************
+ok: [localhost]
+
+TASK [Determine deployment action] *********************************************
+ok: [localhost]
+
+TASK [Display deployment action] ***********************************************
+ok: [localhost] => {
+    "msg": "Will perform upgrade of mywebapp"
+}
+
+TASK [Backup existing application when deploying] ******************************
+changed: [localhost]
+
+TASK [Simulate backup in check mode] *******************************************
+skipping: [localhost]
+
+TASK [Install packages with check mode support] ********************************
+ok: [localhost]
+
+TASK [Display package installation result] *************************************
+ok: [localhost] => {
+    "msg": "Package task completed in deploy mode"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=8    changed=1    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+

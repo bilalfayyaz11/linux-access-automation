@@ -1,0 +1,36 @@
+
+PLAY [Complex Web Application Deployment] **************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Configure Apache virtual host] *******************************************
+--- before: /etc/httpd/conf.d/mywebapp.conf
++++ after: /home/centos/.ansible/tmp/ansible-local-7098_v5m8mhc/tmpoh3v3byv/vhost.conf.j2
+@@ -2,6 +2,17 @@
+     ServerName localhost
+     DocumentRoot /opt/mywebapp
+ 
++    <Directory /opt/mywebapp>
++        AllowOverride All
++        Require all granted
++        Options -Indexes +FollowSymLinks
++    </Directory>
++
+     ErrorLog /var/log/httpd/mywebapp_error.log
+     CustomLog /var/log/httpd/mywebapp_access.log combined
++    LogLevel warn
++
++    KeepAlive On
++    MaxKeepAliveRequests 100
++    KeepAliveTimeout 15
+ </VirtualHost>
+
+changed: [localhost]
+
+RUNNING HANDLER [restart apache] ***********************************************
+changed: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=3    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

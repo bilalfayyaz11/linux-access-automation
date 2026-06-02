@@ -1,0 +1,24 @@
+
+PLAY [Complex Web Application Deployment] **************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Install required packages] ***********************************************
+ok: [localhost]
+
+TASK [Create application directory] ********************************************
+ok: [localhost]
+
+TASK [Create application file] *************************************************
+ok: [localhost]
+
+TASK [Configure Apache virtual host] *******************************************
+ok: [localhost]
+
+TASK [Start Apache] ************************************************************
+ok: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=6    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

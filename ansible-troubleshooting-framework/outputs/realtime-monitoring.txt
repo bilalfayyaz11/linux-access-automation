@@ -1,0 +1,24 @@
+
+PLAY [Setup Real-time Log Monitoring] ******************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Install log monitoring dependencies] *************************************
+ok: [localhost]
+
+TASK [Configure custom rsyslog rules] ******************************************
+changed: [localhost]
+
+TASK [Create log monitoring script] ********************************************
+changed: [localhost]
+
+TASK [Create scheduled critical log check] *************************************
+changed: [localhost]
+
+RUNNING HANDLER [restart rsyslog] **********************************************
+changed: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=6    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

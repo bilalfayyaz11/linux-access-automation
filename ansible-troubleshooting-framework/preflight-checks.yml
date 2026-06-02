@@ -1,0 +1,50 @@
+---
+- name: Pre-flight System Checks
+  hosts: all
+  gather_facts: yes
+
+  tasks:
+    - name: Check disk usage percentage
+      shell: df -h / | awk 'NR==2 {print $5}' | sed 's/%//'
+      register: disk_usage
+      changed_when: false
+
+    - name: Verify disk usage is below threshold
+      fail:
+        msg: "Disk usage is too high: {{ disk_usage.stdout }}% used"
+      when: disk_usage.stdout | int > 85
+
+    - name: Check memory usage percentage
+      shell: free -m | awk 'NR==2{printf "%.0f", $3*100/$2}'
+      register: memory_usage
+      changed_when: false
+
+    - name: Verify memory usage is below threshold
+      fail:
+        msg: "Memory usage is too high: {{ memory_usage.stdout }}%"
+      when: memory_usage.stdout | int > 90
+
+    - name: Check whether important ports are already listening
+      shell: "ss -lnt | awk '{print $4}' | grep -E ':{{ item }}$' || true"
+      loop:
+        - 80
+        - 8080
+        - 3306
+      register: port_check
+      changed_when: false
+
+    - name: Display port check results
+      debug:
+        msg: "Port {{ item.item }} listening status: {{ 'in use' if item.stdout else 'free' }}"
+      loop: "{{ port_check.results }}"
+
+    - name: Display system information
+      debug:
+        msg:
+          - "Hostname: {{ inventory_hostname }}"
+          - "OS: {{ ansible_distribution }} {{ ansible_distribution_version }}"
+          - "Architecture: {{ ansible_architecture }}"
+          - "CPU Cores: {{ ansible_processor_vcpus | default('unknown') }}"
+          - "Total Memory: {{ ansible_memtotal_mb }}MB"
+          - "Disk Usage: {{ disk_usage.stdout }}%"
+          - "Memory Usage: {{ memory_usage.stdout }}%"

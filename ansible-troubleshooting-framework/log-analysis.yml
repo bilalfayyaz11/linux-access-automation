@@ -1,0 +1,102 @@
+---
+- name: Advanced Log Analysis and Troubleshooting
+  hosts: all
+  become: yes
+
+  vars:
+    critical_keywords:
+      - "error"
+      - "failed"
+      - "critical"
+      - "emergency"
+      - "alert"
+      - "panic"
+
+    log_locations:
+      system: /var/log/messages
+      apache: /var/log/httpd/error_log
+      auth: /var/log/secure
+
+  tasks:
+    - name: Create remote log analysis directory
+      file:
+        path: /tmp/log-analysis
+        state: directory
+        mode: '0755'
+
+    - name: Analyze system logs for critical events
+      shell: |
+        echo "=== Critical Event Scan ===" > /tmp/log-analysis/critical-events.log
+
+        for keyword in {{ critical_keywords | join(' ') }}; do
+          echo "--- Searching for: $keyword ---" >> /tmp/log-analysis/critical-events.log
+
+          if [ -f "{{ log_locations.system }}" ]; then
+            grep -i "$keyword" "{{ log_locations.system }}" | tail -20 >> /tmp/log-analysis/critical-events.log || echo "No entries found for $keyword" >> /tmp/log-analysis/critical-events.log
+          else
+            echo "System log not found" >> /tmp/log-analysis/critical-events.log
+          fi
+        done
+      changed_when: false
+
+    - name: Analyze Apache error patterns
+      shell: |
+        if [ -f "{{ log_locations.apache }}" ]; then
+          echo "=== Apache Error Analysis ===" > /tmp/log-analysis/apache-errors.log
+          tail -500 "{{ log_locations.apache }}" >> /tmp/log-analysis/apache-errors.log
+        else
+          echo "Apache error log not found" > /tmp/log-analysis/apache-errors.log
+        fi
+      changed_when: false
+
+    - name: Analyze authentication logs
+      shell: |
+        if [ -f "{{ log_locations.auth }}" ]; then
+          echo "=== Authentication Analysis ===" > /tmp/log-analysis/auth-analysis.log
+          grep -iE "failed|accepted|authentication|sudo" "{{ log_locations.auth }}" | tail -50 >> /tmp/log-analysis/auth-analysis.log || echo "No authentication events found" >> /tmp/log-analysis/auth-analysis.log
+        else
+          echo "Auth log not found" > /tmp/log-analysis/auth-analysis.log
+        fi
+      changed_when: false
+
+    - name: Generate summary troubleshooting report
+      shell: |
+        echo "=== SYSTEM TROUBLESHOOTING REPORT ===" > /tmp/log-analysis/summary-report.log
+        echo "Generated: $(date)" >> /tmp/log-analysis/summary-report.log
+        echo "Host: $(hostname)" >> /tmp/log-analysis/summary-report.log
+        echo "" >> /tmp/log-analysis/summary-report.log
+
+        echo "=== FAILED SYSTEMD UNITS ===" >> /tmp/log-analysis/summary-report.log
+        systemctl list-units --failed --no-pager >> /tmp/log-analysis/summary-report.log || true
+
+        echo "" >> /tmp/log-analysis/summary-report.log
+        echo "=== DISK USAGE ===" >> /tmp/log-analysis/summary-report.log
+        df -h >> /tmp/log-analysis/summary-report.log
+
+        echo "" >> /tmp/log-analysis/summary-report.log
+        echo "=== MEMORY USAGE ===" >> /tmp/log-analysis/summary-report.log
+        free -h >> /tmp/log-analysis/summary-report.log
+
+        echo "" >> /tmp/log-analysis/summary-report.log
+        echo "=== LOAD AVERAGE ===" >> /tmp/log-analysis/summary-report.log
+        uptime >> /tmp/log-analysis/summary-report.log
+
+        echo "" >> /tmp/log-analysis/summary-report.log
+        cat /tmp/log-analysis/critical-events.log >> /tmp/log-analysis/summary-report.log
+
+        echo "" >> /tmp/log-analysis/summary-report.log
+        cat /tmp/log-analysis/apache-errors.log >> /tmp/log-analysis/summary-report.log
+
+        echo "" >> /tmp/log-analysis/summary-report.log
+        cat /tmp/log-analysis/auth-analysis.log >> /tmp/log-analysis/summary-report.log
+      changed_when: false
+
+    - name: Fetch analysis report
+      fetch:
+        src: /tmp/log-analysis/summary-report.log
+        dest: ./reports/{{ inventory_hostname }}-troubleshooting-report.log
+        flat: yes
+
+    - name: Display report location
+      debug:
+        msg: "Troubleshooting report saved to: ./reports/{{ inventory_hostname }}-troubleshooting-report.log"

@@ -1,0 +1,147 @@
+=== SYSTEM TROUBLESHOOTING REPORT ===
+Generated: Tue Jun  2 12:16:32 UTC 2026
+Host: ip-172-31-10-69.ec2.internal
+
+=== FAILED SYSTEMD UNITS ===
+  UNIT                          LOAD   ACTIVE SUB    DESCRIPTION
+● cloudwatch-ami-reinit.service loaded failed failed Enhanced CloudWatch AMI Reinitialization
+● mcelog.service                loaded failed failed Machine Check Exception Logging Daemon
+
+LOAD   = Reflects whether the unit definition was properly loaded.
+ACTIVE = The high-level unit activation state, i.e. generalization of SUB.
+SUB    = The low-level unit activation state, values depend on unit type.
+2 loaded units listed.
+
+=== DISK USAGE ===
+Filesystem      Size  Used Avail Use% Mounted on
+devtmpfs        7.5G     0  7.5G   0% /dev
+tmpfs           7.7G  128K  7.7G   1% /dev/shm
+tmpfs           3.1G   18M  3.1G   1% /run
+efivarfs        128K  4.1K  119K   4% /sys/firmware/efi/efivars
+/dev/nvme0n1p4   29G  7.2G   22G  26% /
+/dev/nvme0n1p3  966M  800M  100M  89% /boot
+/dev/nvme0n1p2  500M   11M  489M   3% /boot/efi
+tmpfs           1.6G   52K  1.6G   1% /run/user/42
+tmpfs           1.6G   36K  1.6G   1% /run/user/1001
+
+=== MEMORY USAGE ===
+               total        used        free      shared  buff/cache   available
+Mem:            15Gi       1.1Gi        13Gi        22Mi       980Mi        14Gi
+Swap:             0B          0B          0B
+
+=== LOAD AVERAGE ===
+ 12:16:32 up 6 min,  1 user,  load average: 0.66, 0.42, 0.20
+
+=== Critical Event Scan ===
+--- Searching for: error ---
+Jun  2 12:10:31 ip-172-31-10-69 mcelog[804]: mcelog: ERROR: AMD Processor family 23: mcelog does not support this processor.  Please use the edac_mce_amd module instead.
+Jun  2 12:10:50 ip-172-31-10-69 /usr/libexec/gdm-x-session[1850]: #011(WW) warning, (EE) error, (NI) not implemented, (??) unknown.
+Jun  2 12:11:01 ip-172-31-10-69 gsd-sharing[2201]: Failed to StopUnit service: GDBus.Error:org.freedesktop.DBus.Error.Spawn.ChildExited: Process org.freedesktop.systemd1 exited with status 1
+Jun  2 12:11:01 ip-172-31-10-69 gsd-sharing[2201]: Failed to StopUnit service: GDBus.Error:org.freedesktop.DBus.Error.Spawn.ChildExited: Process org.freedesktop.systemd1 exited with status 1
+Jun  2 12:11:01 ip-172-31-10-69 gsd-sharing[2201]: Failed to StopUnit service: GDBus.Error:org.freedesktop.DBus.Error.Spawn.ChildExited: Process org.freedesktop.systemd1 exited with status 1
+Jun  2 12:11:01 ip-172-31-10-69 gnome-shell[2000]: Error looking up permission: GDBus.Error:org.freedesktop.portal.Error.NotFound: No entry for geolocation
+Jun  2 12:16:21 ip-172-31-10-69 python3[9259]: ansible-ansible.legacy.command Invoked with _raw_params=if [ -f "/var/log/messages" ]; then#012  tail -50 "/var/log/messages" | grep -iE "error|failed|critical|panic" || echo "No recent errors found"#012else#012  echo "Log file not found"#012fi#012 _uses_shell=True stdin_add_newline=True strip_empty_ends=True argv=None chdir=None executable=None creates=None removes=None stdin=None
+Jun  2 12:16:21 ip-172-31-10-69 python3[9279]: ansible-ansible.legacy.command Invoked with _raw_params=if [ -f "/var/log/httpd/error_log" ]; then#012  tail -50 "/var/log/httpd/error_log" | grep -iE "error|failed|critical|panic" || echo "No recent errors found"#012else#012  echo "Log file not found"#012fi#012 _uses_shell=True stdin_add_newline=True strip_empty_ends=True argv=None chdir=None executable=None creates=None removes=None stdin=None
+Jun  2 12:16:22 ip-172-31-10-69 python3[9298]: ansible-ansible.legacy.command Invoked with _raw_params=if [ -f "/var/log/secure" ]; then#012  tail -50 "/var/log/secure" | grep -iE "error|failed|critical|panic" || echo "No recent errors found"#012else#012  echo "Log file not found"#012fi#012 _uses_shell=True stdin_add_newline=True strip_empty_ends=True argv=None chdir=None executable=None creates=None removes=None stdin=None
+--- Searching for: failed ---
+Jun  2 12:10:59 ip-172-31-10-69 systemd[1]: Failed to start Enhanced CloudWatch AMI Reinitialization.
+Jun  2 12:11:00 ip-172-31-10-69 wireplumber[2132]: wp-event-dispatcher: wp_event_dispatcher_unregister_hook: assertion 'already_registered_dispatcher == self' failed
+Jun  2 12:11:00 ip-172-31-10-69 wireplumber[2132]: wp-event-dispatcher: wp_event_dispatcher_unregister_hook: assertion 'already_registered_dispatcher == self' failed
+Jun  2 12:11:00 ip-172-31-10-69 wireplumber[2132]: wp-event-dispatcher: wp_event_dispatcher_unregister_hook: assertion 'already_registered_dispatcher == self' failed
+Jun  2 12:11:00 ip-172-31-10-69 wireplumber[2132]: wp-event-dispatcher: wp_event_dispatcher_unregister_hook: assertion 'already_registered_dispatcher == self' failed
+Jun  2 12:11:00 ip-172-31-10-69 dbus-broker-launch[795]: Activation request for 'org.freedesktop.Avahi' failed: The systemd unit 'dbus-org.freedesktop.Avahi.service' could not be found.
+Jun  2 12:11:00 ip-172-31-10-69 geoclue[2138]: Failed to connect to avahi service: Daemon not running
+Jun  2 12:11:00 ip-172-31-10-69 dbus-broker-launch[795]: Activation request for 'org.freedesktop.ModemManager1' failed: The systemd unit 'dbus-org.freedesktop.ModemManager1.service' could not be found.
+Jun  2 12:11:01 ip-172-31-10-69 /usr/libexec/gdm-x-session[1963]: dbus-daemon[1963]: [session uid=42 pid=1963] Activated service 'org.freedesktop.systemd1' failed: Process org.freedesktop.systemd1 exited with status 1
+Jun  2 12:11:01 ip-172-31-10-69 gsd-sharing[2201]: Failed to StopUnit service: GDBus.Error:org.freedesktop.DBus.Error.Spawn.ChildExited: Process org.freedesktop.systemd1 exited with status 1
+Jun  2 12:11:01 ip-172-31-10-69 gsd-sharing[2201]: Failed to StopUnit service: GDBus.Error:org.freedesktop.DBus.Error.Spawn.ChildExited: Process org.freedesktop.systemd1 exited with status 1
+Jun  2 12:11:01 ip-172-31-10-69 gsd-sharing[2201]: Failed to StopUnit service: GDBus.Error:org.freedesktop.DBus.Error.Spawn.ChildExited: Process org.freedesktop.systemd1 exited with status 1
+Jun  2 12:11:01 ip-172-31-10-69 gsd-media-keys[2224]: Failed to grab accelerator for keybinding settings:playback-repeat
+Jun  2 12:11:01 ip-172-31-10-69 gsd-media-keys[2224]: Failed to grab accelerator for keybinding settings:playback-random
+Jun  2 12:11:01 ip-172-31-10-69 gsd-media-keys[2224]: Failed to grab accelerator for keybinding settings:hibernate
+Jun  2 12:11:01 ip-172-31-10-69 gsd-media-keys[2224]: Failed to grab accelerator for keybinding settings:rotate-video-lock
+Jun  2 12:11:01 ip-172-31-10-69 gsd-color[2206]: failed to get edid: unable to get EDID for output
+Jun  2 12:16:21 ip-172-31-10-69 python3[9259]: ansible-ansible.legacy.command Invoked with _raw_params=if [ -f "/var/log/messages" ]; then#012  tail -50 "/var/log/messages" | grep -iE "error|failed|critical|panic" || echo "No recent errors found"#012else#012  echo "Log file not found"#012fi#012 _uses_shell=True stdin_add_newline=True strip_empty_ends=True argv=None chdir=None executable=None creates=None removes=None stdin=None
+Jun  2 12:16:21 ip-172-31-10-69 python3[9279]: ansible-ansible.legacy.command Invoked with _raw_params=if [ -f "/var/log/httpd/error_log" ]; then#012  tail -50 "/var/log/httpd/error_log" | grep -iE "error|failed|critical|panic" || echo "No recent errors found"#012else#012  echo "Log file not found"#012fi#012 _uses_shell=True stdin_add_newline=True strip_empty_ends=True argv=None chdir=None executable=None creates=None removes=None stdin=None
+Jun  2 12:16:22 ip-172-31-10-69 python3[9298]: ansible-ansible.legacy.command Invoked with _raw_params=if [ -f "/var/log/secure" ]; then#012  tail -50 "/var/log/secure" | grep -iE "error|failed|critical|panic" || echo "No recent errors found"#012else#012  echo "Log file not found"#012fi#012 _uses_shell=True stdin_add_newline=True strip_empty_ends=True argv=None chdir=None executable=None creates=None removes=None stdin=None
+--- Searching for: critical ---
+Jun  2 12:16:21 ip-172-31-10-69 python3[9259]: ansible-ansible.legacy.command Invoked with _raw_params=if [ -f "/var/log/messages" ]; then#012  tail -50 "/var/log/messages" | grep -iE "error|failed|critical|panic" || echo "No recent errors found"#012else#012  echo "Log file not found"#012fi#012 _uses_shell=True stdin_add_newline=True strip_empty_ends=True argv=None chdir=None executable=None creates=None removes=None stdin=None
+Jun  2 12:16:21 ip-172-31-10-69 python3[9279]: ansible-ansible.legacy.command Invoked with _raw_params=if [ -f "/var/log/httpd/error_log" ]; then#012  tail -50 "/var/log/httpd/error_log" | grep -iE "error|failed|critical|panic" || echo "No recent errors found"#012else#012  echo "Log file not found"#012fi#012 _uses_shell=True stdin_add_newline=True strip_empty_ends=True argv=None chdir=None executable=None creates=None removes=None stdin=None
+Jun  2 12:16:22 ip-172-31-10-69 python3[9298]: ansible-ansible.legacy.command Invoked with _raw_params=if [ -f "/var/log/secure" ]; then#012  tail -50 "/var/log/secure" | grep -iE "error|failed|critical|panic" || echo "No recent errors found"#012else#012  echo "Log file not found"#012fi#012 _uses_shell=True stdin_add_newline=True strip_empty_ends=True argv=None chdir=None executable=None creates=None removes=None stdin=None
+--- Searching for: emergency ---
+--- Searching for: alert ---
+--- Searching for: panic ---
+Jun  2 12:16:21 ip-172-31-10-69 python3[9259]: ansible-ansible.legacy.command Invoked with _raw_params=if [ -f "/var/log/messages" ]; then#012  tail -50 "/var/log/messages" | grep -iE "error|failed|critical|panic" || echo "No recent errors found"#012else#012  echo "Log file not found"#012fi#012 _uses_shell=True stdin_add_newline=True strip_empty_ends=True argv=None chdir=None executable=None creates=None removes=None stdin=None
+Jun  2 12:16:21 ip-172-31-10-69 python3[9279]: ansible-ansible.legacy.command Invoked with _raw_params=if [ -f "/var/log/httpd/error_log" ]; then#012  tail -50 "/var/log/httpd/error_log" | grep -iE "error|failed|critical|panic" || echo "No recent errors found"#012else#012  echo "Log file not found"#012fi#012 _uses_shell=True stdin_add_newline=True strip_empty_ends=True argv=None chdir=None executable=None creates=None removes=None stdin=None
+Jun  2 12:16:22 ip-172-31-10-69 python3[9298]: ansible-ansible.legacy.command Invoked with _raw_params=if [ -f "/var/log/secure" ]; then#012  tail -50 "/var/log/secure" | grep -iE "error|failed|critical|panic" || echo "No recent errors found"#012else#012  echo "Log file not found"#012fi#012 _uses_shell=True stdin_add_newline=True strip_empty_ends=True argv=None chdir=None executable=None creates=None removes=None stdin=None
+
+=== Apache Error Analysis ===
+[Tue Jun 02 12:13:53.090304 2026] [core:notice] [pid 6271:tid 6271] SELinux policy enabled; httpd running as context system_u:system_r:httpd_t:s0
+[Tue Jun 02 12:13:53.093423 2026] [suexec:notice] [pid 6271:tid 6271] AH01232: suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Tue Jun 02 12:13:53.120792 2026] [lbmethod_heartbeat:notice] [pid 6271:tid 6271] AH02282: No slotmem from mod_heartmonitor
+[Tue Jun 02 12:13:53.129701 2026] [mpm_event:notice] [pid 6271:tid 6271] AH00489: Apache/2.4.62 (CentOS Stream) configured -- resuming normal operations
+[Tue Jun 02 12:13:53.129752 2026] [core:notice] [pid 6271:tid 6271] AH00094: Command line: '/usr/sbin/httpd -D FOREGROUND'
+[Tue Jun 02 12:13:55.457844 2026] [mpm_event:notice] [pid 6271:tid 6271] AH00492: caught SIGWINCH, shutting down gracefully
+[Tue Jun 02 12:13:56.558542 2026] [core:notice] [pid 6479:tid 6479] SELinux policy enabled; httpd running as context system_u:system_r:httpd_t:s0
+[Tue Jun 02 12:13:56.559874 2026] [suexec:notice] [pid 6479:tid 6479] AH01232: suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Tue Jun 02 12:13:56.592705 2026] [lbmethod_heartbeat:notice] [pid 6479:tid 6479] AH02282: No slotmem from mod_heartmonitor
+[Tue Jun 02 12:13:56.602185 2026] [mpm_event:notice] [pid 6479:tid 6479] AH00489: Apache/2.4.62 (CentOS Stream) configured -- resuming normal operations
+[Tue Jun 02 12:13:56.602228 2026] [core:notice] [pid 6479:tid 6479] AH00094: Command line: '/usr/sbin/httpd -D FOREGROUND'
+[Tue Jun 02 12:14:58.796623 2026] [mpm_event:notice] [pid 6479:tid 6479] AH00492: caught SIGWINCH, shutting down gracefully
+[Tue Jun 02 12:14:59.905652 2026] [core:notice] [pid 7329:tid 7329] SELinux policy enabled; httpd running as context system_u:system_r:httpd_t:s0
+[Tue Jun 02 12:14:59.907165 2026] [suexec:notice] [pid 7329:tid 7329] AH01232: suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Tue Jun 02 12:14:59.931811 2026] [lbmethod_heartbeat:notice] [pid 7329:tid 7329] AH02282: No slotmem from mod_heartmonitor
+[Tue Jun 02 12:14:59.940759 2026] [mpm_event:notice] [pid 7329:tid 7329] AH00489: Apache/2.4.62 (CentOS Stream) configured -- resuming normal operations
+[Tue Jun 02 12:14:59.940862 2026] [core:notice] [pid 7329:tid 7329] AH00094: Command line: '/usr/sbin/httpd -D FOREGROUND'
+
+=== Authentication Analysis ===
+Jun  2 12:16:06 ip-172-31-10-69 sudo[8909]:  centos : TTY=pts/0 ; PWD=/home/centos/ansible-troubleshooting-automation ; USER=root ; COMMAND=/bin/sh -c 'echo BECOME-SUCCESS-bpbyleomoxruxkzkpirdpobveqznmtvw ; /usr/bin/python3 /home/centos/.ansible/tmp/ansible-tmp-1780402565.6875918-8897-99734042873440/AnsiballZ_setup.py'
+Jun  2 12:16:06 ip-172-31-10-69 sudo[8909]: pam_unix(sudo:session): session opened for user root(uid=0) by centos(uid=1001)
+Jun  2 12:16:07 ip-172-31-10-69 sudo[8909]: pam_unix(sudo:session): session closed for user root
+Jun  2 12:16:07 ip-172-31-10-69 sudo[8963]:  centos : TTY=pts/0 ; PWD=/home/centos/ansible-troubleshooting-automation ; USER=root ; COMMAND=/bin/sh -c 'echo BECOME-SUCCESS-umhgjlvsohqliybeganpyohsdzffvuvc ; /usr/bin/python3 /home/centos/.ansible/tmp/ansible-tmp-1780402567.3637586-8951-25977719529752/AnsiballZ_stat.py'
+Jun  2 12:16:07 ip-172-31-10-69 sudo[8963]: pam_unix(sudo:session): session opened for user root(uid=0) by centos(uid=1001)
+Jun  2 12:16:07 ip-172-31-10-69 sudo[8963]: pam_unix(sudo:session): session closed for user root
+Jun  2 12:16:08 ip-172-31-10-69 sudo[8987]:  centos : TTY=pts/0 ; PWD=/home/centos/ansible-troubleshooting-automation ; USER=root ; COMMAND=/bin/sh -c 'echo BECOME-SUCCESS-hoyzoaindypjnihjubsjbivjtvgxhdxo ; /usr/bin/python3 /home/centos/.ansible/tmp/ansible-tmp-1780402568.0944662-8975-244630523936700/AnsiballZ_command.py'
+Jun  2 12:16:08 ip-172-31-10-69 sudo[8987]: pam_unix(sudo:session): session opened for user root(uid=0) by centos(uid=1001)
+Jun  2 12:16:08 ip-172-31-10-69 sudo[8987]: pam_unix(sudo:session): session closed for user root
+Jun  2 12:16:09 ip-172-31-10-69 sudo[9009]:  centos : TTY=pts/0 ; PWD=/home/centos/ansible-troubleshooting-automation ; USER=root ; COMMAND=/bin/sh -c 'echo BECOME-SUCCESS-cviwnycmocnlldipsmieocnjzrbmditi ; /usr/bin/python3 /home/centos/.ansible/tmp/ansible-tmp-1780402568.7920554-8997-15055282470751/AnsiballZ_dnf.py'
+Jun  2 12:16:09 ip-172-31-10-69 sudo[9009]: pam_unix(sudo:session): session opened for user root(uid=0) by centos(uid=1001)
+Jun  2 12:16:10 ip-172-31-10-69 sudo[9009]: pam_unix(sudo:session): session closed for user root
+Jun  2 12:16:17 ip-172-31-10-69 sudo[9144]:  centos : TTY=pts/0 ; PWD=/home/centos/ansible-troubleshooting-automation ; USER=root ; COMMAND=/bin/sh -c 'echo BECOME-SUCCESS-dgvgmcawtedxgdtqvgazwnimusyjnemi ; /usr/bin/python3 /home/centos/.ansible/tmp/ansible-tmp-1780402577.0563364-9132-117558831489413/AnsiballZ_setup.py'
+Jun  2 12:16:17 ip-172-31-10-69 sudo[9144]: pam_unix(sudo:session): session opened for user root(uid=0) by centos(uid=1001)
+Jun  2 12:16:18 ip-172-31-10-69 sudo[9144]: pam_unix(sudo:session): session closed for user root
+Jun  2 12:16:19 ip-172-31-10-69 sudo[9196]:  centos : TTY=pts/0 ; PWD=/home/centos/ansible-troubleshooting-automation ; USER=root ; COMMAND=/bin/sh -c 'echo BECOME-SUCCESS-jfibefsptppbuyflbfsiuiopuxdandph ; /usr/bin/python3 /home/centos/.ansible/tmp/ansible-tmp-1780402578.6593847-9184-112261965491171/AnsiballZ_systemd.py'
+Jun  2 12:16:19 ip-172-31-10-69 sudo[9196]: pam_unix(sudo:session): session opened for user root(uid=0) by centos(uid=1001)
+Jun  2 12:16:19 ip-172-31-10-69 sudo[9196]: pam_unix(sudo:session): session closed for user root
+Jun  2 12:16:19 ip-172-31-10-69 sudo[9214]:  centos : TTY=pts/0 ; PWD=/home/centos/ansible-troubleshooting-automation ; USER=root ; COMMAND=/bin/sh -c 'echo BECOME-SUCCESS-dwvwwxpytqraqiboejaxmxtrcewrxuzw ; /usr/bin/python3 /home/centos/.ansible/tmp/ansible-tmp-1780402579.6601353-9184-245794415352227/AnsiballZ_systemd.py'
+Jun  2 12:16:19 ip-172-31-10-69 sudo[9214]: pam_unix(sudo:session): session opened for user root(uid=0) by centos(uid=1001)
+Jun  2 12:16:20 ip-172-31-10-69 sudo[9214]: pam_unix(sudo:session): session closed for user root
+Jun  2 12:16:20 ip-172-31-10-69 sudo[9231]:  centos : TTY=pts/0 ; PWD=/home/centos/ansible-troubleshooting-automation ; USER=root ; COMMAND=/bin/sh -c 'echo BECOME-SUCCESS-zzdawrgawrvzwkhjsflrnlannmtydtzu ; /usr/bin/python3 /home/centos/.ansible/tmp/ansible-tmp-1780402580.2391005-9184-188656031916066/AnsiballZ_systemd.py'
+Jun  2 12:16:20 ip-172-31-10-69 sudo[9231]: pam_unix(sudo:session): session opened for user root(uid=0) by centos(uid=1001)
+Jun  2 12:16:20 ip-172-31-10-69 sudo[9231]: pam_unix(sudo:session): session closed for user root
+Jun  2 12:16:21 ip-172-31-10-69 sudo[9257]:  centos : TTY=pts/0 ; PWD=/home/centos/ansible-troubleshooting-automation ; USER=root ; COMMAND=/bin/sh -c 'echo BECOME-SUCCESS-cuqbrkjzdteusyjcdzczlgykbnbttytr ; /usr/bin/python3 /home/centos/.ansible/tmp/ansible-tmp-1780402581.061027-9245-204724087113629/AnsiballZ_command.py'
+Jun  2 12:16:21 ip-172-31-10-69 sudo[9257]: pam_unix(sudo:session): session opened for user root(uid=0) by centos(uid=1001)
+Jun  2 12:16:21 ip-172-31-10-69 sudo[9257]: pam_unix(sudo:session): session closed for user root
+Jun  2 12:16:21 ip-172-31-10-69 sudo[9277]:  centos : TTY=pts/0 ; PWD=/home/centos/ansible-troubleshooting-automation ; USER=root ; COMMAND=/bin/sh -c 'echo BECOME-SUCCESS-lqijxbypumdvsahvfxodjeynbkezvmtn ; /usr/bin/python3 /home/centos/.ansible/tmp/ansible-tmp-1780402581.6416724-9245-78185155662431/AnsiballZ_command.py'
+Jun  2 12:16:21 ip-172-31-10-69 sudo[9277]: pam_unix(sudo:session): session opened for user root(uid=0) by centos(uid=1001)
+Jun  2 12:16:22 ip-172-31-10-69 sudo[9277]: pam_unix(sudo:session): session closed for user root
+Jun  2 12:16:22 ip-172-31-10-69 sudo[9296]:  centos : TTY=pts/0 ; PWD=/home/centos/ansible-troubleshooting-automation ; USER=root ; COMMAND=/bin/sh -c 'echo BECOME-SUCCESS-vyvdueszqvurqvxuvtexyhgbjykfdujk ; /usr/bin/python3 /home/centos/.ansible/tmp/ansible-tmp-1780402582.050397-9245-103434331359646/AnsiballZ_command.py'
+Jun  2 12:16:22 ip-172-31-10-69 sudo[9296]: pam_unix(sudo:session): session opened for user root(uid=0) by centos(uid=1001)
+Jun  2 12:16:22 ip-172-31-10-69 sudo[9296]: pam_unix(sudo:session): session closed for user root
+Jun  2 12:16:22 ip-172-31-10-69 sudo[9318]:  centos : TTY=pts/0 ; PWD=/home/centos/ansible-troubleshooting-automation ; USER=root ; COMMAND=/bin/sh -c 'echo BECOME-SUCCESS-ubbivcmltliywkgrcpxphpetubrkzxwh ; /usr/bin/python3 /home/centos/.ansible/tmp/ansible-tmp-1780402582.5331562-9306-91124823909241/AnsiballZ_command.py'
+Jun  2 12:16:22 ip-172-31-10-69 sudo[9318]: pam_unix(sudo:session): session opened for user root(uid=0) by centos(uid=1001)
+Jun  2 12:16:23 ip-172-31-10-69 sudo[9318]: pam_unix(sudo:session): session closed for user root
+Jun  2 12:16:29 ip-172-31-10-69 sudo[9457]:  centos : TTY=pts/0 ; PWD=/home/centos/ansible-troubleshooting-automation ; USER=root ; COMMAND=/bin/sh -c 'echo BECOME-SUCCESS-dubqghhyajrxzluxkpxeamgygcsxogaz ; /usr/bin/python3 /home/centos/.ansible/tmp/ansible-tmp-1780402588.9034274-9444-97056397202971/AnsiballZ_setup.py'
+Jun  2 12:16:29 ip-172-31-10-69 sudo[9457]: pam_unix(sudo:session): session opened for user root(uid=0) by centos(uid=1001)
+Jun  2 12:16:30 ip-172-31-10-69 sudo[9457]: pam_unix(sudo:session): session closed for user root
+Jun  2 12:16:30 ip-172-31-10-69 sudo[9509]:  centos : TTY=pts/0 ; PWD=/home/centos/ansible-troubleshooting-automation ; USER=root ; COMMAND=/bin/sh -c 'echo BECOME-SUCCESS-tzpgawzqyacuregodakiaslqzwncxugz ; /usr/bin/python3 /home/centos/.ansible/tmp/ansible-tmp-1780402590.5203266-9497-137735168072579/AnsiballZ_file.py'
+Jun  2 12:16:30 ip-172-31-10-69 sudo[9509]: pam_unix(sudo:session): session opened for user root(uid=0) by centos(uid=1001)
+Jun  2 12:16:31 ip-172-31-10-69 sudo[9509]: pam_unix(sudo:session): session closed for user root
+Jun  2 12:16:31 ip-172-31-10-69 sudo[9527]:  centos : TTY=pts/0 ; PWD=/home/centos/ansible-troubleshooting-automation ; USER=root ; COMMAND=/bin/sh -c 'echo BECOME-SUCCESS-gqbduhmhplsxnlhnajukhexrhiaxriug ; /usr/bin/python3 /home/centos/.ansible/tmp/ansible-tmp-1780402591.1288998-9515-124699402068506/AnsiballZ_command.py'
+Jun  2 12:16:31 ip-172-31-10-69 sudo[9527]: pam_unix(sudo:session): session opened for user root(uid=0) by centos(uid=1001)
+Jun  2 12:16:31 ip-172-31-10-69 sudo[9527]: pam_unix(sudo:session): session closed for user root
+Jun  2 12:16:31 ip-172-31-10-69 sudo[9558]:  centos : TTY=pts/0 ; PWD=/home/centos/ansible-troubleshooting-automation ; USER=root ; COMMAND=/bin/sh -c 'echo BECOME-SUCCESS-cyodxdbfmrdarpibofyaufylesiqyxyg ; /usr/bin/python3 /home/centos/.ansible/tmp/ansible-tmp-1780402591.713942-9546-209533996389455/AnsiballZ_command.py'
+Jun  2 12:16:31 ip-172-31-10-69 sudo[9558]: pam_unix(sudo:session): session opened for user root(uid=0) by centos(uid=1001)
+Jun  2 12:16:32 ip-172-31-10-69 sudo[9558]: pam_unix(sudo:session): session closed for user root
+Jun  2 12:16:32 ip-172-31-10-69 sudo[9578]:  centos : TTY=pts/0 ; PWD=/home/centos/ansible-troubleshooting-automation ; USER=root ; COMMAND=/bin/sh -c 'echo BECOME-SUCCESS-zhdxdiklnxhqtubeppzdwsdgyviymmgh ; /usr/bin/python3 /home/centos/.ansible/tmp/ansible-tmp-1780402592.1275024-9566-26419754394762/AnsiballZ_command.py'
+Jun  2 12:16:32 ip-172-31-10-69 sudo[9578]: pam_unix(sudo:session): session opened for user root(uid=0) by centos(uid=1001)
