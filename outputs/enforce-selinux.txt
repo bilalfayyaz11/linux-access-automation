@@ -1,0 +1,42 @@
+
+PLAY [Configure SELinux to Enforcing Mode] *************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Check current SELinux status] ********************************************
+ok: [localhost]
+
+TASK [Display current SELinux status] ******************************************
+ok: [localhost] => {
+    "msg": [
+        "SELinux status:                 enabled",
+        "SELinuxfs mount:                /sys/fs/selinux",
+        "SELinux root directory:         /etc/selinux",
+        "Loaded policy name:             targeted",
+        "Current mode:                   enforcing",
+        "Mode from config file:          enforcing",
+        "Policy MLS status:              enabled",
+        "Policy deny_unknown status:     allowed",
+        "Memory protection checking:     actual (secure)",
+        "Max kernel policy version:      33"
+    ]
+}
+
+TASK [Install SELinux management tools] ****************************************
+ok: [localhost]
+
+TASK [Set SELinux to enforcing mode] *******************************************
+ok: [localhost]
+
+TASK [Verify SELinux mode] *****************************************************
+ok: [localhost]
+
+TASK [Show enforcement status] *************************************************
+ok: [localhost] => {
+    "msg": "SELinux mode: Enforcing"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=7    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

@@ -1,0 +1,30 @@
+---
+- name: Manage SELinux Booleans
+  hosts: selinux_servers
+  become: yes
+
+  tasks:
+
+    - name: Enable httpd network connection
+      seboolean:
+        name: httpd_can_network_connect
+        state: yes
+        persistent: yes
+
+    - name: Enable httpd database network connection
+      seboolean:
+        name: httpd_can_network_connect_db
+        state: yes
+        persistent: yes
+
+    - name: Verify httpd booleans
+      command: getsebool {{ item }}
+      loop:
+        - httpd_can_network_connect
+        - httpd_can_network_connect_db
+      register: boolean_check
+      changed_when: false
+
+    - name: Show boolean results
+      debug:
+        msg: "{{ boolean_check.results | map(attribute='stdout') | list }}"

@@ -1,0 +1,52 @@
+
+PLAY [Configure Application SELinux Policy] ************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Install Apache packages] *************************************************
+ok: [localhost]
+
+TASK [Create application directories] ******************************************
+changed: [localhost] => (item=/opt/mywebapp)
+changed: [localhost] => (item=/opt/mywebapp/htdocs)
+changed: [localhost] => (item=/opt/mywebapp/logs)
+changed: [localhost] => (item=/opt/mywebapp/tmp)
+changed: [localhost] => (item=/opt/mywebapp/config)
+
+TASK [Create application index page] *******************************************
+changed: [localhost]
+
+TASK [Set application SELinux contexts] ****************************************
+changed: [localhost] => (item={'path': '/opt/mywebapp/htdocs(/.*)?', 'context': 'httpd_sys_content_t'})
+changed: [localhost] => (item={'path': '/opt/mywebapp/logs(/.*)?', 'context': 'httpd_log_t'})
+changed: [localhost] => (item={'path': '/opt/mywebapp/tmp(/.*)?', 'context': 'httpd_tmp_t'})
+changed: [localhost] => (item={'path': '/opt/mywebapp/config(/.*)?', 'context': 'httpd_config_t'})
+
+TASK [Apply application contexts] **********************************************
+ok: [localhost]
+
+TASK [Allow application port] **************************************************
+ok: [localhost]
+
+TASK [Enable required SELinux booleans] ****************************************
+ok: [localhost] => (item=httpd_can_network_connect)
+ok: [localhost] => (item=httpd_can_network_connect_db)
+
+TASK [Create Apache virtual host] **********************************************
+changed: [localhost]
+
+TASK [Start and enable Apache] *************************************************
+changed: [localhost]
+
+TASK [Test application access] *************************************************
+ok: [localhost]
+
+TASK [Show application test result] ********************************************
+ok: [localhost] => {
+    "msg": "Application HTTP status: 200"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=12   changed=5    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

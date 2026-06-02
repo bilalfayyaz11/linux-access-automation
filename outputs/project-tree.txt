@@ -1,0 +1,29 @@
+.
+├── inventory
+│   └── hosts
+├── outputs
+│   ├── application-http-test.txt
+│   ├── application-selinux-config.txt
+│   ├── custom-booleans.txt
+│   ├── custom-file-contexts.txt
+│   ├── custom-ports.txt
+│   ├── enforce-selinux.txt
+│   ├── file-contexts.txt
+│   ├── final-getenforce.txt
+│   ├── final-sestatus.txt
+│   ├── project-tree.txt
+│   ├── selinux-booleans.txt
+│   ├── selinux-ports.txt
+│   └── selinux-troubleshooting.txt
+├── playbooks
+│   ├── application-selinux-config.yml
+│   ├── selinux-booleans.yml
+│   ├── selinux-enforcing.yml
+│   ├── selinux-file-contexts.yml
+│   ├── selinux-ports.yml
+│   └── selinux-troubleshooting.yml
+├── reports
+├── screenshots
+└── scripts
+
+6 directories, 20 files

@@ -1,0 +1,36 @@
+---
+- name: Manage SELinux Ports
+  hosts: selinux_servers
+  become: yes
+
+  tasks:
+
+    - name: Allow HTTP custom port 8080
+      community.general.seport:
+        ports: 8080
+        proto: tcp
+        setype: http_port_t
+        state: present
+
+    - name: Allow HTTP custom port 8081
+      community.general.seport:
+        ports: 8081
+        proto: tcp
+        setype: http_port_t
+        state: present
+
+    - name: Allow SSH custom port 2222
+      community.general.seport:
+        ports: 2222
+        proto: tcp
+        setype: ssh_port_t
+        state: present
+
+    - name: Verify custom SELinux ports
+      shell: semanage port -l -C | grep -E '8080|8081|2222' || true
+      register: port_check
+      changed_when: false
+
+    - name: Show custom ports
+      debug:
+        msg: "{{ port_check.stdout_lines }}"

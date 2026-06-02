@@ -1,0 +1,27 @@
+
+PLAY [Manage SELinux Booleans] *************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Enable httpd network connection] *****************************************
+changed: [localhost]
+
+TASK [Enable httpd database network connection] ********************************
+changed: [localhost]
+
+TASK [Verify httpd booleans] ***************************************************
+ok: [localhost] => (item=httpd_can_network_connect)
+ok: [localhost] => (item=httpd_can_network_connect_db)
+
+TASK [Show boolean results] ****************************************************
+ok: [localhost] => {
+    "msg": [
+        "httpd_can_network_connect --> on",
+        "httpd_can_network_connect_db --> on"
+    ]
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=5    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

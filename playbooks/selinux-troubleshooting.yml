@@ -1,0 +1,45 @@
+---
+- name: SELinux Troubleshooting and Reporting
+  hosts: selinux_servers
+  become: yes
+
+  tasks:
+
+    - name: Create SELinux reporting script
+      copy:
+        dest: /usr/local/bin/selinux-report.sh
+        mode: '0755'
+        content: |
+          #!/bin/bash
+          echo "===== SELINUX STATUS ====="
+          sestatus
+          echo
+          echo "===== CURRENT MODE ====="
+          getenforce
+          echo
+          echo "===== CUSTOM FILE CONTEXTS ====="
+          semanage fcontext -l -C
+          echo
+          echo "===== CUSTOM PORTS ====="
+          semanage port -l -C
+          echo
+          echo "===== MODIFIED BOOLEANS ====="
+          semanage boolean -l -C
+          echo
+          echo "===== RECENT AVC DENIALS ====="
+          ausearch -m avc -ts today 2>/dev/null | tail -30 || true
+
+    - name: Run SELinux report
+      command: /usr/local/bin/selinux-report.sh
+      register: selinux_report
+      changed_when: false
+
+    - name: Save report output
+      copy:
+        content: "{{ selinux_report.stdout }}"
+        dest: "{{ ansible_env.HOME }}/selinux-policy-automation/reports/selinux-final-report.txt"
+        mode: '0644'
+
+    - name: Show report summary
+      debug:
+        msg: "SELinux report generated successfully."

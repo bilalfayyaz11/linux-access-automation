@@ -1,0 +1,11 @@
+===== FINAL LAB SUMMARY =====
+Project: selinux-policy-automation
+SELinux mode: Enforcing
+Application test:
+<!DOCTYPE html>
+<html>
+<head><title>mywebapp</title></head>
+<body>
+  <h1>mywebapp secured with SELinux automation</h1>
+</body>
+</html>

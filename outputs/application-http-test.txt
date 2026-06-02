@@ -1,0 +1,9 @@
+HTTP/1.1 200 OK
+Date: Tue, 02 Jun 2026 18:39:03 GMT
+Server: Apache/2.4.62 (CentOS Stream) OpenSSL/3.5.1
+Last-Modified: Tue, 02 Jun 2026 18:38:35 GMT
+ETag: "87-653499e6717c9"
+Accept-Ranges: bytes
+Content-Length: 135
+Content-Type: text/html; charset=UTF-8
+

@@ -1,0 +1,114 @@
+---
+- name: Configure Application SELinux Policy
+  hosts: selinux_servers
+  become: yes
+
+  vars:
+    app_name: mywebapp
+    app_directory: /opt/mywebapp
+    app_port: 8081
+
+  tasks:
+
+    - name: Install Apache packages
+      package:
+        name:
+          - httpd
+          - mod_ssl
+        state: present
+
+    - name: Create application directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: apache
+        group: apache
+        mode: '0755'
+      loop:
+        - "{{ app_directory }}"
+        - "{{ app_directory }}/htdocs"
+        - "{{ app_directory }}/logs"
+        - "{{ app_directory }}/tmp"
+        - "{{ app_directory }}/config"
+
+    - name: Create application index page
+      copy:
+        content: |
+          <!DOCTYPE html>
+          <html>
+          <head><title>{{ app_name }}</title></head>
+          <body>
+            <h1>{{ app_name }} secured with SELinux automation</h1>
+          </body>
+          </html>
+        dest: "{{ app_directory }}/htdocs/index.html"
+        owner: apache
+        group: apache
+        mode: '0644'
+
+    - name: Set application SELinux contexts
+      community.general.sefcontext:
+        target: "{{ item.path }}"
+        setype: "{{ item.context }}"
+        state: present
+      loop:
+        - { path: "{{ app_directory }}/htdocs(/.*)?", context: "httpd_sys_content_t" }
+        - { path: "{{ app_directory }}/logs(/.*)?", context: "httpd_log_t" }
+        - { path: "{{ app_directory }}/tmp(/.*)?", context: "httpd_tmp_t" }
+        - { path: "{{ app_directory }}/config(/.*)?", context: "httpd_config_t" }
+
+    - name: Apply application contexts
+      command: restorecon -Rv {{ app_directory }}
+      register: restore_app_contexts
+      changed_when: "'relabeled' in restore_app_contexts.stdout"
+
+    - name: Allow application port
+      community.general.seport:
+        ports: "{{ app_port }}"
+        proto: tcp
+        setype: http_port_t
+        state: present
+
+    - name: Enable required SELinux booleans
+      seboolean:
+        name: "{{ item }}"
+        state: yes
+        persistent: yes
+      loop:
+        - httpd_can_network_connect
+        - httpd_can_network_connect_db
+
+    - name: Create Apache virtual host
+      copy:
+        content: |
+          Listen {{ app_port }}
+
+          <VirtualHost *:{{ app_port }}>
+              ServerName {{ app_name }}.local
+              DocumentRoot {{ app_directory }}/htdocs
+              ErrorLog {{ app_directory }}/logs/error.log
+              CustomLog {{ app_directory }}/logs/access.log combined
+
+              <Directory "{{ app_directory }}/htdocs">
+                  AllowOverride None
+                  Require all granted
+              </Directory>
+          </VirtualHost>
+        dest: /etc/httpd/conf.d/{{ app_name }}.conf
+        mode: '0644'
+
+    - name: Start and enable Apache
+      systemd:
+        name: httpd
+        state: restarted
+        enabled: yes
+
+    - name: Test application access
+      uri:
+        url: "http://localhost:{{ app_port }}"
+        status_code: 200
+      register: app_test
+
+    - name: Show application test result
+      debug:
+        msg: "Application HTTP status: {{ app_test.status }}"
