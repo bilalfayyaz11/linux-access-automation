@@ -1,0 +1,27 @@
+---
+- name: Debugging Practice Playbook Fixed
+  hosts: webservers
+  become: yes
+
+  tasks:
+
+    - name: Install htop
+      dnf:
+        name: htop
+        state: present
+
+    - name: Create directory
+      file:
+        path: /tmp/ansible-test
+        state: directory
+        mode: '0755'
+
+    - name: Create test file
+      copy:
+        content: "This is a test file created by Ansible"
+        dest: /tmp/test.txt
+
+    - name: Create greeting file
+      copy:
+        content: "Hello {{ inventory_hostname }}!"
+        dest: /tmp/greeting.txt

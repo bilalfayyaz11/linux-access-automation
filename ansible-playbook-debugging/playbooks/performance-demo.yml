@@ -1,0 +1,24 @@
+---
+- name: Performance Demo
+  hosts: webservers
+  become: yes
+
+  tasks:
+
+    - name: Install packages
+      dnf:
+        name:
+          - git
+          - tree
+        state: present
+
+    - name: Create multiple files
+      copy:
+        content: "File {{ item }}"
+        dest: "/tmp/file{{ item }}.txt"
+      loop:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5

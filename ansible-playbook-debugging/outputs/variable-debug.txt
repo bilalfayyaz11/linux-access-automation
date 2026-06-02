@@ -1,0 +1,24 @@
+
+PLAY [Variable Debugging Example] **********************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [debug] *******************************************************************
+ok: [localhost] => {
+    "msg": "Custom message is: Hello from Ansible"
+}
+
+TASK [debug] *******************************************************************
+ok: [localhost] => {
+    "ansible_distribution": "CentOS"
+}
+
+TASK [debug] *******************************************************************
+ok: [localhost] => {
+    "msg": "Hostname: localhost"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

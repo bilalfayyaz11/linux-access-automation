@@ -1,0 +1,14 @@
+---
+- name: Debugging Practice Playbook
+  hosts: webservers
+  become: yes
+
+  tasks:
+  - name: Install package with wrong indentation
+    dnf:
+      name: htop
+      state: present
+
+    - name: Create directory without path
+      file:
+        state: directory

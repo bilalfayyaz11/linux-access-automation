@@ -1,0 +1,26 @@
+
+PLAY [Install and Configure Apache Web Server] *********************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Install Apache package] **************************************************
+ok: [localhost]
+
+TASK [Start and enable Apache service] *****************************************
+ok: [localhost]
+
+TASK [Create custom index page] ************************************************
+ok: [localhost]
+
+TASK [Verify Apache package installed] *****************************************
+skipping: [localhost]
+
+TASK [Display verification result] *********************************************
+ok: [localhost] => {
+    "httpd_check.stdout": ""
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=5    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+

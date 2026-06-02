@@ -1,0 +1,488 @@
+ansible-playbook [core 2.14.18]
+  config file = /home/centos/ansible-playbook-debugging/ansible.cfg
+  configured module search path = ['/home/centos/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/lib/python3.9/site-packages/ansible
+  ansible collection location = /home/centos/.ansible/collections:/usr/share/ansible/collections
+  executable location = /usr/bin/ansible-playbook
+  python version = 3.9.25 (main, Nov 10 2025, 00:00:00) [GCC 11.5.0 20240719 (Red Hat 11.5.0-14)] (/usr/bin/python3)
+  jinja version = 3.1.2
+  libyaml = True
+Using /home/centos/ansible-playbook-debugging/ansible.cfg as config file
+host_list declined parsing /home/centos/ansible-playbook-debugging/inventory/hosts as it did not pass its verify_file() method
+script declined parsing /home/centos/ansible-playbook-debugging/inventory/hosts as it did not pass its verify_file() method
+auto declined parsing /home/centos/ansible-playbook-debugging/inventory/hosts as it did not pass its verify_file() method
+Parsed /home/centos/ansible-playbook-debugging/inventory/hosts inventory source with ini plugin
+Skipping callback 'default', as we already have a stdout callback.
+Skipping callback 'minimal', as we already have a stdout callback.
+Skipping callback 'oneline', as we already have a stdout callback.
+
+PLAYBOOK: webserver-setup.yml **************************************************
+1 plays in playbooks/webserver-setup.yml
+
+PLAY [Install and Configure Apache Web Server] *********************************
+
+TASK [Gathering Facts] *********************************************************
+task path: /home/centos/ansible-playbook-debugging/playbooks/webserver-setup.yml:2
+<localhost> ESTABLISH LOCAL CONNECTION FOR USER: centos
+<localhost> EXEC /bin/sh -c 'echo ~centos && sleep 0'
+<localhost> EXEC /bin/sh -c '( umask 77 && mkdir -p "` echo /home/centos/.ansible/tmp `"&& mkdir "` echo /home/centos/.ansible/tmp/ansible-tmp-1780408802.6249452-7954-22877137906168 `" && echo ansible-tmp-1780408802.6249452-7954-22877137906168="` echo /home/centos/.ansible/tmp/ansible-tmp-1780408802.6249452-7954-22877137906168 `" ) && sleep 0'
+Using module file /usr/lib/python3.9/site-packages/ansible/modules/setup.py
+<localhost> PUT /home/centos/.ansible/tmp/ansible-local-7947zxqrxihp/tmpin369x3p TO /home/centos/.ansible/tmp/ansible-tmp-1780408802.6249452-7954-22877137906168/AnsiballZ_setup.py
+<localhost> EXEC /bin/sh -c 'chmod u+x /home/centos/.ansible/tmp/ansible-tmp-1780408802.6249452-7954-22877137906168/ /home/centos/.ansible/tmp/ansible-tmp-1780408802.6249452-7954-22877137906168/AnsiballZ_setup.py && sleep 0'
+<localhost> EXEC /bin/sh -c 'sudo -H -S -n  -u root /bin/sh -c '"'"'echo BECOME-SUCCESS-otsatetzfecqdkkhzkpssxxknphudsma ; /usr/bin/python3 /home/centos/.ansible/tmp/ansible-tmp-1780408802.6249452-7954-22877137906168/AnsiballZ_setup.py'"'"' && sleep 0'
+<localhost> EXEC /bin/sh -c 'rm -f -r /home/centos/.ansible/tmp/ansible-tmp-1780408802.6249452-7954-22877137906168/ > /dev/null 2>&1 && sleep 0'
+ok: [localhost]
+
+TASK [Install Apache package] **************************************************
+task path: /home/centos/ansible-playbook-debugging/playbooks/webserver-setup.yml:13
+<localhost> ESTABLISH LOCAL CONNECTION FOR USER: centos
+<localhost> EXEC /bin/sh -c 'echo ~centos && sleep 0'
+<localhost> EXEC /bin/sh -c '( umask 77 && mkdir -p "` echo /home/centos/.ansible/tmp `"&& mkdir "` echo /home/centos/.ansible/tmp/ansible-tmp-1780408804.5796185-8007-11465443135132 `" && echo ansible-tmp-1780408804.5796185-8007-11465443135132="` echo /home/centos/.ansible/tmp/ansible-tmp-1780408804.5796185-8007-11465443135132 `" ) && sleep 0'
+Using module file /usr/lib/python3.9/site-packages/ansible/modules/dnf.py
+<localhost> PUT /home/centos/.ansible/tmp/ansible-local-7947zxqrxihp/tmps5i_efea TO /home/centos/.ansible/tmp/ansible-tmp-1780408804.5796185-8007-11465443135132/AnsiballZ_dnf.py
+<localhost> EXEC /bin/sh -c 'chmod u+x /home/centos/.ansible/tmp/ansible-tmp-1780408804.5796185-8007-11465443135132/ /home/centos/.ansible/tmp/ansible-tmp-1780408804.5796185-8007-11465443135132/AnsiballZ_dnf.py && sleep 0'
+<localhost> EXEC /bin/sh -c 'sudo -H -S -n  -u root /bin/sh -c '"'"'echo BECOME-SUCCESS-toiqepnqmceaitsdbhrzozkinyhxohtz ; /usr/bin/python3 /home/centos/.ansible/tmp/ansible-tmp-1780408804.5796185-8007-11465443135132/AnsiballZ_dnf.py'"'"' && sleep 0'
+<localhost> EXEC /bin/sh -c 'rm -f -r /home/centos/.ansible/tmp/ansible-tmp-1780408804.5796185-8007-11465443135132/ > /dev/null 2>&1 && sleep 0'
+ok: [localhost] => {
+    "changed": false,
+    "invocation": {
+        "module_args": {
+            "allow_downgrade": false,
+            "allowerasing": false,
+            "autoremove": false,
+            "bugfix": false,
+            "cacheonly": false,
+            "conf_file": null,
+            "disable_excludes": null,
+            "disable_gpg_check": false,
+            "disable_plugin": [],
+            "disablerepo": [],
+            "download_dir": null,
+            "download_only": false,
+            "enable_plugin": [],
+            "enablerepo": [],
+            "exclude": [],
+            "install_repoquery": true,
+            "install_weak_deps": true,
+            "installroot": "/",
+            "list": null,
+            "lock_timeout": 30,
+            "name": [
+                "httpd"
+            ],
+            "nobest": false,
+            "releasever": null,
+            "security": false,
+            "skip_broken": false,
+            "sslverify": true,
+            "state": "present",
+            "update_cache": false,
+            "update_only": false,
+            "validate_certs": true
+        }
+    },
+    "msg": "Nothing to do",
+    "rc": 0,
+    "results": []
+}
+
+TASK [Start and enable Apache service] *****************************************
+task path: /home/centos/ansible-playbook-debugging/playbooks/webserver-setup.yml:20
+<localhost> ESTABLISH LOCAL CONNECTION FOR USER: centos
+<localhost> EXEC /bin/sh -c 'echo ~centos && sleep 0'
+<localhost> EXEC /bin/sh -c '( umask 77 && mkdir -p "` echo /home/centos/.ansible/tmp `"&& mkdir "` echo /home/centos/.ansible/tmp/ansible-tmp-1780408806.910928-8026-128814763228414 `" && echo ansible-tmp-1780408806.910928-8026-128814763228414="` echo /home/centos/.ansible/tmp/ansible-tmp-1780408806.910928-8026-128814763228414 `" ) && sleep 0'
+Using module file /usr/lib/python3.9/site-packages/ansible/modules/systemd.py
+<localhost> PUT /home/centos/.ansible/tmp/ansible-local-7947zxqrxihp/tmp8i11_dxv TO /home/centos/.ansible/tmp/ansible-tmp-1780408806.910928-8026-128814763228414/AnsiballZ_systemd.py
+<localhost> EXEC /bin/sh -c 'chmod u+x /home/centos/.ansible/tmp/ansible-tmp-1780408806.910928-8026-128814763228414/ /home/centos/.ansible/tmp/ansible-tmp-1780408806.910928-8026-128814763228414/AnsiballZ_systemd.py && sleep 0'
+<localhost> EXEC /bin/sh -c 'sudo -H -S -n  -u root /bin/sh -c '"'"'echo BECOME-SUCCESS-mpdvqzkuubcxnexijbosymoehajmcosy ; /usr/bin/python3 /home/centos/.ansible/tmp/ansible-tmp-1780408806.910928-8026-128814763228414/AnsiballZ_systemd.py'"'"' && sleep 0'
+<localhost> EXEC /bin/sh -c 'rm -f -r /home/centos/.ansible/tmp/ansible-tmp-1780408806.910928-8026-128814763228414/ > /dev/null 2>&1 && sleep 0'
+ok: [localhost] => {
+    "changed": false,
+    "enabled": true,
+    "invocation": {
+        "module_args": {
+            "daemon_reexec": false,
+            "daemon_reload": false,
+            "enabled": true,
+            "force": null,
+            "masked": null,
+            "name": "httpd",
+            "no_block": false,
+            "scope": "system",
+            "state": "started"
+        }
+    },
+    "name": "httpd",
+    "state": "started",
+    "status": {
+        "AccessSELinuxContext": "system_u:object_r:httpd_unit_file_t:s0",
+        "ActiveEnterTimestamp": "Tue 2026-06-02 13:55:01 UTC",
+        "ActiveEnterTimestampMonotonic": "368533049",
+        "ActiveExitTimestampMonotonic": "0",
+        "ActiveState": "active",
+        "After": "network.target systemd-tmpfiles-setup.service tmp.mount -.mount systemd-journald.socket remote-fs.target httpd-init.service sysinit.target system.slice nss-lookup.target basic.target",
+        "AllowIsolate": "no",
+        "AssertResult": "yes",
+        "AssertTimestamp": "Tue 2026-06-02 13:55:01 UTC",
+        "AssertTimestampMonotonic": "368433584",
+        "Before": "multi-user.target shutdown.target",
+        "BlockIOAccounting": "no",
+        "BlockIOWeight": "[not set]",
+        "CPUAccounting": "yes",
+        "CPUAffinityFromNUMA": "no",
+        "CPUQuotaPerSecUSec": "infinity",
+        "CPUQuotaPeriodUSec": "infinity",
+        "CPUSchedulingPolicy": "0",
+        "CPUSchedulingPriority": "0",
+        "CPUSchedulingResetOnFork": "no",
+        "CPUShares": "[not set]",
+        "CPUUsageNSec": "321965000",
+        "CPUWeight": "[not set]",
+        "CacheDirectoryMode": "0755",
+        "CanFreeze": "yes",
+        "CanIsolate": "no",
+        "CanReload": "yes",
+        "CanStart": "yes",
+        "CanStop": "yes",
+        "CapabilityBoundingSet": "cap_chown cap_dac_override cap_dac_read_search cap_fowner cap_fsetid cap_kill cap_setgid cap_setuid cap_setpcap cap_linux_immutable cap_net_bind_service cap_net_broadcast cap_net_admin cap_net_raw cap_ipc_lock cap_ipc_owner cap_sys_module cap_sys_rawio cap_sys_chroot cap_sys_ptrace cap_sys_pacct cap_sys_admin cap_sys_boot cap_sys_nice cap_sys_resource cap_sys_time cap_sys_tty_config cap_mknod cap_lease cap_audit_write cap_audit_control cap_setfcap cap_mac_override cap_mac_admin cap_syslog cap_wake_alarm cap_block_suspend cap_audit_read cap_perfmon cap_bpf cap_checkpoint_restore",
+        "CleanResult": "success",
+        "CollectMode": "inactive",
+        "ConditionResult": "yes",
+        "ConditionTimestamp": "Tue 2026-06-02 13:55:01 UTC",
+        "ConditionTimestampMonotonic": "368433581",
+        "ConfigurationDirectoryMode": "0755",
+        "Conflicts": "shutdown.target",
+        "ControlGroup": "/system.slice/httpd.service",
+        "ControlGroupId": "6050",
+        "ControlPID": "0",
+        "CoredumpFilter": "0x33",
+        "DefaultDependencies": "yes",
+        "DefaultMemoryLow": "0",
+        "DefaultMemoryMin": "0",
+        "Delegate": "no",
+        "Description": "The Apache HTTP Server",
+        "DevicePolicy": "auto",
+        "Documentation": "\"man:httpd.service(8)\"",
+        "DynamicUser": "no",
+        "Environment": "LANG=C",
+        "ExecMainCode": "0",
+        "ExecMainExitTimestampMonotonic": "0",
+        "ExecMainPID": "6146",
+        "ExecMainStartTimestamp": "Tue 2026-06-02 13:55:01 UTC",
+        "ExecMainStartTimestampMonotonic": "368446565",
+        "ExecMainStatus": "0",
+        "ExecReload": "{ path=/usr/sbin/httpd ; argv[]=/usr/sbin/httpd $OPTIONS -k graceful ; ignore_errors=no ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }",
+        "ExecReloadEx": "{ path=/usr/sbin/httpd ; argv[]=/usr/sbin/httpd $OPTIONS -k graceful ; flags= ; start_time=[n/a] ; stop_time=[n/a] ; pid=0 ; code=(null) ; status=0/0 }",
+        "ExecStart": "{ path=/usr/sbin/httpd ; argv[]=/usr/sbin/httpd $OPTIONS -DFOREGROUND ; ignore_errors=no ; start_time=[Tue 2026-06-02 13:55:01 UTC] ; stop_time=[n/a] ; pid=6146 ; code=(null) ; status=0/0 }",
+        "ExecStartEx": "{ path=/usr/sbin/httpd ; argv[]=/usr/sbin/httpd $OPTIONS -DFOREGROUND ; flags= ; start_time=[Tue 2026-06-02 13:55:01 UTC] ; stop_time=[n/a] ; pid=6146 ; code=(null) ; status=0/0 }",
+        "ExitType": "main",
+        "FailureAction": "none",
+        "FileDescriptorStoreMax": "0",
+        "FinalKillSignal": "9",
+        "FragmentPath": "/usr/lib/systemd/system/httpd.service",
+        "FreezerState": "running",
+        "GID": "[not set]",
+        "GuessMainPID": "yes",
+        "IOAccounting": "no",
+        "IOReadBytes": "18446744073709551615",
+        "IOReadOperations": "18446744073709551615",
+        "IOSchedulingClass": "2",
+        "IOSchedulingPriority": "4",
+        "IOWeight": "[not set]",
+        "IOWriteBytes": "18446744073709551615",
+        "IOWriteOperations": "18446744073709551615",
+        "IPAccounting": "no",
+        "IPEgressBytes": "[no data]",
+        "IPEgressPackets": "[no data]",
+        "IPIngressBytes": "[no data]",
+        "IPIngressPackets": "[no data]",
+        "Id": "httpd.service",
+        "IgnoreOnIsolate": "no",
+        "IgnoreSIGPIPE": "yes",
+        "InactiveEnterTimestampMonotonic": "0",
+        "InactiveExitTimestamp": "Tue 2026-06-02 13:55:01 UTC",
+        "InactiveExitTimestampMonotonic": "368447079",
+        "InvocationID": "bc7ea9f45a634a98b2163fde19191d6a",
+        "JobRunningTimeoutUSec": "infinity",
+        "JobTimeoutAction": "none",
+        "JobTimeoutUSec": "infinity",
+        "KeyringMode": "private",
+        "KillMode": "mixed",
+        "KillSignal": "28",
+        "LimitAS": "infinity",
+        "LimitASSoft": "infinity",
+        "LimitCORE": "infinity",
+        "LimitCORESoft": "infinity",
+        "LimitCPU": "infinity",
+        "LimitCPUSoft": "infinity",
+        "LimitDATA": "infinity",
+        "LimitDATASoft": "infinity",
+        "LimitFSIZE": "infinity",
+        "LimitFSIZESoft": "infinity",
+        "LimitLOCKS": "infinity",
+        "LimitLOCKSSoft": "infinity",
+        "LimitMEMLOCK": "8388608",
+        "LimitMEMLOCKSoft": "8388608",
+        "LimitMSGQUEUE": "819200",
+        "LimitMSGQUEUESoft": "819200",
+        "LimitNICE": "0",
+        "LimitNICESoft": "0",
+        "LimitNOFILE": "524288",
+        "LimitNOFILESoft": "1024",
+        "LimitNPROC": "61250",
+        "LimitNPROCSoft": "61250",
+        "LimitRSS": "infinity",
+        "LimitRSSSoft": "infinity",
+        "LimitRTPRIO": "0",
+        "LimitRTPRIOSoft": "0",
+        "LimitRTTIME": "infinity",
+        "LimitRTTIMESoft": "infinity",
+        "LimitSIGPENDING": "61250",
+        "LimitSIGPENDINGSoft": "61250",
+        "LimitSTACK": "infinity",
+        "LimitSTACKSoft": "8388608",
+        "LoadState": "loaded",
+        "LockPersonality": "no",
+        "LogLevelMax": "-1",
+        "LogRateLimitBurst": "0",
+        "LogRateLimitIntervalUSec": "0",
+        "LogsDirectoryMode": "0755",
+        "MainPID": "6146",
+        "ManagedOOMMemoryPressure": "auto",
+        "ManagedOOMMemoryPressureLimit": "0",
+        "ManagedOOMPreference": "none",
+        "ManagedOOMSwap": "auto",
+        "MemoryAccounting": "yes",
+        "MemoryAvailable": "infinity",
+        "MemoryCurrent": "15495168",
+        "MemoryDenyWriteExecute": "no",
+        "MemoryHigh": "infinity",
+        "MemoryLimit": "infinity",
+        "MemoryLow": "0",
+        "MemoryMax": "infinity",
+        "MemoryMin": "0",
+        "MemoryPeak": "16187392",
+        "MemorySwapMax": "infinity",
+        "MountAPIVFS": "no",
+        "NFileDescriptorStore": "0",
+        "NRestarts": "0",
+        "NUMAPolicy": "n/a",
+        "Names": "httpd.service",
+        "NeedDaemonReload": "no",
+        "Nice": "0",
+        "NoNewPrivileges": "no",
+        "NonBlocking": "no",
+        "NotifyAccess": "main",
+        "OOMPolicy": "continue",
+        "OOMScoreAdjust": "0",
+        "OnFailureJobMode": "replace",
+        "OnSuccessJobMode": "fail",
+        "Perpetual": "no",
+        "PrivateDevices": "no",
+        "PrivateIPC": "no",
+        "PrivateMounts": "no",
+        "PrivateNetwork": "no",
+        "PrivateTmp": "yes",
+        "PrivateUsers": "no",
+        "ProcSubset": "all",
+        "ProtectClock": "no",
+        "ProtectControlGroups": "no",
+        "ProtectHome": "no",
+        "ProtectHostname": "no",
+        "ProtectKernelLogs": "no",
+        "ProtectKernelModules": "no",
+        "ProtectKernelTunables": "no",
+        "ProtectProc": "default",
+        "ProtectSystem": "no",
+        "RefuseManualStart": "no",
+        "RefuseManualStop": "no",
+        "ReloadResult": "success",
+        "ReloadSignal": "1",
+        "RemainAfterExit": "no",
+        "RemoveIPC": "no",
+        "Requires": "sysinit.target system.slice -.mount",
+        "RequiresMountsFor": "/var/tmp",
+        "Restart": "no",
+        "RestartKillSignal": "28",
+        "RestartUSec": "100ms",
+        "RestrictNamespaces": "no",
+        "RestrictRealtime": "no",
+        "RestrictSUIDSGID": "no",
+        "Result": "success",
+        "RootDirectoryStartOnly": "no",
+        "RuntimeDirectoryMode": "0755",
+        "RuntimeDirectoryPreserve": "no",
+        "RuntimeMaxUSec": "infinity",
+        "RuntimeRandomizedExtraUSec": "0",
+        "SameProcessGroup": "no",
+        "SecureBits": "0",
+        "SendSIGHUP": "no",
+        "SendSIGKILL": "yes",
+        "Slice": "system.slice",
+        "StandardError": "inherit",
+        "StandardInput": "null",
+        "StandardOutput": "journal",
+        "StartLimitAction": "none",
+        "StartLimitBurst": "5",
+        "StartLimitIntervalUSec": "10s",
+        "StartupBlockIOWeight": "[not set]",
+        "StartupCPUShares": "[not set]",
+        "StartupCPUWeight": "[not set]",
+        "StartupIOWeight": "[not set]",
+        "StateChangeTimestamp": "Tue 2026-06-02 13:55:01 UTC",
+        "StateChangeTimestampMonotonic": "368533049",
+        "StateDirectoryMode": "0755",
+        "StatusErrno": "0",
+        "StatusText": "Total requests: 0; Idle/Busy workers 100/0;Requests/sec: 0; Bytes served/sec:   0 B/sec",
+        "StopWhenUnneeded": "no",
+        "SubState": "running",
+        "SuccessAction": "none",
+        "SyslogFacility": "3",
+        "SyslogLevel": "6",
+        "SyslogLevelPrefix": "yes",
+        "SyslogPriority": "30",
+        "SystemCallErrorNumber": "2147483646",
+        "TTYReset": "no",
+        "TTYVHangup": "no",
+        "TTYVTDisallocate": "no",
+        "TasksAccounting": "yes",
+        "TasksCurrent": "177",
+        "TasksMax": "98000",
+        "TimeoutAbortUSec": "1min 30s",
+        "TimeoutCleanUSec": "infinity",
+        "TimeoutStartFailureMode": "terminate",
+        "TimeoutStartUSec": "1min 30s",
+        "TimeoutStopFailureMode": "terminate",
+        "TimeoutStopUSec": "1min 30s",
+        "TimerSlackNSec": "50000",
+        "Transient": "no",
+        "Type": "notify",
+        "UID": "[not set]",
+        "UMask": "0022",
+        "UnitFilePreset": "disabled",
+        "UnitFileState": "enabled",
+        "UtmpMode": "init",
+        "WantedBy": "multi-user.target",
+        "Wants": "httpd-init.service",
+        "WatchdogSignal": "6",
+        "WatchdogTimestampMonotonic": "0",
+        "WatchdogUSec": "0"
+    }
+}
+
+TASK [Create custom index page] ************************************************
+task path: /home/centos/ansible-playbook-debugging/playbooks/webserver-setup.yml:28
+<localhost> ESTABLISH LOCAL CONNECTION FOR USER: centos
+<localhost> EXEC /bin/sh -c 'echo ~centos && sleep 0'
+<localhost> EXEC /bin/sh -c '( umask 77 && mkdir -p "` echo /home/centos/.ansible/tmp `"&& mkdir "` echo /home/centos/.ansible/tmp/ansible-tmp-1780408808.042131-8046-12236926644126 `" && echo ansible-tmp-1780408808.042131-8046-12236926644126="` echo /home/centos/.ansible/tmp/ansible-tmp-1780408808.042131-8046-12236926644126 `" ) && sleep 0'
+Using module file /usr/lib/python3.9/site-packages/ansible/modules/stat.py
+<localhost> PUT /home/centos/.ansible/tmp/ansible-local-7947zxqrxihp/tmp913d506p TO /home/centos/.ansible/tmp/ansible-tmp-1780408808.042131-8046-12236926644126/AnsiballZ_stat.py
+<localhost> EXEC /bin/sh -c 'chmod u+x /home/centos/.ansible/tmp/ansible-tmp-1780408808.042131-8046-12236926644126/ /home/centos/.ansible/tmp/ansible-tmp-1780408808.042131-8046-12236926644126/AnsiballZ_stat.py && sleep 0'
+<localhost> EXEC /bin/sh -c 'sudo -H -S -n  -u root /bin/sh -c '"'"'echo BECOME-SUCCESS-bwjtybjcyreprerpeklqipcqsgosdmng ; /usr/bin/python3 /home/centos/.ansible/tmp/ansible-tmp-1780408808.042131-8046-12236926644126/AnsiballZ_stat.py'"'"' && sleep 0'
+Using module file /usr/lib/python3.9/site-packages/ansible/modules/file.py
+<localhost> PUT /home/centos/.ansible/tmp/ansible-local-7947zxqrxihp/tmpuonk9e7m TO /home/centos/.ansible/tmp/ansible-tmp-1780408808.042131-8046-12236926644126/AnsiballZ_file.py
+<localhost> EXEC /bin/sh -c 'chmod u+x /home/centos/.ansible/tmp/ansible-tmp-1780408808.042131-8046-12236926644126/ /home/centos/.ansible/tmp/ansible-tmp-1780408808.042131-8046-12236926644126/AnsiballZ_file.py && sleep 0'
+<localhost> EXEC /bin/sh -c 'sudo -H -S -n  -u root /bin/sh -c '"'"'echo BECOME-SUCCESS-tqjcqdfypwczeyottznpgmzpsganmtqa ; /usr/bin/python3 /home/centos/.ansible/tmp/ansible-tmp-1780408808.042131-8046-12236926644126/AnsiballZ_file.py'"'"' && sleep 0'
+<localhost> EXEC /bin/sh -c 'rm -f -r /home/centos/.ansible/tmp/ansible-tmp-1780408808.042131-8046-12236926644126/ > /dev/null 2>&1 && sleep 0'
+ok: [localhost] => {
+    "changed": false,
+    "checksum": "844fc221563cc7021b0f37d68c5fb26d241460e4",
+    "dest": "/var/www/html/index.html",
+    "diff": {
+        "after": {
+            "path": "/var/www/html/index.html"
+        },
+        "before": {
+            "path": "/var/www/html/index.html"
+        }
+    },
+    "gid": 0,
+    "group": "root",
+    "invocation": {
+        "module_args": {
+            "_diff_peek": null,
+            "_original_basename": "tmpyf1auv1a",
+            "access_time": null,
+            "access_time_format": "%Y%m%d%H%M.%S",
+            "attributes": null,
+            "dest": "/var/www/html/index.html",
+            "follow": true,
+            "force": false,
+            "group": null,
+            "mode": "0644",
+            "modification_time": null,
+            "modification_time_format": "%Y%m%d%H%M.%S",
+            "owner": null,
+            "path": "/var/www/html/index.html",
+            "recurse": false,
+            "selevel": null,
+            "serole": null,
+            "setype": null,
+            "seuser": null,
+            "src": null,
+            "state": "file",
+            "unsafe_writes": false
+        }
+    },
+    "mode": "0644",
+    "owner": "root",
+    "path": "/var/www/html/index.html",
+    "secontext": "system_u:object_r:httpd_sys_content_t:s0",
+    "size": 88,
+    "state": "file",
+    "uid": 0
+}
+
+TASK [Verify Apache package installed] *****************************************
+task path: /home/centos/ansible-playbook-debugging/playbooks/webserver-setup.yml:42
+<localhost> ESTABLISH LOCAL CONNECTION FOR USER: centos
+<localhost> EXEC /bin/sh -c 'echo ~centos && sleep 0'
+<localhost> EXEC /bin/sh -c '( umask 77 && mkdir -p "` echo /home/centos/.ansible/tmp `"&& mkdir "` echo /home/centos/.ansible/tmp/ansible-tmp-1780408809.47538-8072-96320640635129 `" && echo ansible-tmp-1780408809.47538-8072-96320640635129="` echo /home/centos/.ansible/tmp/ansible-tmp-1780408809.47538-8072-96320640635129 `" ) && sleep 0'
+Using module file /usr/lib/python3.9/site-packages/ansible/modules/command.py
+<localhost> PUT /home/centos/.ansible/tmp/ansible-local-7947zxqrxihp/tmpgemwnudc TO /home/centos/.ansible/tmp/ansible-tmp-1780408809.47538-8072-96320640635129/AnsiballZ_command.py
+<localhost> EXEC /bin/sh -c 'chmod u+x /home/centos/.ansible/tmp/ansible-tmp-1780408809.47538-8072-96320640635129/ /home/centos/.ansible/tmp/ansible-tmp-1780408809.47538-8072-96320640635129/AnsiballZ_command.py && sleep 0'
+<localhost> EXEC /bin/sh -c 'sudo -H -S -n  -u root /bin/sh -c '"'"'echo BECOME-SUCCESS-qbhuuggxgqcpskmyckvktrxewgbwbngg ; /usr/bin/python3 /home/centos/.ansible/tmp/ansible-tmp-1780408809.47538-8072-96320640635129/AnsiballZ_command.py'"'"' && sleep 0'
+<localhost> EXEC /bin/sh -c 'rm -f -r /home/centos/.ansible/tmp/ansible-tmp-1780408809.47538-8072-96320640635129/ > /dev/null 2>&1 && sleep 0'
+ok: [localhost] => {
+    "changed": false,
+    "cmd": [
+        "rpm",
+        "-q",
+        "httpd"
+    ],
+    "delta": "0:00:00.023794",
+    "end": "2026-06-02 14:00:10.006646",
+    "invocation": {
+        "module_args": {
+            "_raw_params": "rpm -q httpd",
+            "_uses_shell": false,
+            "argv": null,
+            "chdir": null,
+            "creates": null,
+            "executable": null,
+            "removes": null,
+            "stdin": null,
+            "stdin_add_newline": true,
+            "strip_empty_ends": true
+        }
+    },
+    "msg": "",
+    "rc": 0,
+    "start": "2026-06-02 14:00:09.982852",
+    "stderr": "",
+    "stderr_lines": [],
+    "stdout": "httpd-2.4.62-13.el9.x86_64",
+    "stdout_lines": [
+        "httpd-2.4.62-13.el9.x86_64"
+    ]
+}
+
+TASK [Display verification result] *********************************************
+task path: /home/centos/ansible-playbook-debugging/playbooks/webserver-setup.yml:49
+ok: [localhost] => {
+    "httpd_check.stdout": "httpd-2.4.62-13.el9.x86_64"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=6    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

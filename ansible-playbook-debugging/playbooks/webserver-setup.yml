@@ -1,0 +1,53 @@
+---
+- name: Install and Configure Apache Web Server
+  hosts: webservers
+  become: yes
+
+  vars:
+    package_name: httpd
+    service_name: httpd
+    document_root: /var/www/html
+
+  tasks:
+
+    - name: Install Apache package
+      dnf:
+        name: "{{ package_name }}"
+        state: present
+      tags:
+        - install
+
+    - name: Start and enable Apache service
+      systemd:
+        name: "{{ service_name }}"
+        state: started
+        enabled: yes
+      tags:
+        - service
+
+    - name: Create custom index page
+      copy:
+        content: |
+          <html>
+          <body>
+            <h1>Configured by Ansible</h1>
+            <p>Host: {{ inventory_hostname }}</p>
+          </body>
+          </html>
+        dest: "{{ document_root }}/index.html"
+        mode: '0644'
+      tags:
+        - content
+
+    - name: Verify Apache package installed
+      command: rpm -q httpd
+      register: httpd_check
+      changed_when: false
+      tags:
+        - verify
+
+    - name: Display verification result
+      debug:
+        var: httpd_check.stdout
+      tags:
+        - verify

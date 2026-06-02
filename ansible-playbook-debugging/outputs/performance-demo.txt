@@ -1,0 +1,19 @@
+
+PLAY [Performance Demo] ********************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Install packages] ********************************************************
+ok: [localhost]
+
+TASK [Create multiple files] ***************************************************
+changed: [localhost] => (item=1)
+changed: [localhost] => (item=2)
+changed: [localhost] => (item=3)
+changed: [localhost] => (item=4)
+changed: [localhost] => (item=5)
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=3    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

@@ -1,0 +1,14 @@
+---
+- name: Error Handling Examples
+  hosts: webservers
+  become: yes
+
+  tasks:
+
+    - name: Intentional failure
+      command: /bin/false
+      ignore_errors: yes
+
+    - name: Continue execution
+      debug:
+        msg: "Error handled successfully"

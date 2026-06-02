@@ -1,0 +1,18 @@
+
+PLAY [Advanced Apache Configuration] *******************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Create custom Apache configuration] **************************************
+changed: [localhost]
+
+TASK [Install additional packages] *********************************************
+changed: [localhost]
+
+RUNNING HANDLER [restart apache] ***********************************************
+changed: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=4    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

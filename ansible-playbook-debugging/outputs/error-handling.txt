@@ -1,0 +1,18 @@
+
+PLAY [Error Handling Examples] *************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Intentional failure] *****************************************************
+fatal: [localhost]: FAILED! => {"changed": true, "cmd": ["/bin/false"], "delta": "0:00:00.006284", "end": "2026-06-02 14:03:03.932902", "msg": "non-zero return code", "rc": 1, "start": "2026-06-02 14:03:03.926618", "stderr": "", "stderr_lines": [], "stdout": "", "stdout_lines": []}
+...ignoring
+
+TASK [Continue execution] ******************************************************
+ok: [localhost] => {
+    "msg": "Error handled successfully"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=3    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=1   
+
