@@ -1,0 +1,62 @@
+
+PLAY [Comprehensive Validation and Reporting] **********************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Initialize counters] *****************************************************
+ok: [localhost]
+
+TASK [Increment total checks] **************************************************
+ok: [localhost]
+
+TASK [Assert minimum memory] ***************************************************
+ok: [localhost] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+
+TASK [Record pass] *************************************************************
+ok: [localhost]
+
+TASK [Increment total checks] **************************************************
+ok: [localhost]
+
+TASK [Assert CPU count] ********************************************************
+ok: [localhost] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+
+TASK [Record CPU pass] *********************************************************
+ok: [localhost]
+
+TASK [Increment total checks] **************************************************
+ok: [localhost]
+
+TASK [Gather service facts] ****************************************************
+ok: [localhost]
+
+TASK [Verify SSH service] ******************************************************
+ok: [localhost] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+
+TASK [Record SSH pass] *********************************************************
+ok: [localhost]
+
+TASK [Calculate success rate] **************************************************
+ok: [localhost]
+
+TASK [Generate report] *********************************************************
+changed: [localhost]
+
+TASK [Display summary] *********************************************************
+ok: [localhost] => {
+    "msg": "Validation Complete\nStatus: PASS\nSuccess Rate: 100.0%\n"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=15   changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

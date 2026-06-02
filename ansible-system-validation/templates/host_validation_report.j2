@@ -1,0 +1,18 @@
+{
+  "hostname": "{{ report_data.hostname }}",
+  "overall_status": "{{ report_data.overall_status }}",
+  "validation_timestamp": "{{ report_data.validation_timestamp }}",
+  "statistics": {
+    "total_checks": {{ report_data.statistics.total_checks }},
+    "passed_checks": {{ report_data.statistics.passed_checks }},
+    "failed_checks": {{ report_data.statistics.failed_checks }},
+    "success_rate": {{ report_data.statistics.success_rate }}
+  },
+  "system_info": {
+    "os_family": "{{ report_data.system_info.os_family }}",
+    "os_version": "{{ report_data.system_info.os_version }}",
+    "architecture": "{{ report_data.system_info.architecture }}"
+  },
+  "validation_results": {{ report_data.validation_results | to_json }},
+  "errors": {{ report_data.errors | to_json }}
+}

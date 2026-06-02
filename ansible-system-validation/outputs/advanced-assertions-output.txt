@@ -1,0 +1,312 @@
+
+PLAY [Advanced System Configuration Assertions] ********************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Check SSH configuration file] ********************************************
+ok: [localhost]
+
+TASK [Assert SSH configuration exists] *****************************************
+ok: [localhost] => {
+    "changed": false,
+    "msg": "SSH configuration file exists."
+}
+
+TASK [Get current load average] ************************************************
+ok: [localhost]
+
+TASK [Assert load average is acceptable] ***************************************
+ok: [localhost] => {
+    "changed": false,
+    "msg": "Load average 0.32 is acceptable."
+}
+
+TASK [Validate critical directories] *******************************************
+ok: [localhost] => (item=/etc)
+ok: [localhost] => (item=/var/log)
+ok: [localhost] => (item=/tmp)
+ok: [localhost] => (item=/home)
+
+TASK [Assert critical directories exist] ***************************************
+ok: [localhost] => (item={'changed': False, 'stat': {'exists': True, 'path': '/etc', 'mode': '0755', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 8192, 'inode': 6291584, 'dev': 66309, 'nlink': 138, 'atime': 1780429024.9284394, 'mtime': 1780428951.1207182, 'ctime': 1780428951.1207182, 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': False, 'rgrp': True, 'xgrp': True, 'woth': False, 'roth': True, 'xoth': True, 'isuid': False, 'isgid': False, 'blocks': 24, 'block_size': 4096, 'device_type': 0, 'readable': True, 'writeable': True, 'executable': True, 'pw_name': 'root', 'gr_name': 'root', 'mimetype': 'inode/directory', 'charset': 'binary', 'version': '393618126', 'attributes': [], 'attr_flags': ''}, 'invocation': {'module_args': {'path': '/etc', 'follow': False, 'get_md5': False, 'get_checksum': True, 'get_mime': True, 'get_attributes': True, 'checksum_algorithm': 'sha1'}}, 'failed': False, 'item': '/etc', 'ansible_loop_var': 'item'}) => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": {
+        "ansible_loop_var": "item",
+        "changed": false,
+        "failed": false,
+        "invocation": {
+            "module_args": {
+                "checksum_algorithm": "sha1",
+                "follow": false,
+                "get_attributes": true,
+                "get_checksum": true,
+                "get_md5": false,
+                "get_mime": true,
+                "path": "/etc"
+            }
+        },
+        "item": "/etc",
+        "stat": {
+            "atime": 1780429024.9284394,
+            "attr_flags": "",
+            "attributes": [],
+            "block_size": 4096,
+            "blocks": 24,
+            "charset": "binary",
+            "ctime": 1780428951.1207182,
+            "dev": 66309,
+            "device_type": 0,
+            "executable": true,
+            "exists": true,
+            "gid": 0,
+            "gr_name": "root",
+            "inode": 6291584,
+            "isblk": false,
+            "ischr": false,
+            "isdir": true,
+            "isfifo": false,
+            "isgid": false,
+            "islnk": false,
+            "isreg": false,
+            "issock": false,
+            "isuid": false,
+            "mimetype": "inode/directory",
+            "mode": "0755",
+            "mtime": 1780428951.1207182,
+            "nlink": 138,
+            "path": "/etc",
+            "pw_name": "root",
+            "readable": true,
+            "rgrp": true,
+            "roth": true,
+            "rusr": true,
+            "size": 8192,
+            "uid": 0,
+            "version": "393618126",
+            "wgrp": false,
+            "woth": false,
+            "writeable": true,
+            "wusr": true,
+            "xgrp": true,
+            "xoth": true,
+            "xusr": true
+        }
+    },
+    "msg": "Critical directory /etc exists."
+}
+ok: [localhost] => (item={'changed': False, 'stat': {'exists': True, 'path': '/var/log', 'mode': '0755', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 4096, 'inode': 4415355, 'dev': 66309, 'nlink': 16, 'atime': 1780428730.4639997, 'mtime': 1780428747.6872277, 'ctime': 1780428747.6872277, 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': False, 'rgrp': True, 'xgrp': True, 'woth': False, 'roth': True, 'xoth': True, 'isuid': False, 'isgid': False, 'blocks': 8, 'block_size': 4096, 'device_type': 0, 'readable': True, 'writeable': True, 'executable': True, 'pw_name': 'root', 'gr_name': 'root', 'mimetype': 'inode/directory', 'charset': 'binary', 'version': '2276523230', 'attributes': [], 'attr_flags': ''}, 'invocation': {'module_args': {'path': '/var/log', 'follow': False, 'get_md5': False, 'get_checksum': True, 'get_mime': True, 'get_attributes': True, 'checksum_algorithm': 'sha1'}}, 'failed': False, 'item': '/var/log', 'ansible_loop_var': 'item'}) => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": {
+        "ansible_loop_var": "item",
+        "changed": false,
+        "failed": false,
+        "invocation": {
+            "module_args": {
+                "checksum_algorithm": "sha1",
+                "follow": false,
+                "get_attributes": true,
+                "get_checksum": true,
+                "get_md5": false,
+                "get_mime": true,
+                "path": "/var/log"
+            }
+        },
+        "item": "/var/log",
+        "stat": {
+            "atime": 1780428730.4639997,
+            "attr_flags": "",
+            "attributes": [],
+            "block_size": 4096,
+            "blocks": 8,
+            "charset": "binary",
+            "ctime": 1780428747.6872277,
+            "dev": 66309,
+            "device_type": 0,
+            "executable": true,
+            "exists": true,
+            "gid": 0,
+            "gr_name": "root",
+            "inode": 4415355,
+            "isblk": false,
+            "ischr": false,
+            "isdir": true,
+            "isfifo": false,
+            "isgid": false,
+            "islnk": false,
+            "isreg": false,
+            "issock": false,
+            "isuid": false,
+            "mimetype": "inode/directory",
+            "mode": "0755",
+            "mtime": 1780428747.6872277,
+            "nlink": 16,
+            "path": "/var/log",
+            "pw_name": "root",
+            "readable": true,
+            "rgrp": true,
+            "roth": true,
+            "rusr": true,
+            "size": 4096,
+            "uid": 0,
+            "version": "2276523230",
+            "wgrp": false,
+            "woth": false,
+            "writeable": true,
+            "wusr": true,
+            "xgrp": true,
+            "xoth": true,
+            "xusr": true
+        }
+    },
+    "msg": "Critical directory /var/log exists."
+}
+ok: [localhost] => (item={'changed': False, 'stat': {'exists': True, 'path': '/tmp', 'mode': '1777', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 4096, 'inode': 4325507, 'dev': 66309, 'nlink': 15, 'atime': 1749093898.8274949, 'mtime': 1780429204.788172, 'ctime': 1780429204.788172, 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': True, 'rgrp': True, 'xgrp': True, 'woth': True, 'roth': True, 'xoth': True, 'isuid': False, 'isgid': False, 'blocks': 8, 'block_size': 4096, 'device_type': 0, 'readable': True, 'writeable': True, 'executable': True, 'pw_name': 'root', 'gr_name': 'root', 'mimetype': 'inode/directory', 'charset': 'binary', 'version': '2784135624', 'attributes': [], 'attr_flags': ''}, 'invocation': {'module_args': {'path': '/tmp', 'follow': False, 'get_md5': False, 'get_checksum': True, 'get_mime': True, 'get_attributes': True, 'checksum_algorithm': 'sha1'}}, 'failed': False, 'item': '/tmp', 'ansible_loop_var': 'item'}) => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": {
+        "ansible_loop_var": "item",
+        "changed": false,
+        "failed": false,
+        "invocation": {
+            "module_args": {
+                "checksum_algorithm": "sha1",
+                "follow": false,
+                "get_attributes": true,
+                "get_checksum": true,
+                "get_md5": false,
+                "get_mime": true,
+                "path": "/tmp"
+            }
+        },
+        "item": "/tmp",
+        "stat": {
+            "atime": 1749093898.8274949,
+            "attr_flags": "",
+            "attributes": [],
+            "block_size": 4096,
+            "blocks": 8,
+            "charset": "binary",
+            "ctime": 1780429204.788172,
+            "dev": 66309,
+            "device_type": 0,
+            "executable": true,
+            "exists": true,
+            "gid": 0,
+            "gr_name": "root",
+            "inode": 4325507,
+            "isblk": false,
+            "ischr": false,
+            "isdir": true,
+            "isfifo": false,
+            "isgid": false,
+            "islnk": false,
+            "isreg": false,
+            "issock": false,
+            "isuid": false,
+            "mimetype": "inode/directory",
+            "mode": "1777",
+            "mtime": 1780429204.788172,
+            "nlink": 15,
+            "path": "/tmp",
+            "pw_name": "root",
+            "readable": true,
+            "rgrp": true,
+            "roth": true,
+            "rusr": true,
+            "size": 4096,
+            "uid": 0,
+            "version": "2784135624",
+            "wgrp": true,
+            "woth": true,
+            "writeable": true,
+            "wusr": true,
+            "xgrp": true,
+            "xoth": true,
+            "xusr": true
+        }
+    },
+    "msg": "Critical directory /tmp exists."
+}
+ok: [localhost] => (item={'changed': False, 'stat': {'exists': True, 'path': '/home', 'mode': '0755', 'isdir': True, 'ischr': False, 'isblk': False, 'isreg': False, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 0, 'gid': 0, 'size': 36, 'inode': 2097281, 'dev': 66309, 'nlink': 4, 'atime': 1749093890.9084053, 'mtime': 1767166716.7907708, 'ctime': 1780428729.3379998, 'wusr': True, 'rusr': True, 'xusr': True, 'wgrp': False, 'rgrp': True, 'xgrp': True, 'woth': False, 'roth': True, 'xoth': True, 'isuid': False, 'isgid': False, 'blocks': 0, 'block_size': 4096, 'device_type': 0, 'readable': True, 'writeable': True, 'executable': True, 'pw_name': 'root', 'gr_name': 'root', 'mimetype': 'inode/directory', 'charset': 'binary', 'version': '2847628626', 'attributes': [], 'attr_flags': ''}, 'invocation': {'module_args': {'path': '/home', 'follow': False, 'get_md5': False, 'get_checksum': True, 'get_mime': True, 'get_attributes': True, 'checksum_algorithm': 'sha1'}}, 'failed': False, 'item': '/home', 'ansible_loop_var': 'item'}) => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": {
+        "ansible_loop_var": "item",
+        "changed": false,
+        "failed": false,
+        "invocation": {
+            "module_args": {
+                "checksum_algorithm": "sha1",
+                "follow": false,
+                "get_attributes": true,
+                "get_checksum": true,
+                "get_md5": false,
+                "get_mime": true,
+                "path": "/home"
+            }
+        },
+        "item": "/home",
+        "stat": {
+            "atime": 1749093890.9084053,
+            "attr_flags": "",
+            "attributes": [],
+            "block_size": 4096,
+            "blocks": 0,
+            "charset": "binary",
+            "ctime": 1780428729.3379998,
+            "dev": 66309,
+            "device_type": 0,
+            "executable": true,
+            "exists": true,
+            "gid": 0,
+            "gr_name": "root",
+            "inode": 2097281,
+            "isblk": false,
+            "ischr": false,
+            "isdir": true,
+            "isfifo": false,
+            "isgid": false,
+            "islnk": false,
+            "isreg": false,
+            "issock": false,
+            "isuid": false,
+            "mimetype": "inode/directory",
+            "mode": "0755",
+            "mtime": 1767166716.7907708,
+            "nlink": 4,
+            "path": "/home",
+            "pw_name": "root",
+            "readable": true,
+            "rgrp": true,
+            "roth": true,
+            "rusr": true,
+            "size": 36,
+            "uid": 0,
+            "version": "2847628626",
+            "wgrp": false,
+            "woth": false,
+            "writeable": true,
+            "wusr": true,
+            "xgrp": true,
+            "xoth": true,
+            "xusr": true
+        }
+    },
+    "msg": "Critical directory /home exists."
+}
+
+TASK [Validate /var/log permissions] *******************************************
+ok: [localhost]
+
+TASK [Assert /var/log ownership and permissions] *******************************
+ok: [localhost] => {
+    "changed": false,
+    "msg": "/var/log permissions and ownership are compliant."
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=9    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

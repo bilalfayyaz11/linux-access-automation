@@ -1,0 +1,28 @@
+---
+- name: Gather and Display System Facts
+  hosts: validation_targets
+  gather_facts: true
+
+  tasks:
+    - name: Display core system facts
+      ansible.builtin.debug:
+        msg: |
+          Hostname: {{ ansible_hostname }}
+          FQDN: {{ ansible_fqdn }}
+          OS Family: {{ ansible_os_family }}
+          Distribution: {{ ansible_distribution }} {{ ansible_distribution_version }}
+          Architecture: {{ ansible_architecture }}
+          Total Memory: {{ ansible_memtotal_mb }} MB
+          CPU Cores: {{ ansible_processor_vcpus }}
+
+    - name: Show root mount information
+      ansible.builtin.debug:
+        msg: |
+          Mount Point: {{ item.mount }}
+          Device: {{ item.device }}
+          Filesystem: {{ item.fstype }}
+          Size Total: {{ item.size_total | human_readable }}
+          Size Available: {{ item.size_available | human_readable }}
+          Used: {{ ((item.size_total - item.size_available) / item.size_total * 100) | round(2) }}%
+      loop: "{{ ansible_mounts }}"
+      when: item.mount == "/"

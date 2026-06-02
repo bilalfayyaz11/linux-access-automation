@@ -1,0 +1,125 @@
+---
+- name: Comprehensive Validation and Reporting
+  hosts: validation_targets
+  gather_facts: true
+
+  vars:
+    report_directory: "{{ playbook_dir }}/reports"
+
+  tasks:
+
+    - name: Initialize counters
+      ansible.builtin.set_fact:
+        total_checks: 0
+        passed_checks: 0
+        failed_checks: 0
+        validation_summary: []
+        error_summary: []
+
+    - name: Validate memory
+      block:
+
+        - name: Increment total checks
+          ansible.builtin.set_fact:
+            total_checks: "{{ total_checks | int + 1 }}"
+
+        - name: Assert minimum memory
+          ansible.builtin.assert:
+            that:
+              - ansible_memtotal_mb >= 512
+
+        - name: Record pass
+          ansible.builtin.set_fact:
+            passed_checks: "{{ passed_checks | int + 1 }}"
+            validation_summary: "{{ validation_summary + [{'check':'Memory','status':'PASS','value':ansible_memtotal_mb}] }}"
+
+      rescue:
+
+        - name: Record memory failure
+          ansible.builtin.set_fact:
+            failed_checks: "{{ failed_checks | int + 1 }}"
+            error_summary: "{{ error_summary + [{'check':'Memory','error':ansible_failed_result.msg}] }}"
+
+    - name: Validate CPU
+      block:
+
+        - name: Increment total checks
+          ansible.builtin.set_fact:
+            total_checks: "{{ total_checks | int + 1 }}"
+
+        - name: Assert CPU count
+          ansible.builtin.assert:
+            that:
+              - ansible_processor_vcpus >= 1
+
+        - name: Record CPU pass
+          ansible.builtin.set_fact:
+            passed_checks: "{{ passed_checks | int + 1 }}"
+            validation_summary: "{{ validation_summary + [{'check':'CPU','status':'PASS','value':ansible_processor_vcpus}] }}"
+
+      rescue:
+
+        - name: Record CPU failure
+          ansible.builtin.set_fact:
+            failed_checks: "{{ failed_checks | int + 1 }}"
+            error_summary: "{{ error_summary + [{'check':'CPU','error':ansible_failed_result.msg}] }}"
+
+    - name: Validate SSH service
+      block:
+
+        - name: Increment total checks
+          ansible.builtin.set_fact:
+            total_checks: "{{ total_checks | int + 1 }}"
+
+        - name: Gather service facts
+          ansible.builtin.service_facts:
+
+        - name: Verify SSH service
+          ansible.builtin.assert:
+            that:
+              - "'sshd.service' in ansible_facts.services"
+
+        - name: Record SSH pass
+          ansible.builtin.set_fact:
+            passed_checks: "{{ passed_checks | int + 1 }}"
+            validation_summary: "{{ validation_summary + [{'check':'SSH Service','status':'PASS'}] }}"
+
+      rescue:
+
+        - name: Record SSH failure
+          ansible.builtin.set_fact:
+            failed_checks: "{{ failed_checks | int + 1 }}"
+            error_summary: "{{ error_summary + [{'check':'SSH Service','error':ansible_failed_result.msg}] }}"
+
+    - name: Calculate success rate
+      ansible.builtin.set_fact:
+        success_rate: "{{ ((passed_checks | int) / (total_checks | int) * 100) | round(2) }}"
+        host_status: "{{ 'FAIL' if (failed_checks | int) > 0 else 'PASS' }}"
+
+    - name: Generate report
+      ansible.builtin.template:
+        src: templates/host_validation_report.j2
+        dest: "{{ report_directory }}/{{ ansible_hostname }}_validation_report.json"
+      vars:
+        report_data:
+          hostname: "{{ ansible_hostname }}"
+          overall_status: "{{ host_status }}"
+          validation_timestamp: "{{ ansible_date_time.iso8601 }}"
+          statistics:
+            total_checks: "{{ total_checks }}"
+            passed_checks: "{{ passed_checks }}"
+            failed_checks: "{{ failed_checks }}"
+            success_rate: "{{ success_rate }}"
+          validation_results: "{{ validation_summary }}"
+          errors: "{{ error_summary }}"
+          system_info:
+            os_family: "{{ ansible_os_family }}"
+            os_version: "{{ ansible_distribution_version }}"
+            architecture: "{{ ansible_architecture }}"
+
+    - name: Display summary
+      ansible.builtin.debug:
+        msg: |
+          Validation Complete
+          Status: {{ host_status }}
+          Success Rate: {{ success_rate }}%

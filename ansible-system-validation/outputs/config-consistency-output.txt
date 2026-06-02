@@ -1,0 +1,85 @@
+
+PLAY [Validate Configuration Consistency] **************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Initialize consistency results] ******************************************
+ok: [localhost]
+
+TASK [Assert expected OS family] ***********************************************
+ok: [localhost] => {
+    "changed": false,
+    "msg": "OS family validation passed."
+}
+
+TASK [Record OS validation success] ********************************************
+ok: [localhost]
+
+TASK [Assert minimum memory] ***************************************************
+ok: [localhost] => {
+    "changed": false,
+    "msg": "Memory validation passed."
+}
+
+TASK [Record memory validation success] ****************************************
+ok: [localhost]
+
+TASK [Assert minimum CPU cores] ************************************************
+ok: [localhost] => {
+    "changed": false,
+    "msg": "CPU validation passed."
+}
+
+TASK [Record CPU validation success] *******************************************
+ok: [localhost]
+
+TASK [Gather service facts] ****************************************************
+ok: [localhost]
+
+TASK [Assert required services exist and are running] **************************
+ok: [localhost] => (item=sshd) => {
+    "ansible_loop_var": "item",
+    "changed": false,
+    "item": "sshd",
+    "msg": "Required service sshd is running."
+}
+
+TASK [Record service validation success] ***************************************
+ok: [localhost]
+
+TASK [Display consistency results] *********************************************
+ok: [localhost] => {
+    "consistency_results": [
+        {
+            "actual": "RedHat",
+            "check": "OS Family",
+            "expected": "RedHat",
+            "status": "PASS"
+        },
+        {
+            "actual": "15571 MB",
+            "check": "Memory",
+            "expected": "512 MB",
+            "status": "PASS"
+        },
+        {
+            "actual": "4 core(s)",
+            "check": "CPU Cores",
+            "expected": "1 core",
+            "status": "PASS"
+        },
+        {
+            "check": "Required Services",
+            "services": "sshd",
+            "status": "PASS"
+        }
+    ]
+}
+
+TASK [Display assertion failures] **********************************************
+skipping: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=12   changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+

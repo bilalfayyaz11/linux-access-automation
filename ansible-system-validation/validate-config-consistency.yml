@@ -1,0 +1,103 @@
+---
+- name: Validate Configuration Consistency
+  hosts: validation_targets
+  gather_facts: true
+
+  vars:
+    expected_os_family: "RedHat"
+    minimum_memory_mb: 512
+    minimum_cpu_cores: 1
+    required_services:
+      - sshd
+
+  tasks:
+    - name: Initialize consistency results
+      ansible.builtin.set_fact:
+        consistency_results: []
+        assertion_failures: []
+
+    - name: Validate operating system family
+      block:
+        - name: Assert expected OS family
+          ansible.builtin.assert:
+            that:
+              - ansible_os_family == expected_os_family
+            fail_msg: "Expected {{ expected_os_family }}, found {{ ansible_os_family }}"
+            success_msg: "OS family validation passed."
+
+        - name: Record OS validation success
+          ansible.builtin.set_fact:
+            consistency_results: "{{ consistency_results + [{'check':'OS Family','status':'PASS','expected':expected_os_family,'actual':ansible_os_family}] }}"
+
+      rescue:
+        - name: Record OS validation failure
+          ansible.builtin.set_fact:
+            assertion_failures: "{{ assertion_failures + [{'check':'OS Family','status':'FAIL','error':ansible_failed_result.msg}] }}"
+
+    - name: Validate memory requirement
+      block:
+        - name: Assert minimum memory
+          ansible.builtin.assert:
+            that:
+              - ansible_memtotal_mb >= minimum_memory_mb
+            fail_msg: "Memory below minimum requirement."
+            success_msg: "Memory validation passed."
+
+        - name: Record memory validation success
+          ansible.builtin.set_fact:
+            consistency_results: "{{ consistency_results + [{'check':'Memory','status':'PASS','expected':minimum_memory_mb ~ ' MB','actual':ansible_memtotal_mb ~ ' MB'}] }}"
+
+      rescue:
+        - name: Record memory validation failure
+          ansible.builtin.set_fact:
+            assertion_failures: "{{ assertion_failures + [{'check':'Memory','status':'FAIL','error':ansible_failed_result.msg}] }}"
+
+    - name: Validate CPU requirement
+      block:
+        - name: Assert minimum CPU cores
+          ansible.builtin.assert:
+            that:
+              - ansible_processor_vcpus >= minimum_cpu_cores
+            fail_msg: "CPU cores below minimum requirement."
+            success_msg: "CPU validation passed."
+
+        - name: Record CPU validation success
+          ansible.builtin.set_fact:
+            consistency_results: "{{ consistency_results + [{'check':'CPU Cores','status':'PASS','expected':minimum_cpu_cores ~ ' core','actual':ansible_processor_vcpus ~ ' core(s)'}] }}"
+
+      rescue:
+        - name: Record CPU validation failure
+          ansible.builtin.set_fact:
+            assertion_failures: "{{ assertion_failures + [{'check':'CPU Cores','status':'FAIL','error':ansible_failed_result.msg}] }}"
+
+    - name: Gather service facts
+      ansible.builtin.service_facts:
+
+    - name: Validate required services
+      block:
+        - name: Assert required services exist and are running
+          ansible.builtin.assert:
+            that:
+              - (item + '.service') in ansible_facts.services
+              - ansible_facts.services[item + '.service'].state == 'running'
+            fail_msg: "Required service {{ item }} is missing or not running."
+            success_msg: "Required service {{ item }} is running."
+          loop: "{{ required_services }}"
+
+        - name: Record service validation success
+          ansible.builtin.set_fact:
+            consistency_results: "{{ consistency_results + [{'check':'Required Services','status':'PASS','services':required_services | join(', ')}] }}"
+
+      rescue:
+        - name: Record service validation failure
+          ansible.builtin.set_fact:
+            assertion_failures: "{{ assertion_failures + [{'check':'Required Services','status':'FAIL','error':ansible_failed_result.msg}] }}"
+
+    - name: Display consistency results
+      ansible.builtin.debug:
+        var: consistency_results
+
+    - name: Display assertion failures
+      ansible.builtin.debug:
+        var: assertion_failures
+      when: assertion_failures | length > 0

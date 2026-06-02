@@ -1,0 +1,18 @@
+{
+  "hostname": "ip-172-31-10-27",
+  "overall_status": "PASS",
+  "validation_timestamp": "2026-06-02T19:40:25Z",
+  "statistics": {
+    "total_checks": 3,
+    "passed_checks": 3,
+    "failed_checks": 0,
+    "success_rate": 100.0
+  },
+  "system_info": {
+    "os_family": "RedHat",
+    "os_version": "9",
+    "architecture": "x86_64"
+  },
+  "validation_results": [{"check": "Memory", "status": "PASS", "value": 15571}, {"check": "CPU", "status": "PASS", "value": 4}, {"check": "SSH Service", "status": "PASS"}],
+  "errors": []
+}

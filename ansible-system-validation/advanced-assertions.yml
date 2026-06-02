@@ -1,0 +1,67 @@
+---
+- name: Advanced System Configuration Assertions
+  hosts: validation_targets
+  gather_facts: true
+
+  vars:
+    max_load_average: 2.0
+    critical_directories:
+      - /etc
+      - /var/log
+      - /tmp
+      - /home
+
+  tasks:
+    - name: Check SSH configuration file
+      ansible.builtin.stat:
+        path: /etc/ssh/sshd_config
+      register: ssh_config_stat
+
+    - name: Assert SSH configuration exists
+      ansible.builtin.assert:
+        that:
+          - ssh_config_stat.stat.exists
+          - ssh_config_stat.stat.isreg
+        fail_msg: "SSH configuration file is missing."
+        success_msg: "SSH configuration file exists."
+
+    - name: Get current load average
+      ansible.builtin.shell: "uptime | awk -F'load average:' '{print $2}' | awk -F',' '{print $1}' | tr -d ' '"
+      register: current_load
+      changed_when: false
+
+    - name: Assert load average is acceptable
+      ansible.builtin.assert:
+        that:
+          - (current_load.stdout | float) <= max_load_average
+        fail_msg: "Load average {{ current_load.stdout }} exceeds threshold {{ max_load_average }}."
+        success_msg: "Load average {{ current_load.stdout }} is acceptable."
+
+    - name: Validate critical directories
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      register: critical_dir_results
+      loop: "{{ critical_directories }}"
+
+    - name: Assert critical directories exist
+      ansible.builtin.assert:
+        that:
+          - item.stat.exists
+          - item.stat.isdir
+        fail_msg: "Critical directory {{ item.item }} is missing."
+        success_msg: "Critical directory {{ item.item }} exists."
+      loop: "{{ critical_dir_results.results }}"
+
+    - name: Validate /var/log permissions
+      ansible.builtin.stat:
+        path: /var/log
+      register: log_dir_stat
+
+    - name: Assert /var/log ownership and permissions
+      ansible.builtin.assert:
+        that:
+          - log_dir_stat.stat.uid == 0
+          - log_dir_stat.stat.gid == 0
+          - log_dir_stat.stat.mode in ['0755', '0775']
+        fail_msg: "/var/log permissions or ownership are not compliant."
+        success_msg: "/var/log permissions and ownership are compliant."

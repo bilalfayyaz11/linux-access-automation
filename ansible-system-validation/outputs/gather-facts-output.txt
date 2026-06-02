@@ -1,0 +1,21 @@
+
+PLAY [Gather and Display System Facts] *****************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Display core system facts] ***********************************************
+ok: [localhost] => {
+    "msg": "Hostname: ip-172-31-10-27\nFQDN: ip-172-31-10-27.ec2.internal\nOS Family: RedHat\nDistribution: CentOS 9\nArchitecture: x86_64\nTotal Memory: 15571 MB\nCPU Cores: 4\n"
+}
+
+TASK [Show root mount information] *********************************************
+ok: [localhost] => (item={'mount': '/', 'device': '/dev/nvme0n1p4', 'fstype': 'xfs', 'options': 'rw,seclabel,relatime,attr2,inode64,logbufs=8,logbsize=32k,noquota', 'size_total': 30569115648, 'size_available': 22904365056, 'block_size': 4096, 'block_total': 7463163, 'block_available': 5591886, 'block_used': 1871277, 'inode_total': 14959040, 'inode_available': 14803063, 'inode_used': 155977, 'uuid': '596343d2-9dab-4c86-9dd0-4a537eb34256'}) => {
+    "msg": "Mount Point: /\nDevice: /dev/nvme0n1p4\nFilesystem: xfs\nSize Total: 28.47 GB\nSize Available: 21.33 GB\nUsed: 25.07%\n"
+}
+skipping: [localhost] => (item={'mount': '/boot', 'device': '/dev/nvme0n1p3', 'fstype': 'ext4', 'options': 'rw,seclabel,relatime', 'size_total': 1012768768, 'size_available': 104751104, 'block_size': 4096, 'block_total': 247258, 'block_available': 25574, 'block_used': 221684, 'inode_total': 64000, 'inode_available': 63619, 'inode_used': 381, 'uuid': '5c6d2636-1ce3-4997-bf2f-1d032b4db44e'}) 
+skipping: [localhost] => (item={'mount': '/boot/efi', 'device': '/dev/nvme0n1p2', 'fstype': 'vfat', 'options': 'rw,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=ascii,shortname=winnt,errors=remount-ro', 'size_total': 523968512, 'size_available': 512655360, 'block_size': 8192, 'block_total': 63961, 'block_available': 62580, 'block_used': 1381, 'inode_total': 0, 'inode_available': 0, 'inode_used': 0, 'uuid': 'DCE7-EF83'}) 
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
