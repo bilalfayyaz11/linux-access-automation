@@ -1,0 +1,28 @@
+---
+- name: Advanced Lineinfile Operations
+  hosts: managed
+  become: yes
+
+  tasks:
+    - name: Create hosts file
+      copy:
+        dest: /opt/file-app/hosts
+        content: |
+          127.0.0.1 localhost
+          192.168.1.10 node1
+
+    - name: Add database server
+      lineinfile:
+        path: /opt/file-app/hosts
+        line: '192.168.1.20 database'
+
+    - name: Add cache server
+      lineinfile:
+        path: /opt/file-app/hosts
+        line: '192.168.1.30 cache'
+
+    - name: Create summary
+      copy:
+        dest: /opt/file-app/advanced-summary.txt
+        content: |
+          Advanced lineinfile operations completed.

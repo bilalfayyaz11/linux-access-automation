@@ -1,0 +1,19 @@
+
+PLAY [Template and Directory Management] ***************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Create application directories] ******************************************
+changed: [localhost] => (item=/opt/file-app)
+changed: [localhost] => (item=/opt/file-app/config)
+changed: [localhost] => (item=/opt/file-app/data)
+changed: [localhost] => (item=/opt/file-app/scripts)
+
+TASK [Generate system report] **************************************************
+An exception occurred during task execution. To see the full traceback, use -vvv. The error was: If you are using a module and expect the file to exist on the remote, see the remote_src option
+fatal: [localhost]: FAILED! => {"changed": false, "msg": "Could not find or access 'templates/system-report.j2'\nSearched in:\n\t/home/centos/ansible-file-automation/playbooks/templates/templates/system-report.j2\n\t/home/centos/ansible-file-automation/playbooks/templates/system-report.j2\n\t/home/centos/ansible-file-automation/playbooks/templates/templates/system-report.j2\n\t/home/centos/ansible-file-automation/playbooks/templates/system-report.j2 on the Ansible Controller.\nIf you are using a module and expect the file to exist on the remote, see the remote_src option"}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=2    changed=1    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+

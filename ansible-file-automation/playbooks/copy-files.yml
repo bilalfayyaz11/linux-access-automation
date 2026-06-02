@@ -1,0 +1,26 @@
+---
+- name: File Copy Automation
+  hosts: managed
+  become: yes
+
+  tasks:
+    - name: Create destination directory
+      file:
+        path: /opt/file-management
+        state: directory
+        mode: '0755'
+
+    - name: Copy welcome file
+      copy:
+        src: files/welcome.txt
+        dest: /opt/file-management/welcome.txt
+        mode: '0644'
+
+    - name: Create server information file
+      copy:
+        content: |
+          Hostname: {{ inventory_hostname }}
+          Date: {{ ansible_date_time.date }}
+          Managed By: Ansible
+        dest: /opt/file-management/server-info.txt
+        mode: '0644'

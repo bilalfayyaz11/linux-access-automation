@@ -1,0 +1,43 @@
+---
+- name: Template and Directory Management
+  hosts: managed
+  become: yes
+
+  tasks:
+    - name: Create application directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0755'
+      loop:
+        - /opt/file-app
+        - /opt/file-app/config
+        - /opt/file-app/data
+        - /opt/file-app/scripts
+
+    - name: Generate system report
+      template:
+        src: templates/system-report.j2
+        dest: /opt/file-app/system-report.txt
+        mode: '0644'
+
+    - name: Generate application config
+      template:
+        src: templates/app-config.j2
+        dest: /opt/file-app/config/app.conf
+        mode: '0644'
+
+    - name: Create startup script
+      copy:
+        dest: /opt/file-app/scripts/startup.sh
+        mode: '0755'
+        content: |
+          #!/bin/bash
+          echo "Application started on $(date)"
+
+    - name: Create environment file
+      copy:
+        dest: /opt/file-app/data/environment.txt
+        content: |
+          Environment: Development
+          Managed By: Ansible

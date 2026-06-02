@@ -1,0 +1,6 @@
+=== SYSTEM REPORT ===
+Hostname: {{ inventory_hostname }}
+OS: {{ ansible_distribution }} {{ ansible_distribution_version }}
+Architecture: {{ ansible_architecture }}
+Memory: {{ ansible_memtotal_mb }} MB
+Generated: {{ ansible_date_time.iso8601 }}

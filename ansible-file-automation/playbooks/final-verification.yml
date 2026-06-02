@@ -1,0 +1,27 @@
+---
+- name: Final Verification
+  hosts: managed
+  become: yes
+
+  tasks:
+    - name: Verify application config exists
+      stat:
+        path: /opt/file-app/config/application.properties
+      register: app_config
+
+    - name: Verify system report exists
+      stat:
+        path: /opt/file-app/system-report.txt
+      register: system_report
+
+    - name: Verify startup script exists
+      stat:
+        path: /opt/file-app/scripts/startup.sh
+      register: startup_script
+
+    - name: Assert all files exist
+      assert:
+        that:
+          - app_config.stat.exists
+          - system_report.stat.exists
+          - startup_script.stat.exists

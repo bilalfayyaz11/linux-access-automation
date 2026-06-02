@@ -1,0 +1,26 @@
+
+PLAY [Final Verification] ******************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Verify application config exists] ****************************************
+ok: [localhost]
+
+TASK [Verify system report exists] *********************************************
+ok: [localhost]
+
+TASK [Verify startup script exists] ********************************************
+ok: [localhost]
+
+TASK [Assert all files exist] **************************************************
+fatal: [localhost]: FAILED! => {
+    "assertion": "system_report.stat.exists",
+    "changed": false,
+    "evaluated_to": false,
+    "msg": "Assertion failed"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=4    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+

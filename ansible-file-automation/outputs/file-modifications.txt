@@ -1,0 +1,30 @@
+
+PLAY [File Modification with Lineinfile] ***************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Create base configuration] ***********************************************
+changed: [localhost]
+
+TASK [Change application port] *************************************************
+changed: [localhost]
+
+TASK [Enable debug mode] *******************************************************
+changed: [localhost]
+
+TASK [Change environment] ******************************************************
+changed: [localhost]
+
+TASK [Increase connections] ****************************************************
+changed: [localhost]
+
+TASK [Add SSL setting] *********************************************************
+changed: [localhost]
+
+TASK [Create modification log] *************************************************
+changed: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=8    changed=7    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

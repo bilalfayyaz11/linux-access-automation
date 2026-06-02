@@ -1,0 +1,52 @@
+---
+- name: File Modification with Lineinfile
+  hosts: managed
+  become: yes
+
+  tasks:
+    - name: Create base configuration
+      copy:
+        dest: /opt/file-app/config/application.properties
+        content: |
+          app.name=FileAutomation
+          app.port=8080
+          app.debug=false
+          environment=production
+          max.connections=100
+
+    - name: Change application port
+      lineinfile:
+        path: /opt/file-app/config/application.properties
+        regexp: '^app.port='
+        line: 'app.port=9090'
+
+    - name: Enable debug mode
+      lineinfile:
+        path: /opt/file-app/config/application.properties
+        regexp: '^app.debug='
+        line: 'app.debug=true'
+
+    - name: Change environment
+      lineinfile:
+        path: /opt/file-app/config/application.properties
+        regexp: '^environment='
+        line: 'environment=development'
+
+    - name: Increase connections
+      lineinfile:
+        path: /opt/file-app/config/application.properties
+        regexp: '^max.connections='
+        line: 'max.connections=200'
+
+    - name: Add SSL setting
+      lineinfile:
+        path: /opt/file-app/config/application.properties
+        line: 'ssl.enabled=true'
+
+    - name: Create modification log
+      copy:
+        dest: /opt/file-app/modification-log.txt
+        content: |
+          File modifications completed successfully
+          Host: {{ inventory_hostname }}
+          Date: {{ ansible_date_time.iso8601 }}
