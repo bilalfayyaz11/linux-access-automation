@@ -1,0 +1,21 @@
+
+PLAY [Setup ACL Environment] ***************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [package] *****************************************************************
+ok: [localhost]
+
+TASK [file] ********************************************************************
+changed: [localhost] => (item=/opt/projects)
+changed: [localhost] => (item=/opt/projects/web-app)
+changed: [localhost] => (item=/opt/projects/testing)
+changed: [localhost] => (item=/opt/projects/admin)
+
+TASK [file] ********************************************************************
+changed: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=4    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

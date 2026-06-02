@@ -1,0 +1,30 @@
+
+PLAY [Automate User and Group Management] **************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Create system groups] ****************************************************
+changed: [localhost] => (item={'name': 'developers', 'gid': 3001})
+changed: [localhost] => (item={'name': 'testers', 'gid': 3002})
+changed: [localhost] => (item={'name': 'admins', 'gid': 3003})
+
+TASK [Create system users] *****************************************************
+changed: [localhost] => (item={'username': 'alice', 'full_name': 'Alice Johnson', 'primary_group': 'developers', 'secondary_groups': ['admins'], 'shell': '/bin/bash'})
+changed: [localhost] => (item={'username': 'bob', 'full_name': 'Bob Smith', 'primary_group': 'testers', 'secondary_groups': ['developers'], 'shell': '/bin/bash'})
+changed: [localhost] => (item={'username': 'charlie', 'full_name': 'Charlie Brown', 'primary_group': 'admins', 'secondary_groups': [], 'shell': '/bin/bash'})
+
+TASK [Display created users] ***************************************************
+ok: [localhost] => (item={'username': 'alice', 'full_name': 'Alice Johnson', 'primary_group': 'developers', 'secondary_groups': ['admins'], 'shell': '/bin/bash'}) => {
+    "msg": "User alice configured with primary group developers"
+}
+ok: [localhost] => (item={'username': 'bob', 'full_name': 'Bob Smith', 'primary_group': 'testers', 'secondary_groups': ['developers'], 'shell': '/bin/bash'}) => {
+    "msg": "User bob configured with primary group testers"
+}
+ok: [localhost] => (item={'username': 'charlie', 'full_name': 'Charlie Brown', 'primary_group': 'admins', 'secondary_groups': [], 'shell': '/bin/bash'}) => {
+    "msg": "User charlie configured with primary group admins"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=4    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

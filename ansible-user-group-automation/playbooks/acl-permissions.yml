@@ -1,0 +1,48 @@
+---
+- name: Configure ACL Permissions
+  hosts: webservers
+  become: yes
+
+  tasks:
+
+    - acl:
+        path: /opt/projects/web-app
+        entity: developers
+        etype: group
+        permissions: rwx
+        state: present
+
+    - acl:
+        path: /opt/projects/testing
+        entity: testers
+        etype: group
+        permissions: rwx
+        state: present
+
+    - acl:
+        path: /opt/projects/admin
+        entity: admins
+        etype: group
+        permissions: rwx
+        state: present
+
+    - acl:
+        path: /opt/shared-workspace
+        entity: developers
+        etype: group
+        permissions: rwx
+        state: present
+
+    - acl:
+        path: /opt/shared-workspace
+        entity: testers
+        etype: group
+        permissions: rwx
+        state: present
+
+    - acl:
+        path: /opt/shared-workspace
+        entity: admins
+        etype: group
+        permissions: rwx
+        state: present

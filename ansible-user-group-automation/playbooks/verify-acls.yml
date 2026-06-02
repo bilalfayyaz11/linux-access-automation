@@ -1,0 +1,13 @@
+---
+- name: Verify ACLs
+  hosts: webservers
+  become: yes
+
+  tasks:
+
+    - command: getfacl /opt/projects/web-app
+      register: web_acl
+      changed_when: false
+
+    - debug:
+        var: web_acl.stdout_lines

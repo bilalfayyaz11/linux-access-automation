@@ -1,0 +1,25 @@
+---
+- name: Setup ACL Environment
+  hosts: webservers
+  become: yes
+
+  tasks:
+
+    - package:
+        name: acl
+        state: present
+
+    - file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0775'
+      loop:
+        - /opt/projects
+        - /opt/projects/web-app
+        - /opt/projects/testing
+        - /opt/projects/admin
+
+    - file:
+        path: /opt/shared-workspace
+        state: directory
+        mode: '0775'

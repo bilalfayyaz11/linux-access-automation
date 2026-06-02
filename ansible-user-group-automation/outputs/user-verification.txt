@@ -1,0 +1,3 @@
+alice:x:1002:3001:Alice Johnson:/home/alice:/bin/bash
+bob:x:1003:3002:Bob Smith:/home/bob:/bin/bash
+charlie:x:1004:3003:Charlie Brown:/home/charlie:/bin/bash
