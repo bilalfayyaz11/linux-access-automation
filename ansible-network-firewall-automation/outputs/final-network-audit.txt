@@ -1,0 +1,49 @@
+===== FINAL TREE =====
+.
+├── ansible.cfg
+├── inventory
+│   └── hosts
+├── outputs
+│   ├── final-network-audit.txt
+│   ├── firewall-config.txt
+│   ├── network-config.txt
+│   └── network-validation.txt
+├── playbooks
+│   ├── firewall-config.yml
+│   └── network-config.yml
+├── reports
+│   └── network-diagnostics.txt
+└── scripts
+
+5 directories, 9 files
+===== PLAYBOOK SYNTAX =====
+
+playbook: playbooks/network-config.yml
+
+playbook: playbooks/firewall-config.yml
+===== FIREWALL FINAL STATE =====
+public (active)
+  target: default
+  icmp-block-inversion: no
+  interfaces: ens5
+  sources: 
+  services: cockpit dhcpv6-client http https ssh
+  ports: 8443/tcp 8080/tcp
+  protocols: 
+  forward: yes
+  masquerade: no
+  forward-ports: 
+  source-ports: 
+  icmp-blocks: 
+  rich rules: 
+	rule service name="ssh" accept limit value="3/m"
+===== NETWORK FINAL STATE =====
+DEVICE  TYPE      STATE                   CONNECTION  
+ens5    ethernet  connected               System ens5 
+lo      loopback  connected (externally)  lo          
+default via 172.31.10.1 dev ens5 proto dhcp src 172.31.10.137 metric 100 
+172.31.10.0/24 dev ens5 proto kernel scope link src 172.31.10.137 metric 100 
+default via 172.31.10.1 dev ens5 proto dhcp src 172.31.10.137 metric 100 
+172.31.10.0/24 dev ens5 proto kernel scope link src 172.31.10.137 metric 100 
+default via 172.31.10.1 dev ens5 proto dhcp src 172.31.10.137 metric 100 
+172.31.10.0/24 dev ens5 proto kernel scope link src 172.31.10.137 metric 100 

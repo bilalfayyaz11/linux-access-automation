@@ -1,0 +1,36 @@
+
+PLAY [Configure Local Firewall Rules] ******************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Ensure firewalld is installed] *******************************************
+ok: [localhost]
+
+TASK [Start and enable firewalld] **********************************************
+ok: [localhost]
+
+TASK [Allow SSH service] *******************************************************
+ok: [localhost]
+
+TASK [Allow HTTP service] ******************************************************
+changed: [localhost]
+
+TASK [Allow HTTPS service] *****************************************************
+changed: [localhost]
+
+TASK [Allow custom application port 8080] **************************************
+changed: [localhost]
+
+TASK [Add SSH rate-limit rich rule] ********************************************
+changed: [localhost]
+
+TASK [Enable denied packet logging] ********************************************
+changed: [localhost]
+
+TASK [Reload firewalld] ********************************************************
+changed: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=10   changed=6    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

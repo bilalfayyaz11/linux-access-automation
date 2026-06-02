@@ -1,0 +1,60 @@
+---
+- name: Configure Local Firewall Rules
+  hosts: network_servers
+  become: yes
+
+  tasks:
+    - name: Ensure firewalld is installed
+      ansible.builtin.package:
+        name: firewalld
+        state: present
+
+    - name: Start and enable firewalld
+      ansible.builtin.systemd:
+        name: firewalld
+        state: started
+        enabled: yes
+
+    - name: Allow SSH service
+      ansible.posix.firewalld:
+        service: ssh
+        permanent: yes
+        immediate: yes
+        state: enabled
+
+    - name: Allow HTTP service
+      ansible.posix.firewalld:
+        service: http
+        permanent: yes
+        immediate: yes
+        state: enabled
+
+    - name: Allow HTTPS service
+      ansible.posix.firewalld:
+        service: https
+        permanent: yes
+        immediate: yes
+        state: enabled
+
+    - name: Allow custom application port 8080
+      ansible.posix.firewalld:
+        port: 8080/tcp
+        permanent: yes
+        immediate: yes
+        state: enabled
+
+    - name: Add SSH rate-limit rich rule
+      ansible.posix.firewalld:
+        rich_rule: 'rule service name="ssh" accept limit value="3/m"'
+        permanent: yes
+        immediate: yes
+        state: enabled
+
+    - name: Enable denied packet logging
+      ansible.builtin.command: firewall-cmd --set-log-denied=all
+      register: log_denied_result
+      changed_when: "'success' in log_denied_result.stdout"
+
+    - name: Reload firewalld
+      ansible.builtin.command: firewall-cmd --reload
+      changed_when: true

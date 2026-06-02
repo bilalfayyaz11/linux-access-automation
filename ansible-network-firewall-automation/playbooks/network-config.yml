@@ -1,0 +1,25 @@
+---
+- name: Configure Local Network Identity
+  hosts: network_servers
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    - name: Set stable lab hostname
+      ansible.builtin.hostname:
+        name: network-node.local
+
+    - name: Capture active NetworkManager connections
+      ansible.builtin.command: nmcli -t -f NAME,DEVICE connection show --active
+      register: active_connections
+      changed_when: false
+
+    - name: Save active connection details
+      ansible.builtin.copy:
+        content: "{{ active_connections.stdout }}"
+        dest: /tmp/active-network-connections.txt
+        mode: '0644'
+
+    - name: Display active NetworkManager connections
+      ansible.builtin.debug:
+        msg: "{{ active_connections.stdout_lines }}"
