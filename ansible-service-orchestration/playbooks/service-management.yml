@@ -1,0 +1,40 @@
+---
+- name: Manage Linux services with Ansible systemd
+  hosts: webservers
+  become: yes
+
+  vars:
+    services_to_manage:
+      - httpd
+      - firewalld
+
+  tasks:
+    - name: Check systemd availability
+      command: systemctl --version
+      register: systemd_check
+      changed_when: false
+
+    - name: Display systemd version
+      debug:
+        msg: "{{ systemd_check.stdout_lines[0] }}"
+
+    - name: Install required service packages
+      dnf:
+        name:
+          - httpd
+          - firewalld
+        state: present
+
+    - name: Start and enable required services
+      systemd:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+        daemon_reload: yes
+      loop: "{{ services_to_manage }}"
+      register: service_results
+
+    - name: Display service automation results
+      debug:
+        msg: "{{ item.item }} changed={{ item.changed }}"
+      loop: "{{ service_results.results }}"

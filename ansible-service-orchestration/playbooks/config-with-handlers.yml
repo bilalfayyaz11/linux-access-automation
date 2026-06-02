@@ -1,0 +1,24 @@
+---
+- name: Apache Handler Demo
+  hosts: webservers
+  become: yes
+
+  handlers:
+    - name: restart apache
+      systemd:
+        name: httpd
+        state: restarted
+
+  tasks:
+    - name: Create test page
+      copy:
+        dest: /var/www/html/config-test.html
+        content: |
+          Handler Test Page
+      notify: restart apache
+
+    - name: Ensure Apache running
+      systemd:
+        name: httpd
+        state: started
+        enabled: yes

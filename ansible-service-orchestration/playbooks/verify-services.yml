@@ -1,0 +1,34 @@
+---
+- name: Verify service state and HTTP availability
+  hosts: webservers
+  become: yes
+
+  tasks:
+    - name: Gather service facts
+      service_facts:
+
+    - name: Verify httpd is running and enabled
+      assert:
+        that:
+          - ansible_facts.services['httpd.service'].state == 'running'
+          - ansible_facts.services['httpd.service'].status == 'enabled'
+        success_msg: "Apache is running and enabled"
+        fail_msg: "Apache is not running or not enabled"
+
+    - name: Verify firewalld is running and enabled
+      assert:
+        that:
+          - ansible_facts.services['firewalld.service'].state == 'running'
+          - ansible_facts.services['firewalld.service'].status == 'enabled'
+        success_msg: "firewalld is running and enabled"
+        fail_msg: "firewalld is not running or not enabled"
+
+    - name: Check if Apache is listening on port 80
+      wait_for:
+        host: 127.0.0.1
+        port: 80
+        timeout: 10
+
+    - name: Display verification summary
+      debug:
+        msg: "Service verification completed successfully."
