@@ -1,0 +1,46 @@
+===== FINAL STORAGE TREE =====
+.
+├── ansible.cfg
+├── group_vars
+├── inventory
+│   └── hosts
+├── outputs
+│   ├── complete-storage-automation.txt
+│   ├── final-storage-audit.txt
+│   └── storage-verification.txt
+├── playbooks
+│   └── complete-storage-automation.yml
+└── scripts
+
+5 directories, 6 files
+===== BLOCK STORAGE =====
+NAME                  FSTYPE      FSVER    LABEL  UUID                                   FSAVAIL FSUSE% MOUNTPOINTS
+nvme1n1                                                                                                 
+└─nvme1n1p1           LVM2_member LVM2 001        C0m1cp-RxCS-jZ25-eK62-JeBU-yAO9-qjW4lH                
+  ├─vg_data-lv_web    ext4        1.0             9f2d21fd-ff09-4719-9751-42daa097037e      1.8G     0% /var/www
+  ├─vg_data-lv_logs   xfs                         5246bd8e-8fb7-4921-b98c-d689cca20494    920.8M     4% /var/log/apps
+  └─vg_data-lv_backup ext4        1.0             95ff2183-8695-4ef1-b757-c4108b628609    906.2M     0% /backup
+nvme0n1                                                                                                 
+├─nvme0n1p1                                                                                             
+├─nvme0n1p2           vfat        FAT16    EFI    DCE7-EF83                               488.9M     2% /boot/efi
+├─nvme0n1p3           ext4        1.0      BOOT   5c6d2636-1ce3-4997-bf2f-1d032b4db44e     99.9M    83% /boot
+└─nvme0n1p4           xfs                  centos 596343d2-9dab-4c86-9dd0-4a537eb34256     21.3G    25% /
+===== LVM SUMMARY =====
+  LV        VG      Attr       LSize Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  lv_backup vg_data -wi-ao---- 1.00g                                                    
+  lv_logs   vg_data -wi-ao---- 1.00g                                                    
+  lv_web    vg_data -wi-ao---- 2.00g                                                    
+===== MOUNT VERIFICATION =====
+/dev/mapper/vg_data-lv_web     2.0G   28K  1.8G   1% /var/www
+/dev/mapper/vg_data-lv_logs    960M   40M  921M   5% /var/log/apps
+/dev/mapper/vg_data-lv_backup  974M   28K  907M   1% /backup
+===== FSTAB VERIFICATION =====
+/dev/vg_data/lv_web /var/www ext4 defaults 1 2
+/dev/vg_data/lv_logs /var/log/apps xfs defaults,noatime 1 2
+/dev/vg_data/lv_backup /backup ext4 defaults 1 2
+/dev/vg_data/lv_web /var/www ext4 defaults 1 2
+/dev/vg_data/lv_logs /var/log/apps xfs defaults,noatime 1 2
+/dev/vg_data/lv_backup /backup ext4 defaults 1 2
+/dev/vg_data/lv_web /var/www ext4 defaults 1 2
+/dev/vg_data/lv_logs /var/log/apps xfs defaults,noatime 1 2
+/dev/vg_data/lv_backup /backup ext4 defaults 1 2

@@ -1,0 +1,97 @@
+
+PLAY [Complete Storage Management Automation] **********************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Install required packages] ***********************************************
+ok: [localhost]
+
+TASK [Check target disk exists] ************************************************
+ok: [localhost]
+
+TASK [Stop if target disk does not exist] **************************************
+skipping: [localhost]
+
+TASK [Create LVM partition on target disk] *************************************
+ok: [localhost]
+
+TASK [Create volume group] *****************************************************
+ok: [localhost]
+
+TASK [Create logical volumes] **************************************************
+ok: [localhost] => (item={'name': 'lv_web', 'size': '2G', 'mount_point': '/var/www', 'filesystem': 'ext4', 'mount_options': 'defaults', 'dump': 1, 'passno': 2})
+ok: [localhost] => (item={'name': 'lv_logs', 'size': '1G', 'mount_point': '/var/log/apps', 'filesystem': 'xfs', 'mount_options': 'defaults,noatime', 'dump': 1, 'passno': 2})
+ok: [localhost] => (item={'name': 'lv_backup', 'size': '1G', 'mount_point': '/backup', 'filesystem': 'ext4', 'mount_options': 'defaults', 'dump': 1, 'passno': 2})
+
+TASK [Create mount point directories] ******************************************
+ok: [localhost] => (item={'name': 'lv_web', 'size': '2G', 'mount_point': '/var/www', 'filesystem': 'ext4', 'mount_options': 'defaults', 'dump': 1, 'passno': 2})
+ok: [localhost] => (item={'name': 'lv_logs', 'size': '1G', 'mount_point': '/var/log/apps', 'filesystem': 'xfs', 'mount_options': 'defaults,noatime', 'dump': 1, 'passno': 2})
+ok: [localhost] => (item={'name': 'lv_backup', 'size': '1G', 'mount_point': '/backup', 'filesystem': 'ext4', 'mount_options': 'defaults', 'dump': 1, 'passno': 2})
+
+TASK [Format logical volumes] **************************************************
+ok: [localhost] => (item={'name': 'lv_web', 'size': '2G', 'mount_point': '/var/www', 'filesystem': 'ext4', 'mount_options': 'defaults', 'dump': 1, 'passno': 2})
+ok: [localhost] => (item={'name': 'lv_logs', 'size': '1G', 'mount_point': '/var/log/apps', 'filesystem': 'xfs', 'mount_options': 'defaults,noatime', 'dump': 1, 'passno': 2})
+ok: [localhost] => (item={'name': 'lv_backup', 'size': '1G', 'mount_point': '/backup', 'filesystem': 'ext4', 'mount_options': 'defaults', 'dump': 1, 'passno': 2})
+
+TASK [Backup fstab] ************************************************************
+changed: [localhost]
+
+TASK [Mount logical volumes and persist in fstab] ******************************
+ok: [localhost] => (item={'name': 'lv_web', 'size': '2G', 'mount_point': '/var/www', 'filesystem': 'ext4', 'mount_options': 'defaults', 'dump': 1, 'passno': 2})
+ok: [localhost] => (item={'name': 'lv_logs', 'size': '1G', 'mount_point': '/var/log/apps', 'filesystem': 'xfs', 'mount_options': 'defaults,noatime', 'dump': 1, 'passno': 2})
+ok: [localhost] => (item={'name': 'lv_backup', 'size': '1G', 'mount_point': '/backup', 'filesystem': 'ext4', 'mount_options': 'defaults', 'dump': 1, 'passno': 2})
+
+TASK [Create validation files] *************************************************
+changed: [localhost] => (item={'name': 'lv_web', 'size': '2G', 'mount_point': '/var/www', 'filesystem': 'ext4', 'mount_options': 'defaults', 'dump': 1, 'passno': 2})
+changed: [localhost] => (item={'name': 'lv_logs', 'size': '1G', 'mount_point': '/var/log/apps', 'filesystem': 'xfs', 'mount_options': 'defaults,noatime', 'dump': 1, 'passno': 2})
+changed: [localhost] => (item={'name': 'lv_backup', 'size': '1G', 'mount_point': '/backup', 'filesystem': 'ext4', 'mount_options': 'defaults', 'dump': 1, 'passno': 2})
+
+TASK [Display final storage configuration] *************************************
+ok: [localhost]
+
+TASK [Show storage summary] ****************************************************
+ok: [localhost] => {
+    "msg": [
+        "=== BLOCK DEVICES ===",
+        "NAME                  MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS",
+        "nvme1n1               259:0    0   40G  0 disk ",
+        "└─nvme1n1p1           259:7    0   40G  0 part ",
+        "  ├─vg_data-lv_web    253:0    0    2G  0 lvm  /var/www",
+        "  ├─vg_data-lv_logs   253:1    0    1G  0 lvm  /var/log/apps",
+        "  └─vg_data-lv_backup 253:2    0    1G  0 lvm  /backup",
+        "nvme0n1               259:1    0   30G  0 disk ",
+        "├─nvme0n1p1           259:2    0    2M  0 part ",
+        "├─nvme0n1p2           259:3    0  500M  0 part /boot/efi",
+        "├─nvme0n1p3           259:4    0 1000M  0 part /boot",
+        "└─nvme0n1p4           259:5    0 28.5G  0 part /",
+        "",
+        "=== PHYSICAL VOLUMES ===",
+        "  PV             VG      Fmt  Attr PSize   PFree  ",
+        "  /dev/nvme1n1p1 vg_data lvm2 a--  <40.00g <36.00g",
+        "",
+        "=== VOLUME GROUPS ===",
+        "  VG      #PV #LV #SN Attr   VSize   VFree  ",
+        "  vg_data   1   3   0 wz--n- <40.00g <36.00g",
+        "",
+        "=== LOGICAL VOLUMES ===",
+        "  LV        VG      Attr       LSize Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert",
+        "  lv_backup vg_data -wi-ao---- 1.00g                                                    ",
+        "  lv_logs   vg_data -wi-ao---- 1.00g                                                    ",
+        "  lv_web    vg_data -wi-ao---- 2.00g                                                    ",
+        "",
+        "=== MOUNTED FILESYSTEMS ===",
+        "/dev/mapper/vg_data-lv_web     2.0G   28K  1.8G   1% /var/www",
+        "/dev/mapper/vg_data-lv_logs    960M   40M  921M   5% /var/log/apps",
+        "/dev/mapper/vg_data-lv_backup  974M   28K  907M   1% /backup",
+        "",
+        "=== FSTAB ENTRIES ===",
+        "/dev/vg_data/lv_web /var/www ext4 defaults 1 2",
+        "/dev/vg_data/lv_logs /var/log/apps xfs defaults,noatime 1 2",
+        "/dev/vg_data/lv_backup /backup ext4 defaults 1 2"
+    ]
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=13   changed=2    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+
