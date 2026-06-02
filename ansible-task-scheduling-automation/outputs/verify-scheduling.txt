@@ -1,0 +1,30 @@
+
+PLAY [Verify Scheduled Automation] *********************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Check root cron jobs] ****************************************************
+ok: [localhost]
+
+TASK [Check queued at jobs] ****************************************************
+ok: [localhost]
+
+TASK [Check systemd timers] ****************************************************
+ok: [localhost]
+
+TASK [Verify systemd unit files] ***********************************************
+ok: [localhost]
+
+TASK [Display scheduling summary] **********************************************
+ok: [localhost] => {
+    "msg": [
+        "Cron jobs: ['#Ansible: Daily temporary file cleanup', '0 2 * * * /usr/local/bin/tmp-cleanup.sh >> /var/log/automated-tasks/cleanup.log 2>&1', '#Ansible: Weekly logrotate validation', '30 1 * * 0 /usr/sbin/logrotate -d /etc/logrotate.conf >> /var/log/automated-tasks/logrotate-validation.log 2>&1', '#Ansible: Disk usage monitoring', \"*/30 * * * * df -h | awk 'NR==1 || $5+0 >= 80' >> /var/log/automated-tasks/disk-usage.log 2>&1\"]",
+        "At jobs: ['1\\tTue Jun  2 17:38:00 2026 a root']",
+        "Timers: ['NEXT                        LEFT         LAST                        PASSED   UNIT                         ACTIVATES', 'Tue 2026-06-02 17:40:00 UTC 3min 0s left -                           -        sysstat-collect.timer        sysstat-collect.service', 'Tue 2026-06-02 17:46:37 UTC 9min left    -                           -        system-monitor.timer         system-monitor.service', 'Tue 2026-06-02 17:46:37 UTC 9min left    -                           -        systemd-tmpfiles-clean.timer systemd-tmpfiles-clean.service', 'Tue 2026-06-02 18:22:24 UTC 45min left   -                           -        dnf-makecache.timer          dnf-makecache.service', 'Wed 2026-06-03 00:00:00 UTC 6h left      Tue 2026-06-02 17:31:47 UTC 5min ago logrotate.timer              logrotate.service', 'Wed 2026-06-03 00:00:00 UTC 6h left      Tue 2026-06-02 17:31:47 UTC 5min ago mlocate-updatedb.timer       mlocate-updatedb.service', 'Wed 2026-06-03 00:07:00 UTC 6h left      -                           -        sysstat-summary.timer        sysstat-summary.service', 'Wed 2026-06-03 00:23:02 UTC 6h left      -                           -        system-backup.timer          system-backup.service', 'Sun 2026-06-07 01:00:00 UTC 4 days left  Tue 2026-06-02 17:31:47 UTC 5min ago raid-check.timer             raid-check.service', '', '9 timers listed.']"
+    ]
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=6    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

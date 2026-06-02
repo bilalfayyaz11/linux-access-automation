@@ -1,0 +1,30 @@
+---
+- name: Automate One-Time Tasks with At
+  hosts: scheduling_servers
+  become: yes
+
+  tasks:
+    - name: Ensure at package is installed
+      ansible.builtin.package:
+        name: at
+        state: present
+
+    - name: Ensure atd service is active
+      ansible.builtin.systemd:
+        name: atd
+        state: started
+        enabled: yes
+
+    - name: Schedule one-time validation task
+      ansible.builtin.command: >
+        bash -c "echo 'echo One-time task executed at $(date) >> /var/log/automated-tasks/at-task.log' | at now + 2 minutes"
+      changed_when: true
+
+    - name: Capture at queue
+      ansible.builtin.command: atq
+      register: at_queue
+      changed_when: false
+
+    - name: Display queued at jobs
+      ansible.builtin.debug:
+        msg: "{{ at_queue.stdout_lines }}"

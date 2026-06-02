@@ -1,0 +1,54 @@
+---
+- name: Automate Recurring Tasks with Cron
+  hosts: scheduling_servers
+  become: yes
+  vars:
+    log_directory: /var/log/automated-tasks
+
+  tasks:
+    - name: Ensure automated task log directory exists
+      ansible.builtin.file:
+        path: "{{ log_directory }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Create temporary cleanup script
+      ansible.builtin.copy:
+        content: |
+          #!/bin/bash
+          echo "Cleanup started at $(date)"
+          find /tmp -type f -mtime +7 -delete
+          echo "Cleanup completed at $(date)"
+        dest: /usr/local/bin/tmp-cleanup.sh
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Schedule daily temporary file cleanup
+      ansible.builtin.cron:
+        name: "Daily temporary file cleanup"
+        minute: "0"
+        hour: "2"
+        job: "/usr/local/bin/tmp-cleanup.sh >> {{ log_directory }}/cleanup.log 2>&1"
+        user: root
+        state: present
+
+    - name: Schedule weekly logrotate validation
+      ansible.builtin.cron:
+        name: "Weekly logrotate validation"
+        minute: "30"
+        hour: "1"
+        weekday: "0"
+        job: "/usr/sbin/logrotate -d /etc/logrotate.conf >> {{ log_directory }}/logrotate-validation.log 2>&1"
+        user: root
+        state: present
+
+    - name: Schedule disk usage monitoring
+      ansible.builtin.cron:
+        name: "Disk usage monitoring"
+        minute: "*/30"
+        job: "df -h | awk 'NR==1 || $5+0 >= 80' >> {{ log_directory }}/disk-usage.log 2>&1"
+        user: root
+        state: present

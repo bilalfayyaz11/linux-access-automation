@@ -1,0 +1,36 @@
+
+PLAY [Configure Systemd Timers for Scheduled Automation] ***********************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Create system backup script] *********************************************
+changed: [localhost]
+
+TASK [Create system backup service] ********************************************
+changed: [localhost]
+
+TASK [Create system backup timer] **********************************************
+changed: [localhost]
+
+TASK [Create system monitor script] ********************************************
+changed: [localhost]
+
+TASK [Create system monitor service] *******************************************
+changed: [localhost]
+
+TASK [Create system monitor timer] *********************************************
+changed: [localhost]
+
+TASK [Reload systemd] **********************************************************
+ok: [localhost]
+
+TASK [Enable and start system backup timer] ************************************
+changed: [localhost]
+
+TASK [Enable and start system monitor timer] ***********************************
+changed: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=10   changed=8    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

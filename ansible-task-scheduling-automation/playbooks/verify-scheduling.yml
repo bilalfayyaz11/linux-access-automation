@@ -1,0 +1,33 @@
+---
+- name: Verify Scheduled Automation
+  hosts: scheduling_servers
+  become: yes
+
+  tasks:
+    - name: Check root cron jobs
+      ansible.builtin.command: crontab -l
+      register: cron_jobs
+      failed_when: false
+      changed_when: false
+
+    - name: Check queued at jobs
+      ansible.builtin.command: atq
+      register: at_jobs
+      failed_when: false
+      changed_when: false
+
+    - name: Check systemd timers
+      ansible.builtin.command: systemctl list-timers --all --no-pager
+      register: timers
+      changed_when: false
+
+    - name: Verify systemd unit files
+      ansible.builtin.command: systemd-analyze verify /etc/systemd/system/system-backup.service /etc/systemd/system/system-backup.timer /etc/systemd/system/system-monitor.service /etc/systemd/system/system-monitor.timer
+      changed_when: false
+
+    - name: Display scheduling summary
+      ansible.builtin.debug:
+        msg:
+          - "Cron jobs: {{ cron_jobs.stdout_lines }}"
+          - "At jobs: {{ at_jobs.stdout_lines }}"
+          - "Timers: {{ timers.stdout_lines }}"

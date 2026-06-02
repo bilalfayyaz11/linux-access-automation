@@ -1,0 +1,28 @@
+
+PLAY [Automate One-Time Tasks with At] *****************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Ensure at package is installed] ******************************************
+ok: [localhost]
+
+TASK [Ensure atd service is active] ********************************************
+ok: [localhost]
+
+TASK [Schedule one-time validation task] ***************************************
+changed: [localhost]
+
+TASK [Capture at queue] ********************************************************
+ok: [localhost]
+
+TASK [Display queued at jobs] **************************************************
+ok: [localhost] => {
+    "msg": [
+        "1\tTue Jun  2 17:38:00 2026 a root"
+    ]
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=6    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

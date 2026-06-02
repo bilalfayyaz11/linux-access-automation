@@ -1,0 +1,144 @@
+---
+- name: Configure Systemd Timers for Scheduled Automation
+  hosts: scheduling_servers
+  become: yes
+
+  tasks:
+    - name: Create system backup script
+      ansible.builtin.copy:
+        content: |
+          #!/bin/bash
+          BACKUP_DIR="/backup/systemd"
+          DATE=$(date +%Y%m%d_%H%M%S)
+
+          mkdir -p "$BACKUP_DIR"
+
+          tar -czf "$BACKUP_DIR/system_backup_$DATE.tar.gz" \
+            /etc/passwd /etc/group /etc/hosts /etc/fstab \
+            2>/dev/null || true
+
+          echo "System backup completed at $DATE" >> /var/log/systemd-backup.log
+
+          ls -t "$BACKUP_DIR"/system_backup_*.tar.gz 2>/dev/null | tail -n +11 | xargs -r rm -f
+        dest: /usr/local/bin/systemd-backup.sh
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Create system backup service
+      ansible.builtin.copy:
+        content: |
+          [Unit]
+          Description=System Backup Service
+          After=multi-user.target
+
+          [Service]
+          Type=oneshot
+          ExecStart=/usr/local/bin/systemd-backup.sh
+          User=root
+          StandardOutput=journal
+          StandardError=journal
+        dest: /etc/systemd/system/system-backup.service
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Create system backup timer
+      ansible.builtin.copy:
+        content: |
+          [Unit]
+          Description=Run System Backup Daily
+          Requires=system-backup.service
+
+          [Timer]
+          OnCalendar=daily
+          RandomizedDelaySec=1800
+          Persistent=true
+
+          [Install]
+          WantedBy=timers.target
+        dest: /etc/systemd/system/system-backup.timer
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Create system monitor script
+      ansible.builtin.copy:
+        content: |
+          #!/bin/bash
+          LOG_FILE="/var/log/system-monitor.log"
+
+          DISK_USAGE=$(df / | awk 'NR==2 {print $5}' | sed 's/%//')
+          MEM_USAGE=$(free | awk 'NR==2{printf "%.0f", $3*100/$2}')
+          LOAD_AVG=$(awk '{print $1}' /proc/loadavg)
+
+          echo "$(date): disk=${DISK_USAGE}% memory=${MEM_USAGE}% load=${LOAD_AVG}" >> "$LOG_FILE"
+
+          if [ "$DISK_USAGE" -gt 80 ]; then
+            echo "$(date): WARNING disk usage is ${DISK_USAGE}%" >> "$LOG_FILE"
+          fi
+
+          if [ "$MEM_USAGE" -gt 90 ]; then
+            echo "$(date): WARNING memory usage is ${MEM_USAGE}%" >> "$LOG_FILE"
+          fi
+
+          if (( $(echo "$LOAD_AVG > 2.0" | bc -l) )); then
+            echo "$(date): WARNING load average is ${LOAD_AVG}" >> "$LOG_FILE"
+          fi
+        dest: /usr/local/bin/system-monitor.sh
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Create system monitor service
+      ansible.builtin.copy:
+        content: |
+          [Unit]
+          Description=System Monitoring Service
+          After=multi-user.target
+
+          [Service]
+          Type=oneshot
+          ExecStart=/usr/local/bin/system-monitor.sh
+          User=root
+          StandardOutput=journal
+          StandardError=journal
+        dest: /etc/systemd/system/system-monitor.service
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Create system monitor timer
+      ansible.builtin.copy:
+        content: |
+          [Unit]
+          Description=Run System Monitoring Every 15 Minutes
+          Requires=system-monitor.service
+
+          [Timer]
+          OnBootSec=15min
+          OnUnitActiveSec=15min
+          Persistent=true
+
+          [Install]
+          WantedBy=timers.target
+        dest: /etc/systemd/system/system-monitor.timer
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Reload systemd
+      ansible.builtin.systemd:
+        daemon_reload: yes
+
+    - name: Enable and start system backup timer
+      ansible.builtin.systemd:
+        name: system-backup.timer
+        enabled: yes
+        state: started
+
+    - name: Enable and start system monitor timer
+      ansible.builtin.systemd:
+        name: system-monitor.timer
+        enabled: yes
+        state: started
