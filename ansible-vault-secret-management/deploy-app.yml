@@ -1,0 +1,48 @@
+---
+- name: Deploy Application with Environment-Specific Secrets
+  hosts: localhost
+  connection: local
+  gather_facts: true
+
+  vars_files:
+    - secrets.yml
+    - prod-secrets.yml
+
+  vars:
+    app_name: SecureApp
+    app_version: "1.0.0"
+
+  tasks:
+    - name: Create application directory
+      ansible.builtin.file:
+        path: "/opt/{{ app_name }}"
+        state: directory
+        mode: '0755'
+      become: true
+
+    - name: Deploy application configuration template
+      ansible.builtin.template:
+        src: templates/app-config.j2
+        dest: "/opt/{{ app_name }}/config.yml"
+        mode: '0600'
+      become: true
+
+    - name: Create environment-specific database config
+      ansible.builtin.copy:
+        content: |
+          environment: {{ environment }}
+          database:
+            host: "{{ prod_db_host if environment == 'prod' else db_host }}"
+            username: "{{ prod_db_username if environment == 'prod' else db_username }}"
+            password: "{{ prod_db_password if environment == 'prod' else db_password }}"
+          api:
+            endpoint: "{{ prod_api_endpoint if environment == 'prod' else 'https://api.dev.internal' }}"
+            token: "{{ prod_api_token if environment == 'prod' else api_key }}"
+        dest: "/opt/{{ app_name }}/env-config.yml"
+        mode: '0600'
+      become: true
+      no_log: true
+
+    - name: Display deployment summary
+      ansible.builtin.debug:
+        msg: "Application {{ app_name }} v{{ app_version }} deployed for {{ environment }} environment."

@@ -1,0 +1,23 @@
+
+PLAY [Deploy Application with Environment-Specific Secrets] ********************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Create application directory] ********************************************
+ok: [localhost]
+
+TASK [Deploy application configuration template] *******************************
+changed: [localhost]
+
+TASK [Create environment-specific database config] *****************************
+ok: [localhost]
+
+TASK [Display deployment summary] **********************************************
+ok: [localhost] => {
+    "msg": "Application SecureApp v1.0.0 deployed for [] environment."
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=5    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

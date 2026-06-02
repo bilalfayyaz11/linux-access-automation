@@ -1,0 +1,33 @@
+---
+- name: Configure Secure Database Connection
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - secrets.yml
+
+  tasks:
+    - name: Create secure application config
+      ansible.builtin.copy:
+        content: |
+          [database]
+          host={{ db_host }}
+          port={{ db_port }}
+          username={{ db_username }}
+          password={{ db_password }}
+
+          [api]
+          key={{ api_key }}
+          token={{ secret_token }}
+        dest: /tmp/secure-app-config.ini
+        mode: '0600'
+      no_log: true
+
+    - name: Verify secure config permissions
+      ansible.builtin.stat:
+        path: /tmp/secure-app-config.ini
+      register: config_file
+
+    - name: Show secure config status
+      ansible.builtin.debug:
+        msg: "Secure config created with permissions {{ config_file.stat.mode }}"

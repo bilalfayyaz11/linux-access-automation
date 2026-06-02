@@ -1,0 +1,17 @@
+
+PLAY [Configure Secure Database Connection] ************************************
+
+TASK [Create secure application config] ****************************************
+changed: [localhost]
+
+TASK [Verify secure config permissions] ****************************************
+ok: [localhost]
+
+TASK [Show secure config status] ***********************************************
+ok: [localhost] => {
+    "msg": "Secure config created with permissions 0600"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=3    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

@@ -1,0 +1,13 @@
+Ansible Vault Health Check
+==========================
+PASS: Vault password file exists: /home/centos/.ansible/vault/main_pass
+PASS: Vault password file exists: /home/centos/.ansible/vault/dev_pass
+PASS: Vault password file exists: /home/centos/.ansible/vault/prod_pass
+
+PASS: secrets.yml is encrypted and accessible
+PASS: prod-secrets.yml is encrypted and accessible
+PASS: user-secrets.yml is encrypted and accessible
+PASS: dev-secrets.yml is encrypted and accessible
+PASS: prod-secrets-multi.yml is encrypted and accessible
+
+Health check completed

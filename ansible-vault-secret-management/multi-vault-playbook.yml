@@ -1,0 +1,32 @@
+---
+- name: Demonstrate Multiple Vault IDs
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars_files:
+    - dev-secrets.yml
+    - prod-secrets-multi.yml
+
+  tasks:
+    - name: Verify development secrets loaded
+      ansible.builtin.debug:
+        msg: "Development vault loaded successfully"
+
+    - name: Verify production secrets loaded
+      ansible.builtin.debug:
+        msg: "Production vault loaded successfully"
+
+    - name: Create combined configuration
+      ansible.builtin.copy:
+        content: |
+          [development]
+          database_url={{ dev_database_url }}
+          api_key={{ dev_api_key }}
+
+          [production]
+          database_url={{ prod_database_url }}
+          api_key={{ prod_api_key }}
+        dest: /tmp/multi-env-config.ini
+        mode: '0600'
+      no_log: true
