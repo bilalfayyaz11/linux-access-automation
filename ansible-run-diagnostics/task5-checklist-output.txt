@@ -1,0 +1,31 @@
+=== ANSIBLE TROUBLESHOOTING CHECKLIST ===
+
+1. Syntax Check
+ansible-playbook playbook.yml --syntax-check
+
+2. Dry Run
+ansible-playbook -i inventory playbook.yml --check
+
+3. Dry Run with Diff
+ansible-playbook -i inventory playbook.yml --check --diff
+
+4. Interactive Step Mode
+ansible-playbook -i inventory playbook.yml --step
+
+5. Verbose Output
+ansible-playbook -i inventory playbook.yml -vvv
+
+6. Connectivity Test
+ansible -i inventory all -m ping
+
+7. Gather Facts
+ansible -i inventory all -m setup
+
+8. Limit to Host
+ansible-playbook -i inventory playbook.yml --limit hostname
+
+9. List Tasks
+ansible-playbook -i inventory playbook.yml --list-tasks
+
+10. List Hosts
+ansible-playbook -i inventory playbook.yml --list-hosts

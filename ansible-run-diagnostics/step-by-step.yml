@@ -1,0 +1,61 @@
+---
+- name: Step-by-Step Playbook Execution
+  hosts: webservers
+  become: yes
+  vars:
+    packages_to_install:
+      - vim
+      - wget
+      - curl
+      - nano
+
+  tasks:
+    - name: Update package cache
+      ansible.builtin.dnf:
+        update_cache: yes
+
+    - name: Install essential packages
+      ansible.builtin.dnf:
+        name: "{{ packages_to_install }}"
+        state: present
+
+    - name: Create application directory
+      ansible.builtin.file:
+        path: /opt/myapp
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Create configuration file
+      ansible.builtin.copy:
+        content: |
+          # Application Configuration
+          app_name=MyApplication
+          app_version=1.0.0
+          debug_mode=false
+        dest: /opt/myapp/config.conf
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Create startup script
+      ansible.builtin.copy:
+        content: |
+          #!/bin/bash
+          echo "Starting MyApplication..."
+          echo "Configuration loaded from /opt/myapp/config.conf"
+          echo "Application started successfully"
+        dest: /opt/myapp/start.sh
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Test the startup script
+      ansible.builtin.command: /opt/myapp/start.sh
+      register: startup_result
+      changed_when: false
+
+    - name: Display startup result
+      ansible.builtin.debug:
+        var: startup_result.stdout_lines

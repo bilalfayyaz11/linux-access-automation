@@ -1,0 +1,63 @@
+
+PLAY [Comprehensive Troubleshooting Scenario] **********************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Deployment start message] ************************************************
+ok: [localhost] => {
+    "msg": "Starting deployment on localhost"
+}
+
+TASK [Create web group] ********************************************************
+changed: [localhost]
+
+TASK [Create web user] *********************************************************
+changed: [localhost]
+
+TASK [Install required packages] ***********************************************
+changed: [localhost]
+
+TASK [Create application directory] ********************************************
+--- before
++++ after
+@@ -1,4 +1,4 @@
+ {
+     "path": "/var/www/myapp",
+-    "state": "absent"
++    "state": "directory"
+ }
+
+changed: [localhost]
+
+TASK [Deploy template] *********************************************************
+--- before
++++ after: /home/centos/.ansible/tmp/ansible-local-10627bqoh9dmk/tmpbjp8fnh2/index.html.j2
+@@ -0,0 +1,13 @@
++<!DOCTYPE html>
++<html>
++<head>
++    <title>localhost - MyApp</title>
++</head>
++<body>
++    <h1>Welcome to MyApp</h1>
++    <p>Host: localhost</p>
++    <p>IP: 172.31.10.69</p>
++    <p>User: webadmin</p>
++    <p>Port: 8080</p>
++</body>
++</html>
+
+changed: [localhost]
+
+TASK [Start httpd] *************************************************************
+changed: [localhost]
+
+TASK [Final deployment summary] ************************************************
+ok: [localhost] => {
+    "msg": "Deployment completed successfully"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=9    changed=6    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

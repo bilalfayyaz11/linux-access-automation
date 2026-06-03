@@ -1,0 +1,15 @@
+
+PLAY [Web Server Setup and Configuration] **************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Install web server package] **********************************************
+changed: [localhost]
+
+TASK [Start and enable web service] ********************************************
+fatal: [localhost]: FAILED! => {"changed": false, "msg": "Could not find the requested service httpd: host"}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=2    changed=1    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+

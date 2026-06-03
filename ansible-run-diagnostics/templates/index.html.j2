@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ inventory_hostname }} - MyApp</title>
+</head>
+<body>
+    <h1>Welcome to MyApp</h1>
+    <p>Host: {{ inventory_hostname }}</p>
+    <p>IP: {{ ansible_default_ipv4.address | default('N/A') }}</p>
+    <p>User: {{ web_user }}</p>
+    <p>Port: {{ app_port }}</p>
+</body>
+</html>

@@ -1,0 +1,52 @@
+
+PLAY [Step-by-Step Playbook Execution] *****************************************
+Perform task: TASK: Gathering Facts (N)o/(y)es/(c)ontinue: 
+Perform task: TASK: Gathering Facts (N)o/(y)es/(c)ontinue: *********************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+Perform task: TASK: Update package cache (N)o/(y)es/(c)ontinue: 
+Perform task: TASK: Update package cache (N)o/(y)es/(c)ontinue: ****************
+
+TASK [Update package cache] ****************************************************
+ok: [localhost]
+Perform task: TASK: Install essential packages (N)o/(y)es/(c)ontinue: 
+Perform task: TASK: Install essential packages (N)o/(y)es/(c)ontinue: **********
+
+TASK [Install essential packages] **********************************************
+ok: [localhost]
+Perform task: TASK: Create application directory (N)o/(y)es/(c)ontinue: 
+Perform task: TASK: Create application directory (N)o/(y)es/(c)ontinue: ********
+
+TASK [Create application directory] ********************************************
+ok: [localhost]
+Perform task: TASK: Create configuration file (N)o/(y)es/(c)ontinue: 
+Perform task: TASK: Create configuration file (N)o/(y)es/(c)ontinue: ***********
+
+TASK [Create configuration file] ***********************************************
+ok: [localhost]
+Perform task: TASK: Create startup script (N)o/(y)es/(c)ontinue: 
+Perform task: TASK: Create startup script (N)o/(y)es/(c)ontinue: ***************
+
+TASK [Create startup script] ***************************************************
+ok: [localhost]
+Perform task: TASK: Test the startup script (N)o/(y)es/(c)ontinue: 
+Perform task: TASK: Test the startup script (N)o/(y)es/(c)ontinue: *************
+
+TASK [Test the startup script] *************************************************
+ok: [localhost]
+Perform task: TASK: Display startup result (N)o/(y)es/(c)ontinue: 
+Perform task: TASK: Display startup result (N)o/(y)es/(c)ontinue: **************
+
+TASK [Display startup result] **************************************************
+ok: [localhost] => {
+    "startup_result.stdout_lines": [
+        "Starting MyApplication...",
+        "Configuration loaded from /opt/myapp/config.conf",
+        "Application started successfully"
+    ]
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=8    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

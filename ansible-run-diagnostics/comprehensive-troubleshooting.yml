@@ -1,0 +1,60 @@
+---
+- name: Comprehensive Troubleshooting Scenario
+  hosts: webservers
+  become: yes
+
+  vars:
+    web_user: webadmin
+    web_group: webadmin
+    app_port: 8080
+
+  tasks:
+
+    - name: Deployment start message
+      debug:
+        msg: "Starting deployment on {{ inventory_hostname }}"
+
+    - name: Create web group
+      group:
+        name: "{{ web_group }}"
+        state: present
+
+    - name: Create web user
+      user:
+        name: "{{ web_user }}"
+        group: "{{ web_group }}"
+        state: present
+
+    - name: Install required packages
+      dnf:
+        name:
+          - httpd
+          - python3-pip
+          - git
+        state: present
+
+    - name: Create application directory
+      file:
+        path: /var/www/myapp
+        state: directory
+        owner: "{{ web_user }}"
+        group: "{{ web_group }}"
+        mode: '0755'
+
+    - name: Deploy template
+      template:
+        src: index.html.j2
+        dest: /var/www/myapp/index.html
+        owner: "{{ web_user }}"
+        group: "{{ web_group }}"
+        mode: '0644'
+
+    - name: Start httpd
+      systemd:
+        name: httpd
+        state: started
+        enabled: yes
+
+    - name: Final deployment summary
+      debug:
+        msg: "Deployment completed successfully"

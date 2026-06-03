@@ -1,0 +1,86 @@
+
+PLAY [Advanced Debugging Techniques] *******************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Debug - Display entire data structure] ***********************************
+ok: [localhost] => {
+    "users": [
+        {
+            "groups": [
+                "wheel",
+                "developers"
+            ],
+            "name": "alice",
+            "uid": 1001
+        },
+        {
+            "groups": [
+                "developers"
+            ],
+            "name": "bob",
+            "uid": 1002
+        }
+    ]
+}
+
+TASK [Debug - Loop through complex data] ***************************************
+ok: [localhost] => (item={'name': 'alice', 'uid': 1001, 'groups': ['wheel', 'developers']}) => {
+    "msg": "User: alice\nUID: 1001\nGroups: wheel, developers\n"
+}
+ok: [localhost] => (item={'name': 'bob', 'uid': 1002, 'groups': ['developers']}) => {
+    "msg": "User: bob\nUID: 1002\nGroups: developers\n"
+}
+
+TASK [Register command output for debugging] ***********************************
+ok: [localhost]
+
+TASK [Debug - Display command results] *****************************************
+ok: [localhost] => {
+    "disk_usage": {
+        "changed": false,
+        "cmd": [
+            "df",
+            "-h"
+        ],
+        "delta": "0:00:00.007052",
+        "end": "2026-06-03 01:43:49.593342",
+        "failed": false,
+        "msg": "",
+        "rc": 0,
+        "start": "2026-06-03 01:43:49.586290",
+        "stderr": "",
+        "stderr_lines": [],
+        "stdout": "Filesystem      Size  Used Avail Use% Mounted on\ndevtmpfs        7.5G     0  7.5G   0% /dev\ntmpfs           7.7G  132K  7.7G   1% /dev/shm\ntmpfs           3.1G   18M  3.1G   1% /run\nefivarfs        128K  4.1K  119K   4% /sys/firmware/efi/efivars\n/dev/nvme0n1p4   29G  7.2G   22G  26% /\n/dev/nvme0n1p3  966M  800M  100M  89% /boot\n/dev/nvme0n1p2  500M   11M  489M   3% /boot/efi\ntmpfs           1.6G   56K  1.6G   1% /run/user/42\ntmpfs           1.6G   36K  1.6G   1% /run/user/1001",
+        "stdout_lines": [
+            "Filesystem      Size  Used Avail Use% Mounted on",
+            "devtmpfs        7.5G     0  7.5G   0% /dev",
+            "tmpfs           7.7G  132K  7.7G   1% /dev/shm",
+            "tmpfs           3.1G   18M  3.1G   1% /run",
+            "efivarfs        128K  4.1K  119K   4% /sys/firmware/efi/efivars",
+            "/dev/nvme0n1p4   29G  7.2G   22G  26% /",
+            "/dev/nvme0n1p3  966M  800M  100M  89% /boot",
+            "/dev/nvme0n1p2  500M   11M  489M   3% /boot/efi",
+            "tmpfs           1.6G   56K  1.6G   1% /run/user/42",
+            "tmpfs           1.6G   36K  1.6G   1% /run/user/1001"
+        ]
+    }
+}
+
+TASK [Debug - Display specific parts of registered variable] *******************
+ok: [localhost] => {
+    "msg": "Command: df -h\nReturn Code: 0\nOutput Lines: 10\n"
+}
+
+TASK [Debug - Network interface information] ***********************************
+ok: [localhost] => (item=ens5) => {
+    "msg": "Interface ens5 has IP 172.31.10.69"
+}
+ok: [localhost] => (item=lo) => {
+    "msg": "Interface lo has IP 127.0.0.1"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=7    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

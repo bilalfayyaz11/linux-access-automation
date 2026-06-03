@@ -1,0 +1,39 @@
+
+PLAY [Comprehensive Troubleshooting Scenario] **********************************
+Perform task: TASK: Gathering Facts (N)o/(y)es/(c)ontinue: 
+Perform task: TASK: Gathering Facts (N)o/(y)es/(c)ontinue: *********************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Deployment start message] ************************************************
+ok: [localhost] => {
+    "msg": "Starting deployment on localhost"
+}
+
+TASK [Create web group] ********************************************************
+changed: [localhost]
+
+TASK [Create web user] *********************************************************
+changed: [localhost]
+
+TASK [Install required packages] ***********************************************
+changed: [localhost]
+
+TASK [Create application directory] ********************************************
+changed: [localhost]
+
+TASK [Deploy template] *********************************************************
+changed: [localhost]
+
+TASK [Start httpd] *************************************************************
+changed: [localhost]
+
+TASK [Final deployment summary] ************************************************
+ok: [localhost] => {
+    "msg": "Deployment completed successfully"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=9    changed=6    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

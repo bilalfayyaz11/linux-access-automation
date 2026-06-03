@@ -1,0 +1,43 @@
+---
+- name: Web Server Setup and Configuration
+  hosts: webservers
+  become: yes
+  vars:
+    web_package: httpd
+    web_service: httpd
+    document_root: /var/www/html
+
+  tasks:
+    - name: Install web server package
+      ansible.builtin.dnf:
+        name: "{{ web_package }}"
+        state: present
+
+    - name: Start and enable web service
+      ansible.builtin.systemd:
+        name: "{{ web_service }}"
+        state: started
+        enabled: yes
+
+    - name: Create custom index page
+      ansible.builtin.copy:
+        content: |
+          <html>
+          <head><title>Welcome to {{ inventory_hostname }}</title></head>
+          <body>
+          <h1>Server: {{ inventory_hostname }}</h1>
+          <p>Managed by Ansible</p>
+          </body>
+          </html>
+        dest: "{{ document_root }}/index.html"
+        owner: apache
+        group: apache
+        mode: '0644'
+
+    - name: Open firewall for HTTP
+      ansible.posix.firewalld:
+        service: http
+        permanent: yes
+        state: enabled
+        immediate: yes
+      ignore_errors: yes

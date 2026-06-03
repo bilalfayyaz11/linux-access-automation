@@ -1,0 +1,48 @@
+---
+- name: Ansible Troubleshooting Reference
+  hosts: webservers
+  gather_facts: yes
+
+  tasks:
+
+    - name: Syntax validation reference
+      debug:
+        msg: "This playbook has valid syntax"
+
+    - name: Connection test
+      ping:
+      register: ping_result
+
+    - name: Connection status
+      debug:
+        msg: "Connection to {{ inventory_hostname }}: {{ 'SUCCESS' if ping_result.ping == 'pong' else 'FAILED' }}"
+
+    - name: Display key system facts
+      debug:
+        msg: |
+          OS: {{ ansible_distribution }} {{ ansible_distribution_version }}
+          Kernel: {{ ansible_kernel }}
+          Memory: {{ ansible_memtotal_mb }} MB
+          CPU Cores: {{ ansible_processor_vcpus }}
+          Python: {{ ansible_python_version }}
+
+    - name: Display Ansible version
+      debug:
+        msg: "Ansible version: {{ ansible_version.full }}"
+
+    - name: Privilege escalation test
+      command: whoami
+      become: yes
+      register: privilege_test
+      changed_when: false
+
+    - name: Privilege escalation result
+      debug:
+        msg: "Running as: {{ privilege_test.stdout }}"
+
+    - name: Variable resolution test
+      debug:
+        msg: |
+          inventory_hostname={{ inventory_hostname }}
+          ansible_hostname={{ ansible_hostname }}
+          group_names={{ group_names }}

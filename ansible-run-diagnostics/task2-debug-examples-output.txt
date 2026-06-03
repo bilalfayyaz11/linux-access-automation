@@ -1,0 +1,39 @@
+
+PLAY [Debug Module Examples] ***************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Debug - Display simple message] ******************************************
+ok: [localhost] => {
+    "msg": "Starting deployment of MyWebApp version 1.2.3"
+}
+
+TASK [Debug - Display variable values] *****************************************
+ok: [localhost] => {
+    "ansible_hostname": "ip-172-31-10-69"
+}
+
+TASK [Debug - Display multiple variables] **************************************
+ok: [localhost] => {
+    "msg": "Host Information:\n- Hostname: ip-172-31-10-69\n- IP Address: 172.31.10.69\n- OS Family: RedHat\n- Architecture: x86_64\n"
+}
+
+TASK [Debug - Conditional debugging] *******************************************
+ok: [localhost] => {
+    "msg": "Debug mode is enabled for localhost"
+}
+
+TASK [Gather package facts] ****************************************************
+ok: [localhost]
+
+TASK [Debug - Display installed packages filtered] *****************************
+skipping: [localhost] => (item=httpd) 
+ok: [localhost] => (item=openssh-server) => {
+    "msg": "Package openssh-server is installed"
+}
+skipping: [localhost] => (item=vim) 
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=7    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

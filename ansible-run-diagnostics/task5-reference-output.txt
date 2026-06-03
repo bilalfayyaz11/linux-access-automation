@@ -1,0 +1,45 @@
+
+PLAY [Ansible Troubleshooting Reference] ***************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Syntax validation reference] *********************************************
+ok: [localhost] => {
+    "msg": "This playbook has valid syntax"
+}
+
+TASK [Connection test] *********************************************************
+ok: [localhost]
+
+TASK [Connection status] *******************************************************
+ok: [localhost] => {
+    "msg": "Connection to localhost: SUCCESS"
+}
+
+TASK [Display key system facts] ************************************************
+ok: [localhost] => {
+    "msg": "OS: CentOS 9\nKernel: 5.14.0-654.el9.x86_64\nMemory: 15571 MB\nCPU Cores: 4\nPython: 3.9.25\n"
+}
+
+TASK [Display Ansible version] *************************************************
+ok: [localhost] => {
+    "msg": "Ansible version: 2.14.18"
+}
+
+TASK [Privilege escalation test] ***********************************************
+ok: [localhost]
+
+TASK [Privilege escalation result] *********************************************
+ok: [localhost] => {
+    "msg": "Running as: root"
+}
+
+TASK [Variable resolution test] ************************************************
+ok: [localhost] => {
+    "msg": "inventory_hostname=localhost\nansible_hostname=ip-172-31-10-69\ngroup_names=['webservers']\n"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=9    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

@@ -1,0 +1,38 @@
+
+PLAY [Step-by-Step Playbook Execution] *****************************************
+Perform task: TASK: Gathering Facts (N)o/(y)es/(c)ontinue: 
+Perform task: TASK: Gathering Facts (N)o/(y)es/(c)ontinue: *********************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Update package cache] ****************************************************
+ok: [localhost]
+
+TASK [Install essential packages] **********************************************
+changed: [localhost]
+
+TASK [Create application directory] ********************************************
+changed: [localhost]
+
+TASK [Create configuration file] ***********************************************
+changed: [localhost]
+
+TASK [Create startup script] ***************************************************
+changed: [localhost]
+
+TASK [Test the startup script] *************************************************
+ok: [localhost]
+
+TASK [Display startup result] **************************************************
+ok: [localhost] => {
+    "startup_result.stdout_lines": [
+        "Starting MyApplication...",
+        "Configuration loaded from /opt/myapp/config.conf",
+        "Application started successfully"
+    ]
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=8    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

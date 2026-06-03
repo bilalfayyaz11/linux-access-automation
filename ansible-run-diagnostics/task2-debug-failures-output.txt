@@ -1,0 +1,51 @@
+
+PLAY [Debugging Failed Tasks] **************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Attempt to install package and capture result] ***************************
+changed: [localhost]
+
+TASK [Debug - Package installation result] *************************************
+ok: [localhost] => {
+    "package_result": {
+        "changed": true,
+        "failed": false,
+        "msg": "",
+        "rc": 0,
+        "results": [
+            "Installed: apr-util-1.6.1-23.el9.x86_64",
+            "Installed: httpd-core-2.4.62-13.el9.x86_64",
+            "Installed: httpd-filesystem-2.4.62-13.el9.noarch",
+            "Installed: apr-util-bdb-1.6.1-23.el9.x86_64",
+            "Installed: httpd-tools-2.4.62-13.el9.x86_64",
+            "Installed: mod_http2-2.0.26-6.el9.x86_64",
+            "Installed: apr-util-openssl-1.6.1-23.el9.x86_64",
+            "Installed: httpd-2.4.62-13.el9.x86_64",
+            "Installed: centos-logos-httpd-90.9-1.el9.noarch",
+            "Installed: apr-1.7.0-12.el9.x86_64",
+            "Installed: mod_lua-2.4.62-13.el9.x86_64"
+        ]
+    }
+}
+
+TASK [Debug - Conditional message based on result] *****************************
+skipping: [localhost]
+
+TASK [Debug - Success message] *************************************************
+ok: [localhost] => {
+    "msg": "Package httpd installed successfully"
+}
+
+TASK [Create test file] ********************************************************
+changed: [localhost]
+
+TASK [Debug - File creation result] ********************************************
+ok: [localhost] => {
+    "msg": "File created successfully at /tmp/test-file.txt"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=6    changed=2    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+
