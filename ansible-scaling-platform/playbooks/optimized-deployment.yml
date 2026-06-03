@@ -1,0 +1,91 @@
+---
+- name: High-Performance Web Server Deployment
+  hosts: webservers
+  gather_facts: true
+  become: true
+  strategy: free
+  serial: "25%"
+  max_fail_percentage: 10
+
+  vars:
+    ansible_ssh_pipelining: true
+    deployment_timeout: 300
+    batch_delay: 2
+    web_packages:
+      - httpd
+      - firewalld
+
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+
+  pre_tasks:
+    - name: Set deployment start time
+      ansible.builtin.set_fact:
+        deployment_start: "{{ ansible_date_time.epoch }}"
+      run_once: true
+
+    - name: Check system resources
+      ansible.builtin.setup:
+        filter:
+          - ansible_memtotal_mb
+          - ansible_processor_vcpus
+          - ansible_default_ipv4
+      tags: ['facts']
+
+    - name: Validate minimum system requirements
+      ansible.builtin.assert:
+        that:
+          - ansible_memtotal_mb >= 512
+          - ansible_processor_vcpus >= 1
+        fail_msg: "System does not meet minimum requirements"
+        success_msg: "System requirements validated"
+      tags: ['validation']
+
+  tasks:
+    - name: Install packages in batch
+      ansible.builtin.package:
+        name: "{{ web_packages }}"
+        state: present
+      become: true
+      async: 300
+      poll: 0
+      register: package_install
+      tags: ['packages']
+
+    - name: Wait for package installation
+      ansible.builtin.async_status:
+        jid: "{{ package_install.ansible_job_id }}"
+      register: package_result
+      until: package_result.finished
+      retries: 30
+      delay: 10
+      tags: ['packages']
+
+    - name: Deploy web server role
+      ansible.builtin.include_role:
+        name: webserver
+      tags: ['webserver']
+
+  post_tasks:
+    - name: Calculate deployment time
+      ansible.builtin.set_fact:
+        deployment_duration: "{{ ansible_date_time.epoch | int - deployment_start | int }}"
+
+    - name: Performance health check
+      ansible.builtin.uri:
+        url: "http://127.0.0.1:{{ http_port | default(80) }}"
+        method: GET
+        status_code: 200
+        timeout: 10
+      register: perf_health_check
+      retries: 3
+      delay: 2
+      tags: ['health_check']
+
+    - name: Log deployment metrics
+      ansible.builtin.lineinfile:
+        path: "{{ playbook_dir }}/../outputs/deployment-metrics.log"
+        line: "{{ ansible_date_time.iso8601 }},{{ inventory_hostname }},{{ deployment_duration }},{{ perf_health_check.elapsed }}"
+        create: true
+      delegate_to: localhost
+      tags: ['metrics']

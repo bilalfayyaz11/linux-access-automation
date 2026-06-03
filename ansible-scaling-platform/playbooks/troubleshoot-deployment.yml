@@ -1,0 +1,97 @@
+---
+- name: Troubleshoot Large-Scale Deployment Issues
+  hosts: webservers
+  gather_facts: true
+  become: true
+  ignore_errors: true
+
+  tasks:
+    - name: Check connectivity to all hosts
+      ansible.builtin.ping:
+      register: connectivity_test
+      tags: ['connectivity']
+
+    - name: Test execution context
+      ansible.builtin.shell: |
+        echo "User: $(whoami)"
+        echo "Home: $HOME"
+        echo "Current directory: $(pwd)"
+        echo "Sudo access: $(sudo -n true 2>/dev/null && echo 'Yes' || echo 'No')"
+      register: ssh_test
+      changed_when: false
+      tags: ['connectivity']
+
+    - name: Check system resources
+      ansible.builtin.shell: |
+        echo "=== System Resources ==="
+        echo "Memory: $(free -h | grep Mem)"
+        echo "Disk: $(df -h /)"
+        echo "CPU: $(nproc) cores"
+        echo "Load: $(uptime | awk -F'load average:' '{print $2}')"
+        echo "=== Network ==="
+        echo "Hostname: $(hostname -f)"
+        echo "IP: $(hostname -I)"
+        echo "=== Services ==="
+        systemctl status httpd --no-pager -l || echo "httpd not running"
+      register: resource_check
+      changed_when: false
+      tags: ['resources']
+
+    - name: Check common deployment issues
+      ansible.builtin.shell: |
+        echo "=== Common Issues Check ==="
+
+        if command -v getenforce >/dev/null 2>&1; then
+          echo "SELinux: $(getenforce)"
+        fi
+
+        if systemctl is-active firewalld >/dev/null 2>&1; then
+          echo "Firewall: Active"
+          firewall-cmd --list-services 2>/dev/null || echo "Cannot list firewall services"
+        else
+          echo "Firewall: Inactive"
+        fi
+
+        if [ -f /var/lib/rpm/.rpm.lock ]; then
+          echo "RPM lock: Present"
+        else
+          echo "RPM lock: None"
+        fi
+
+        echo "Disk usage:"
+        df -h | grep -E '(Filesystem|/dev/)'
+
+        echo "Zombie processes: $(ps aux | awk '$8 ~ /^Z/ { count++ } END { print count+0 }')"
+      register: common_issues
+      changed_when: false
+      tags: ['issues']
+
+    - name: Generate troubleshooting report
+      ansible.builtin.copy:
+        content: |
+          ANSIBLE TROUBLESHOOTING REPORT
+          ==============================
+          Host: {{ inventory_hostname }}
+          Date: {{ ansible_date_time.iso8601 }}
+
+          CONNECTIVITY TEST:
+          {{ connectivity_test | to_nice_json }}
+
+          EXECUTION CONTEXT:
+          {{ ssh_test.stdout }}
+
+          SYSTEM RESOURCES:
+          {{ resource_check.stdout }}
+
+          COMMON ISSUES:
+          {{ common_issues.stdout }}
+
+          FACTS SUMMARY:
+          - OS: {{ ansible_distribution }} {{ ansible_distribution_version }}
+          - Kernel: {{ ansible_kernel }}
+          - Architecture: {{ ansible_architecture }}
+          - CPU Cores: {{ ansible_processor_vcpus }}
+          - Memory: {{ ansible_memtotal_mb }}MB
+        dest: "{{ playbook_dir }}/../reports/{{ inventory_hostname }}-troubleshooting-report.txt"
+      delegate_to: localhost
+      tags: ['report']

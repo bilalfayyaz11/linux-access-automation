@@ -1,0 +1,46 @@
+{
+  "_meta": {
+    "hostvars": {
+      "localhost": {
+        "ansible_host": "127.0.0.1",
+        "ansible_connection": "local",
+        "region_name": "us_east",
+        "server_id": "web-us-east-01"
+      }
+    }
+  },
+  "webservers": {
+    "hosts": [
+      "localhost"
+    ],
+    "vars": {
+      "ansible_connection": "local",
+      "ansible_user": "centos",
+      "http_port": 80,
+      "max_clients": 200
+    }
+  },
+  "us_east": {
+    "hosts": [
+      "localhost"
+    ],
+    "vars": {
+      "region": "us-east-1",
+      "datacenter": "virginia"
+    }
+  },
+  "us_west": {
+    "hosts": [],
+    "vars": {
+      "region": "us-west-2",
+      "datacenter": "oregon"
+    }
+  },
+  "europe": {
+    "hosts": [],
+    "vars": {
+      "region": "eu-west-1",
+      "datacenter": "ireland"
+    }
+  }
+}

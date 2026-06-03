@@ -1,0 +1,21 @@
+
+PLAY [Troubleshoot Large-Scale Deployment Issues] ******************************
+
+TASK [Check connectivity to all hosts] *****************************************
+ok: [localhost]
+
+TASK [Test execution context] **************************************************
+ok: [localhost]
+
+TASK [Check system resources] **************************************************
+ok: [localhost]
+
+TASK [Check common deployment issues] ******************************************
+ok: [localhost]
+
+TASK [Generate troubleshooting report] *****************************************
+changed: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=5    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

@@ -1,0 +1,44 @@
+
+PLAY [Scale Web Servers by Region] *********************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [webserver : Install web server packages] *********************************
+ok: [localhost]
+
+TASK [webserver : Create web content directory] ********************************
+ok: [localhost]
+
+TASK [webserver : Deploy web application template] *****************************
+changed: [localhost]
+
+TASK [webserver : Configure web server] ****************************************
+ok: [localhost]
+
+TASK [webserver : Start and enable web server] *********************************
+ok: [localhost]
+
+TASK [webserver : Ensure firewalld is running] *********************************
+ok: [localhost]
+
+TASK [webserver : Configure firewall for web traffic] **************************
+changed: [localhost]
+
+TASK [webserver : Reload firewall rules] ***************************************
+ok: [localhost]
+
+RUNNING HANDLER [webserver : restart webserver] ********************************
+changed: [localhost]
+
+TASK [Verify regional deployment] **********************************************
+ok: [localhost]
+
+TASK [Report regional deployment status] ***************************************
+ok: [localhost] => {
+    "msg": "Region us_east deployment completed successfully"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=12   changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

@@ -1,0 +1,329 @@
+2026-06-03 02:55:43,971 p=5927 u=centos n=ansible | [DEPRECATION WARNING]: DEFAULT_GATHER_TIMEOUT option, the module_defaults 
+keyword is a more generic version and can apply to all calls to the 
+M(ansible.builtin.gather_facts) or M(ansible.builtin.setup) actions, use 
+module_defaults instead. This feature will be removed from ansible-core in 
+version 2.18. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2026-06-03 02:55:44,037 p=5927 u=centos n=ansible | {
+    "_meta": {
+        "hostvars": {
+            "localhost": {
+                "ansible_connection": "local",
+                "ansible_host": "127.0.0.1",
+                "ansible_user": "centos",
+                "datacenter": "virginia",
+                "http_port": 80,
+                "max_clients": 200,
+                "region": "us-east-1",
+                "region_name": "us_east",
+                "server_id": "web-us-east-01"
+            }
+        }
+    },
+    "all": {
+        "children": [
+            "ungrouped",
+            "webservers",
+            "us_east",
+            "us_west",
+            "europe"
+        ]
+    },
+    "us_east": {
+        "hosts": [
+            "localhost"
+        ]
+    },
+    "webservers": {
+        "hosts": [
+            "localhost"
+        ]
+    }
+}
+2026-06-03 02:55:44,707 p=5935 u=centos n=ansible | [DEPRECATION WARNING]: DEFAULT_GATHER_TIMEOUT option, the module_defaults 
+keyword is a more generic version and can apply to all calls to the 
+M(ansible.builtin.gather_facts) or M(ansible.builtin.setup) actions, use 
+module_defaults instead. This feature will be removed from ansible-core in 
+version 2.18. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2026-06-03 02:55:44,909 p=5935 u=centos n=ansible | ERROR! couldn't resolve module/action 'ansible.posix.firewalld'. This often indicates a misspelling, missing collection, or incorrect module path.
+
+The error appears to be in '/home/centos/ansible-scaling-platform/roles/webserver/tasks/main.yml': line 50, column 3, but may
+be elsewhere in the file depending on the exact syntax problem.
+
+The offending line appears to be:
+
+
+- name: Configure firewall for web traffic
+  ^ here
+
+2026-06-03 02:55:45,581 p=5944 u=centos n=ansible | [DEPRECATION WARNING]: DEFAULT_GATHER_TIMEOUT option, the module_defaults 
+keyword is a more generic version and can apply to all calls to the 
+M(ansible.builtin.gather_facts) or M(ansible.builtin.setup) actions, use 
+module_defaults instead. This feature will be removed from ansible-core in 
+version 2.18. Deprecation warnings can be disabled by setting 
+deprecation_warnings=False in ansible.cfg.
+2026-06-03 02:55:45,751 p=5944 u=centos n=ansible | ERROR! couldn't resolve module/action 'ansible.posix.firewalld'. This often indicates a misspelling, missing collection, or incorrect module path.
+
+The error appears to be in '/home/centos/ansible-scaling-platform/roles/webserver/tasks/main.yml': line 50, column 3, but may
+be elsewhere in the file depending on the exact syntax problem.
+
+The offending line appears to be:
+
+
+- name: Configure firewall for web traffic
+  ^ here
+
+2026-06-03 02:56:23,368 p=6056 u=centos n=ansible | playbook: playbooks/scale-webservers.yml
+2026-06-03 02:56:24,231 p=6065 u=centos n=ansible | playbook: playbooks/scale-by-region.yml
+2026-06-03 02:57:01,461 p=6173 u=centos n=ansible | PLAY [Scale Web Servers Across Multiple Regions] *******************************
+2026-06-03 02:57:03,124 p=6173 u=centos n=ansible | TASK [Gathering Facts] *********************************************************
+2026-06-03 02:57:03,124 p=6173 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:57:03,174 p=6173 u=centos n=ansible | TASK [Display deployment information] ******************************************
+2026-06-03 02:57:03,174 p=6173 u=centos n=ansible | ok: [localhost] => {
+    "msg": "Starting deployment to localhost\nRegion: us_east\nBatch size: 5\n"
+}
+2026-06-03 02:57:03,200 p=6173 u=centos n=ansible | [WARNING]: Reset is not implemented for this connection
+
+2026-06-03 02:57:03,681 p=6173 u=centos n=ansible | TASK [Ensure system is ready for deployment] ***********************************
+2026-06-03 02:57:03,681 p=6173 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:57:05,392 p=6173 u=centos n=ansible | TASK [webserver : Install web server packages] *********************************
+2026-06-03 02:57:05,392 p=6173 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:57:05,932 p=6173 u=centos n=ansible | TASK [webserver : Create web content directory] ********************************
+2026-06-03 02:57:05,932 p=6173 u=centos n=ansible | changed: [localhost]
+2026-06-03 02:57:06,997 p=6173 u=centos n=ansible | TASK [webserver : Deploy web application template] *****************************
+2026-06-03 02:57:06,997 p=6173 u=centos n=ansible | changed: [localhost]
+2026-06-03 02:57:07,768 p=6173 u=centos n=ansible | TASK [webserver : Configure web server] ****************************************
+2026-06-03 02:57:07,769 p=6173 u=centos n=ansible | changed: [localhost]
+2026-06-03 02:57:09,217 p=6173 u=centos n=ansible | TASK [webserver : Start and enable web server] *********************************
+2026-06-03 02:57:09,217 p=6173 u=centos n=ansible | changed: [localhost]
+2026-06-03 02:57:09,815 p=6173 u=centos n=ansible | TASK [webserver : Ensure firewalld is running] *********************************
+2026-06-03 02:57:09,815 p=6173 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:57:10,745 p=6173 u=centos n=ansible | TASK [webserver : Configure firewall for web traffic] **************************
+2026-06-03 02:57:10,746 p=6173 u=centos n=ansible | changed: [localhost]
+2026-06-03 02:57:11,703 p=6173 u=centos n=ansible | TASK [webserver : Reload firewall rules] ***************************************
+2026-06-03 02:57:11,703 p=6173 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:57:13,421 p=6173 u=centos n=ansible | RUNNING HANDLER [webserver : restart webserver] ********************************
+2026-06-03 02:57:13,422 p=6173 u=centos n=ansible | changed: [localhost]
+2026-06-03 02:57:14,206 p=6173 u=centos n=ansible | TASK [Perform health check] ****************************************************
+2026-06-03 02:57:14,207 p=6173 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:57:14,245 p=6173 u=centos n=ansible | TASK [Display deployment success] **********************************************
+2026-06-03 02:57:14,246 p=6173 u=centos n=ansible | ok: [localhost] => {
+    "msg": "Successfully deployed to localhost\nHealth check status: 200\nResponse time: 0s\n"
+}
+2026-06-03 02:57:14,266 p=6173 u=centos n=ansible | PLAY RECAP *********************************************************************
+2026-06-03 02:57:14,267 p=6173 u=centos n=ansible | localhost                  : ok=14   changed=6    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2026-06-03 02:57:19,991 p=6874 u=centos n=ansible | PLAY [Scale Web Servers by Region] *********************************************
+2026-06-03 02:57:21,515 p=6874 u=centos n=ansible | TASK [Gathering Facts] *********************************************************
+2026-06-03 02:57:21,515 p=6874 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:57:23,211 p=6874 u=centos n=ansible | TASK [webserver : Install web server packages] *********************************
+2026-06-03 02:57:23,211 p=6874 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:57:23,759 p=6874 u=centos n=ansible | TASK [webserver : Create web content directory] ********************************
+2026-06-03 02:57:23,759 p=6874 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:57:24,839 p=6874 u=centos n=ansible | TASK [webserver : Deploy web application template] *****************************
+2026-06-03 02:57:24,840 p=6874 u=centos n=ansible | changed: [localhost]
+2026-06-03 02:57:25,521 p=6874 u=centos n=ansible | TASK [webserver : Configure web server] ****************************************
+2026-06-03 02:57:25,522 p=6874 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:57:26,486 p=6874 u=centos n=ansible | TASK [webserver : Start and enable web server] *********************************
+2026-06-03 02:57:26,487 p=6874 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:57:27,054 p=6874 u=centos n=ansible | TASK [webserver : Ensure firewalld is running] *********************************
+2026-06-03 02:57:27,054 p=6874 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:57:27,996 p=6874 u=centos n=ansible | TASK [webserver : Configure firewall for web traffic] **************************
+2026-06-03 02:57:27,996 p=6874 u=centos n=ansible | changed: [localhost]
+2026-06-03 02:57:28,966 p=6874 u=centos n=ansible | TASK [webserver : Reload firewall rules] ***************************************
+2026-06-03 02:57:28,966 p=6874 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:57:30,674 p=6874 u=centos n=ansible | RUNNING HANDLER [webserver : restart webserver] ********************************
+2026-06-03 02:57:30,674 p=6874 u=centos n=ansible | changed: [localhost]
+2026-06-03 02:57:31,490 p=6874 u=centos n=ansible | TASK [Verify regional deployment] **********************************************
+2026-06-03 02:57:31,490 p=6874 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:57:31,545 p=6874 u=centos n=ansible | TASK [Report regional deployment status] ***************************************
+2026-06-03 02:57:31,545 p=6874 u=centos n=ansible | ok: [localhost] => {
+    "msg": "Region us_east deployment completed successfully"
+}
+2026-06-03 02:57:31,565 p=6874 u=centos n=ansible | PLAY RECAP *********************************************************************
+2026-06-03 02:57:31,565 p=6874 u=centos n=ansible | localhost                  : ok=12   changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2026-06-03 02:57:50,214 p=7475 u=centos n=ansible | playbook: playbooks/optimized-deployment.yml
+2026-06-03 02:57:54,271 p=7484 u=centos n=ansible |  [ERROR]: User interrupted execution
+
+2026-06-03 02:58:00,335 p=7592 u=centos n=ansible | playbook: playbooks/optimized-deployment.yml
+2026-06-03 02:58:03,970 p=7601 u=centos n=ansible | [WARNING]: Skipping callback plugin 'timer', unable to load
+
+2026-06-03 02:58:03,970 p=7601 u=centos n=ansible | [WARNING]: Skipping callback plugin 'profile_tasks', unable to load
+
+2026-06-03 02:58:03,973 p=7601 u=centos n=ansible | PLAY [High-Performance Web Server Deployment] **********************************
+2026-06-03 02:58:03,981 p=7601 u=centos n=ansible | [WARNING]: Using max_fail_percentage with the free strategy is not supported,
+as tasks are executed independently on each host
+
+2026-06-03 02:58:05,449 p=7601 u=centos n=ansible | TASK [Gathering Facts] *********************************************************
+2026-06-03 02:58:05,450 p=7601 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:58:05,460 p=7601 u=centos n=ansible | [WARNING]: Using run_once with the free strategy is not currently supported.
+This task will still be executed for every host in the inventory list.
+
+2026-06-03 02:58:05,481 p=7601 u=centos n=ansible | TASK [Set deployment start time] ***********************************************
+2026-06-03 02:58:05,482 p=7601 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:58:06,498 p=7601 u=centos n=ansible | TASK [Check system resources] **************************************************
+2026-06-03 02:58:06,498 p=7601 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:58:06,531 p=7601 u=centos n=ansible | TASK [Validate minimum system requirements] ************************************
+2026-06-03 02:58:06,532 p=7601 u=centos n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "System requirements validated"
+}
+2026-06-03 02:58:06,577 p=7601 u=centos n=ansible | TASK [Install packages in batch] ***********************************************
+2026-06-03 02:58:06,578 p=7601 u=centos n=ansible | fatal: [localhost]: FAILED! => {"msg": "The task includes an option with an undefined variable. The error was: 'web_packages' is undefined. 'web_packages' is undefined\n\nThe error appears to be in '/home/centos/ansible-scaling-platform/playbooks/optimized-deployment.yml': line 42, column 7, but may\nbe elsewhere in the file depending on the exact syntax problem.\n\nThe offending line appears to be:\n\n  tasks:\n    - name: Install packages in batch\n      ^ here\n"}
+2026-06-03 02:58:06,581 p=7601 u=centos n=ansible | PLAY RECAP *********************************************************************
+2026-06-03 02:58:06,581 p=7601 u=centos n=ansible | localhost                  : ok=4    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2026-06-03 02:58:58,458 p=7802 u=centos n=ansible | playbook: playbooks/optimized-deployment.yml
+2026-06-03 02:59:02,285 p=7811 u=centos n=ansible | [WARNING]: Skipping callback plugin 'timer', unable to load
+
+2026-06-03 02:59:02,286 p=7811 u=centos n=ansible | [WARNING]: Skipping callback plugin 'profile_tasks', unable to load
+
+2026-06-03 02:59:02,288 p=7811 u=centos n=ansible | PLAY [High-Performance Web Server Deployment] **********************************
+2026-06-03 02:59:02,296 p=7811 u=centos n=ansible | [WARNING]: Using max_fail_percentage with the free strategy is not supported,
+as tasks are executed independently on each host
+
+2026-06-03 02:59:02,309 p=7811 u=centos n=ansible | [WARNING]: Using run_once with the free strategy is not currently supported.
+This task will still be executed for every host in the inventory list.
+
+2026-06-03 02:59:02,330 p=7811 u=centos n=ansible | TASK [Set deployment start time] ***********************************************
+2026-06-03 02:59:02,330 p=7811 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:59:03,678 p=7811 u=centos n=ansible | TASK [Check system resources] **************************************************
+2026-06-03 02:59:03,679 p=7811 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:59:03,715 p=7811 u=centos n=ansible | TASK [Validate minimum system requirements] ************************************
+2026-06-03 02:59:03,716 p=7811 u=centos n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "System requirements validated"
+}
+2026-06-03 02:59:04,546 p=7811 u=centos n=ansible | TASK [Install packages in batch] ***********************************************
+2026-06-03 02:59:04,547 p=7811 u=centos n=ansible | changed: [localhost]
+2026-06-03 02:59:15,332 p=7811 u=centos n=ansible | TASK [Wait for package installation] *******************************************
+2026-06-03 02:59:15,332 p=7811 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:59:15,357 p=7811 u=centos n=ansible | TASK [Deploy web server role] **************************************************
+2026-06-03 02:59:16,795 p=7811 u=centos n=ansible | TASK [webserver : Install web server packages] *********************************
+2026-06-03 02:59:16,795 p=7811 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:59:17,292 p=7811 u=centos n=ansible | TASK [webserver : Create web content directory] ********************************
+2026-06-03 02:59:17,292 p=7811 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:59:18,366 p=7811 u=centos n=ansible | TASK [webserver : Deploy web application template] *****************************
+2026-06-03 02:59:18,366 p=7811 u=centos n=ansible | changed: [localhost]
+2026-06-03 02:59:19,052 p=7811 u=centos n=ansible | TASK [webserver : Configure web server] ****************************************
+2026-06-03 02:59:19,052 p=7811 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:59:19,941 p=7811 u=centos n=ansible | TASK [webserver : Start and enable web server] *********************************
+2026-06-03 02:59:19,941 p=7811 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:59:20,468 p=7811 u=centos n=ansible | TASK [webserver : Ensure firewalld is running] *********************************
+2026-06-03 02:59:20,468 p=7811 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:59:21,361 p=7811 u=centos n=ansible | TASK [webserver : Configure firewall for web traffic] **************************
+2026-06-03 02:59:21,362 p=7811 u=centos n=ansible | changed: [localhost]
+2026-06-03 02:59:22,309 p=7811 u=centos n=ansible | TASK [webserver : Reload firewall rules] ***************************************
+2026-06-03 02:59:22,309 p=7811 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:59:23,995 p=7811 u=centos n=ansible | RUNNING HANDLER [webserver : restart webserver] ********************************
+2026-06-03 02:59:23,995 p=7811 u=centos n=ansible | changed: [localhost]
+2026-06-03 02:59:24,046 p=7811 u=centos n=ansible | TASK [Calculate deployment time] ***********************************************
+2026-06-03 02:59:24,046 p=7811 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:59:24,832 p=7811 u=centos n=ansible | TASK [Performance health check] ************************************************
+2026-06-03 02:59:24,833 p=7811 u=centos n=ansible | ok: [localhost]
+2026-06-03 02:59:25,312 p=7811 u=centos n=ansible | TASK [Log deployment metrics] **************************************************
+2026-06-03 02:59:25,312 p=7811 u=centos n=ansible | [WARNING]: Module remote_tmp /root/.ansible/tmp did not exist and was created
+with a mode of 0700, this may cause issues when running as another user. To
+avoid this, create the remote_tmp dir with the correct permissions manually
+
+2026-06-03 02:59:25,313 p=7811 u=centos n=ansible | changed: [localhost]
+2026-06-03 02:59:25,336 p=7811 u=centos n=ansible | PLAY RECAP *********************************************************************
+2026-06-03 02:59:25,336 p=7811 u=centos n=ansible | localhost                  : ok=17   changed=5    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2026-06-03 03:00:12,463 p=8308 u=centos n=ansible | playbook: playbooks/cache-facts.yml
+2026-06-03 03:00:13,336 p=8317 u=centos n=ansible | playbook: playbooks/deploy-with-cache.yml
+2026-06-03 03:00:19,175 p=8326 u=centos n=ansible | [WARNING]: Skipping callback plugin 'timer', unable to load
+
+2026-06-03 03:00:19,175 p=8326 u=centos n=ansible | [WARNING]: Skipping callback plugin 'profile_tasks', unable to load
+
+2026-06-03 03:00:19,177 p=8326 u=centos n=ansible | PLAY [Cache System Facts for Large Deployments] ********************************
+2026-06-03 03:00:19,218 p=8326 u=centos n=ansible | TASK [Gather comprehensive facts] **********************************************
+2026-06-03 03:00:20,580 p=8326 u=centos n=ansible | ok: [localhost]
+2026-06-03 03:00:20,590 p=8326 u=centos n=ansible | TASK [Gather service facts] ****************************************************
+2026-06-03 03:00:26,264 p=8326 u=centos n=ansible | ok: [localhost]
+2026-06-03 03:00:26,280 p=8326 u=centos n=ansible | TASK [Create custom facts directory] *******************************************
+2026-06-03 03:00:26,770 p=8326 u=centos n=ansible | changed: [localhost]
+2026-06-03 03:00:26,789 p=8326 u=centos n=ansible | TASK [Deploy custom web server facts] ******************************************
+2026-06-03 03:00:27,786 p=8326 u=centos n=ansible | changed: [localhost]
+2026-06-03 03:00:27,805 p=8326 u=centos n=ansible | TASK [Refresh facts after custom fact deployment] ******************************
+2026-06-03 03:00:28,927 p=8326 u=centos n=ansible | ok: [localhost]
+2026-06-03 03:00:28,944 p=8326 u=centos n=ansible | TASK [Display cached facts summary] ********************************************
+2026-06-03 03:00:28,987 p=8326 u=centos n=ansible | ok: [localhost] => {
+    "msg": "Host: localhost\nOS: CentOS 9\nMemory: 15571MB\nCPU: 4 cores\nWeb Server Installed: true\nWeb Server Running: active\n"
+}
+2026-06-03 03:00:29,075 p=8326 u=centos n=ansible | PLAY RECAP *********************************************************************
+2026-06-03 03:00:29,075 p=8326 u=centos n=ansible | localhost                  : ok=6    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2026-06-03 03:00:33,702 p=8634 u=centos n=ansible | [WARNING]: Skipping callback plugin 'timer', unable to load
+
+2026-06-03 03:00:33,702 p=8634 u=centos n=ansible | [WARNING]: Skipping callback plugin 'profile_tasks', unable to load
+
+2026-06-03 03:00:33,705 p=8634 u=centos n=ansible | PLAY [Deploy Using Cached Facts] ***********************************************
+2026-06-03 03:00:33,742 p=8634 u=centos n=ansible | TASK [Set cached deployment decisions] *****************************************
+2026-06-03 03:00:33,785 p=8634 u=centos n=ansible | ok: [localhost]
+2026-06-03 03:00:33,859 p=8634 u=centos n=ansible | TASK [Install web server package conditionally] ********************************
+2026-06-03 03:00:33,876 p=8634 u=centos n=ansible | skipping: [localhost]
+2026-06-03 03:00:33,903 p=8634 u=centos n=ansible | TASK [Deploy web server using reusable role] ***********************************
+2026-06-03 03:00:33,985 p=8634 u=centos n=ansible | TASK [webserver : Install web server packages] *********************************
+2026-06-03 03:00:35,604 p=8634 u=centos n=ansible | ok: [localhost]
+2026-06-03 03:00:35,628 p=8634 u=centos n=ansible | TASK [webserver : Create web content directory] ********************************
+2026-06-03 03:00:36,143 p=8634 u=centos n=ansible | ok: [localhost]
+2026-06-03 03:00:36,169 p=8634 u=centos n=ansible | TASK [webserver : Deploy web application template] *****************************
+2026-06-03 03:00:37,179 p=8634 u=centos n=ansible | changed: [localhost]
+2026-06-03 03:00:37,203 p=8634 u=centos n=ansible | TASK [webserver : Configure web server] ****************************************
+2026-06-03 03:00:37,870 p=8634 u=centos n=ansible | ok: [localhost]
+2026-06-03 03:00:37,922 p=8634 u=centos n=ansible | TASK [webserver : Start and enable web server] *********************************
+2026-06-03 03:00:38,803 p=8634 u=centos n=ansible | ok: [localhost]
+2026-06-03 03:00:38,829 p=8634 u=centos n=ansible | TASK [webserver : Ensure firewalld is running] *********************************
+2026-06-03 03:00:39,347 p=8634 u=centos n=ansible | ok: [localhost]
+2026-06-03 03:00:39,372 p=8634 u=centos n=ansible | TASK [webserver : Configure firewall for web traffic] **************************
+2026-06-03 03:00:40,260 p=8634 u=centos n=ansible | changed: [localhost]
+2026-06-03 03:00:40,286 p=8634 u=centos n=ansible | TASK [webserver : Reload firewall rules] ***************************************
+2026-06-03 03:00:41,215 p=8634 u=centos n=ansible | ok: [localhost]
+2026-06-03 03:00:41,262 p=8634 u=centos n=ansible | TASK [Start web server conditionally] ******************************************
+2026-06-03 03:00:41,788 p=8634 u=centos n=ansible | ok: [localhost]
+2026-06-03 03:00:41,859 p=8634 u=centos n=ansible | RUNNING HANDLER [webserver : restart webserver] ********************************
+2026-06-03 03:00:43,491 p=8634 u=centos n=ansible | changed: [localhost]
+2026-06-03 03:00:43,516 p=8634 u=centos n=ansible | TASK [Update custom facts after cached deployment] *****************************
+2026-06-03 03:00:43,903 p=8634 u=centos n=ansible | ok: [localhost]
+2026-06-03 03:00:43,951 p=8634 u=centos n=ansible | TASK [Save updated facts evidence] *********************************************
+2026-06-03 03:00:44,588 p=8634 u=centos n=ansible | changed: [localhost]
+2026-06-03 03:00:44,638 p=8634 u=centos n=ansible | PLAY RECAP *********************************************************************
+2026-06-03 03:00:44,638 p=8634 u=centos n=ansible | localhost                  : ok=13   changed=4    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+2026-06-03 03:01:38,119 p=9098 u=centos n=ansible | playbook: playbooks/monitor-performance.yml
+2026-06-03 03:01:38,998 p=9107 u=centos n=ansible | playbook: playbooks/troubleshoot-deployment.yml
+2026-06-03 03:01:46,136 p=9116 u=centos n=ansible | [WARNING]: Skipping callback plugin 'timer', unable to load
+
+2026-06-03 03:01:46,137 p=9116 u=centos n=ansible | [WARNING]: Skipping callback plugin 'profile_tasks', unable to load
+
+2026-06-03 03:01:46,139 p=9116 u=centos n=ansible | PLAY [Monitor Ansible Performance and System Health] ***************************
+2026-06-03 03:01:46,221 p=9116 u=centos n=ansible | TASK [Install lightweight monitoring tools] ************************************
+2026-06-03 03:01:47,860 p=9116 u=centos n=ansible | ok: [localhost]
+2026-06-03 03:01:47,884 p=9116 u=centos n=ansible | TASK [Check system performance] ************************************************
+2026-06-03 03:01:48,528 p=9116 u=centos n=ansible | ok: [localhost]
+2026-06-03 03:01:48,553 p=9116 u=centos n=ansible | TASK [Parse performance metrics] ***********************************************
+2026-06-03 03:01:48,602 p=9116 u=centos n=ansible | ok: [localhost]
+2026-06-03 03:01:48,629 p=9116 u=centos n=ansible | TASK [Check performance thresholds] ********************************************
+2026-06-03 03:01:48,668 p=9116 u=centos n=ansible | skipping: [localhost]
+2026-06-03 03:01:48,716 p=9116 u=centos n=ansible | TASK [Save performance metrics locally] ****************************************
+2026-06-03 03:01:49,214 p=9116 u=centos n=ansible | changed: [localhost]
+2026-06-03 03:01:49,240 p=9116 u=centos n=ansible | TASK [Test web server response time] *******************************************
+2026-06-03 03:01:50,055 p=9116 u=centos n=ansible | ok: [localhost]
+2026-06-03 03:01:50,136 p=9116 u=centos n=ansible | TASK [Save response time metrics locally] **************************************
+2026-06-03 03:01:50,425 p=9116 u=centos n=ansible | changed: [localhost]
+2026-06-03 03:01:50,518 p=9116 u=centos n=ansible | PLAY RECAP *********************************************************************
+2026-06-03 03:01:50,518 p=9116 u=centos n=ansible | localhost                  : ok=6    changed=2    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+2026-06-03 03:01:55,397 p=9187 u=centos n=ansible | [WARNING]: Skipping callback plugin 'timer', unable to load
+
+2026-06-03 03:01:55,397 p=9187 u=centos n=ansible | [WARNING]: Skipping callback plugin 'profile_tasks', unable to load
+
+2026-06-03 03:01:55,400 p=9187 u=centos n=ansible | PLAY [Troubleshoot Large-Scale Deployment Issues] ******************************
+2026-06-03 03:01:55,483 p=9187 u=centos n=ansible | TASK [Check connectivity to all hosts] *****************************************
+2026-06-03 03:01:55,934 p=9187 u=centos n=ansible | ok: [localhost]
+2026-06-03 03:01:55,961 p=9187 u=centos n=ansible | TASK [Test execution context] **************************************************
+2026-06-03 03:01:56,455 p=9187 u=centos n=ansible | ok: [localhost]
+2026-06-03 03:01:56,483 p=9187 u=centos n=ansible | TASK [Check system resources] **************************************************
+2026-06-03 03:01:56,825 p=9187 u=centos n=ansible | ok: [localhost]
+2026-06-03 03:01:56,853 p=9187 u=centos n=ansible | TASK [Check common deployment issues] ******************************************
+2026-06-03 03:01:57,583 p=9187 u=centos n=ansible | ok: [localhost]
+2026-06-03 03:01:57,632 p=9187 u=centos n=ansible | TASK [Generate troubleshooting report] *****************************************
+2026-06-03 03:01:58,616 p=9187 u=centos n=ansible | changed: [localhost]
+2026-06-03 03:01:58,708 p=9187 u=centos n=ansible | PLAY RECAP *********************************************************************
+2026-06-03 03:01:58,708 p=9187 u=centos n=ansible | localhost                  : ok=5    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   

@@ -1,0 +1,51 @@
+---
+- name: Deploy Using Cached Facts
+  hosts: webservers
+  gather_facts: true
+  become: true
+
+  pre_tasks:
+    - name: Set cached deployment decisions
+      ansible.builtin.set_fact:
+        skip_package_install: "{{ ansible_local.webserver.web_server_installed | default(false) | bool }}"
+        needs_service_restart: "{{ not (ansible_local.webserver.web_server_running | default(false) | bool) }}"
+      tags: ['facts']
+
+  tasks:
+    - name: Install web server package conditionally
+      ansible.builtin.package:
+        name:
+          - httpd
+          - firewalld
+        state: present
+      when: not skip_package_install
+      become: true
+      tags: ['packages']
+
+    - name: Deploy web server using reusable role
+      ansible.builtin.include_role:
+        name: webserver
+      tags: ['webserver']
+
+    - name: Start web server conditionally
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: true
+      when: needs_service_restart
+      become: true
+      tags: ['service']
+
+  post_tasks:
+    - name: Update custom facts after cached deployment
+      ansible.builtin.command: /etc/ansible/facts.d/webserver.fact
+      register: updated_facts
+      changed_when: false
+      tags: ['facts_update']
+
+    - name: Save updated facts evidence
+      ansible.builtin.copy:
+        content: "{{ updated_facts.stdout }}"
+        dest: "{{ playbook_dir }}/../outputs/updated-webserver-facts.json"
+      delegate_to: localhost
+      tags: ['facts_update']

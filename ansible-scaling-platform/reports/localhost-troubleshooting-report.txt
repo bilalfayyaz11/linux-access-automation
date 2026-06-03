@@ -1,0 +1,69 @@
+ANSIBLE TROUBLESHOOTING REPORT
+==============================
+Host: localhost
+Date: 2026-06-03T03:00:19Z
+
+CONNECTIVITY TEST:
+{
+    "changed": false,
+    "failed": false,
+    "ping": "pong"
+}
+
+EXECUTION CONTEXT:
+User: root
+Home: /root
+Current directory: /home/centos/ansible-scaling-platform/playbooks
+Sudo access: Yes
+
+SYSTEM RESOURCES:
+=== System Resources ===
+Memory: Mem:            15Gi       1.1Gi        13Gi        20Mi       963Mi        14Gi
+Disk: Filesystem      Size  Used Avail Use% Mounted on
+/dev/nvme0n1p4   29G  7.2G   22G  26% /
+CPU: 4 cores
+Load:  0.27, 0.23, 0.14
+=== Network ===
+Hostname: ip-172-31-10-219.ec2.internal
+IP: 172.31.10.219 
+=== Services ===
+● httpd.service - The Apache HTTP Server
+     Loaded: loaded (/usr/lib/systemd/system/httpd.service; enabled; preset: disabled)
+     Active: active (running) since Wed 2026-06-03 03:00:43 UTC; 1min 13s ago
+       Docs: man:httpd.service(8)
+   Main PID: 8755 (httpd)
+     Status: "Total requests: 2; Idle/Busy workers 100/0;Requests/sec: 0.029; Bytes served/sec:  50 B/sec"
+      Tasks: 177 (limit: 98000)
+     Memory: 14.4M (peak: 14.8M)
+        CPU: 156ms
+     CGroup: /system.slice/httpd.service
+             ├─8755 /usr/sbin/httpd -DFOREGROUND
+             ├─8757 /usr/sbin/httpd -DFOREGROUND
+             ├─8758 /usr/sbin/httpd -DFOREGROUND
+             ├─8759 /usr/sbin/httpd -DFOREGROUND
+             └─8760 /usr/sbin/httpd -DFOREGROUND
+
+Jun 03 03:00:43 ip-172-31-10-219.ec2.internal systemd[1]: Starting The Apache HTTP Server...
+Jun 03 03:00:43 ip-172-31-10-219.ec2.internal httpd[8755]: Server configured, listening on: port 80
+Jun 03 03:00:43 ip-172-31-10-219.ec2.internal systemd[1]: Started The Apache HTTP Server.
+
+COMMON ISSUES:
+=== Common Issues Check ===
+SELinux: Enforcing
+Firewall: Active
+cockpit dhcpv6-client http ssh
+RPM lock: Present
+Disk usage:
+Filesystem      Size  Used Avail Use% Mounted on
+tmpfs           7.7G  128K  7.7G   1% /dev/shm
+/dev/nvme0n1p4   29G  7.2G   22G  26% /
+/dev/nvme0n1p3  966M  800M  100M  89% /boot
+/dev/nvme0n1p2  500M   11M  489M   3% /boot/efi
+Zombie processes: 0
+
+FACTS SUMMARY:
+- OS: CentOS 9
+- Kernel: 5.14.0-654.el9.x86_64
+- Architecture: x86_64
+- CPU Cores: 4
+- Memory: 15571MB

@@ -1,0 +1,36 @@
+{
+    "_meta": {
+        "hostvars": {
+            "localhost": {
+                "ansible_connection": "local",
+                "ansible_host": "127.0.0.1",
+                "ansible_user": "centos",
+                "datacenter": "virginia",
+                "http_port": 80,
+                "max_clients": 200,
+                "region": "us-east-1",
+                "region_name": "us_east",
+                "server_id": "web-us-east-01"
+            }
+        }
+    },
+    "all": {
+        "children": [
+            "ungrouped",
+            "webservers",
+            "us_east",
+            "us_west",
+            "europe"
+        ]
+    },
+    "us_east": {
+        "hosts": [
+            "localhost"
+        ]
+    },
+    "webservers": {
+        "hosts": [
+            "localhost"
+        ]
+    }
+}

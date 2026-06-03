@@ -1,0 +1,26 @@
+
+PLAY [Cache System Facts for Large Deployments] ********************************
+
+TASK [Gather comprehensive facts] **********************************************
+ok: [localhost]
+
+TASK [Gather service facts] ****************************************************
+ok: [localhost]
+
+TASK [Create custom facts directory] *******************************************
+changed: [localhost]
+
+TASK [Deploy custom web server facts] ******************************************
+changed: [localhost]
+
+TASK [Refresh facts after custom fact deployment] ******************************
+ok: [localhost]
+
+TASK [Display cached facts summary] ********************************************
+ok: [localhost] => {
+    "msg": "Host: localhost\nOS: CentOS 9\nMemory: 15571MB\nCPU: 4 cores\nWeb Server Installed: true\nWeb Server Running: active\n"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=6    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

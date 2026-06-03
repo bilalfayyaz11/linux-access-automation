@@ -1,0 +1,27 @@
+
+PLAY [Monitor Ansible Performance and System Health] ***************************
+
+TASK [Install lightweight monitoring tools] ************************************
+ok: [localhost]
+
+TASK [Check system performance] ************************************************
+ok: [localhost]
+
+TASK [Parse performance metrics] ***********************************************
+ok: [localhost]
+
+TASK [Check performance thresholds] ********************************************
+skipping: [localhost]
+
+TASK [Save performance metrics locally] ****************************************
+changed: [localhost]
+
+TASK [Test web server response time] *******************************************
+ok: [localhost]
+
+TASK [Save response time metrics locally] **************************************
+changed: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=6    changed=2    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+

@@ -1,0 +1,52 @@
+
+PLAY [Scale Web Servers Across Multiple Regions] *******************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Display deployment information] ******************************************
+ok: [localhost] => {
+    "msg": "Starting deployment to localhost\nRegion: us_east\nBatch size: 5\n"
+}
+
+TASK [Ensure system is ready for deployment] ***********************************
+ok: [localhost]
+
+TASK [webserver : Install web server packages] *********************************
+ok: [localhost]
+
+TASK [webserver : Create web content directory] ********************************
+changed: [localhost]
+
+TASK [webserver : Deploy web application template] *****************************
+changed: [localhost]
+
+TASK [webserver : Configure web server] ****************************************
+changed: [localhost]
+
+TASK [webserver : Start and enable web server] *********************************
+changed: [localhost]
+
+TASK [webserver : Ensure firewalld is running] *********************************
+ok: [localhost]
+
+TASK [webserver : Configure firewall for web traffic] **************************
+changed: [localhost]
+
+TASK [webserver : Reload firewall rules] ***************************************
+ok: [localhost]
+
+RUNNING HANDLER [webserver : restart webserver] ********************************
+changed: [localhost]
+
+TASK [Perform health check] ****************************************************
+ok: [localhost]
+
+TASK [Display deployment success] **********************************************
+ok: [localhost] => {
+    "msg": "Successfully deployed to localhost\nHealth check status: 200\nResponse time: 0s\n"
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=14   changed=6    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

@@ -1,0 +1,63 @@
+
+PLAY [High-Performance Web Server Deployment] **********************************
+
+TASK [Set deployment start time] ***********************************************
+ok: [localhost]
+
+TASK [Check system resources] **************************************************
+ok: [localhost]
+
+TASK [Validate minimum system requirements] ************************************
+ok: [localhost] => {
+    "changed": false,
+    "msg": "System requirements validated"
+}
+
+TASK [Install packages in batch] ***********************************************
+changed: [localhost]
+FAILED - RETRYING: [localhost]: Wait for package installation (30 retries left).
+
+TASK [Wait for package installation] *******************************************
+ok: [localhost]
+
+TASK [Deploy web server role] **************************************************
+
+TASK [webserver : Install web server packages] *********************************
+ok: [localhost]
+
+TASK [webserver : Create web content directory] ********************************
+ok: [localhost]
+
+TASK [webserver : Deploy web application template] *****************************
+changed: [localhost]
+
+TASK [webserver : Configure web server] ****************************************
+ok: [localhost]
+
+TASK [webserver : Start and enable web server] *********************************
+ok: [localhost]
+
+TASK [webserver : Ensure firewalld is running] *********************************
+ok: [localhost]
+
+TASK [webserver : Configure firewall for web traffic] **************************
+changed: [localhost]
+
+TASK [webserver : Reload firewall rules] ***************************************
+ok: [localhost]
+
+RUNNING HANDLER [webserver : restart webserver] ********************************
+changed: [localhost]
+
+TASK [Calculate deployment time] ***********************************************
+ok: [localhost]
+
+TASK [Performance health check] ************************************************
+ok: [localhost]
+
+TASK [Log deployment metrics] **************************************************
+changed: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=17   changed=5    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

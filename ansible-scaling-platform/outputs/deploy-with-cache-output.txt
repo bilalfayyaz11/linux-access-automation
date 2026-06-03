@@ -1,0 +1,50 @@
+
+PLAY [Deploy Using Cached Facts] ***********************************************
+
+TASK [Set cached deployment decisions] *****************************************
+ok: [localhost]
+
+TASK [Install web server package conditionally] ********************************
+skipping: [localhost]
+
+TASK [Deploy web server using reusable role] ***********************************
+
+TASK [webserver : Install web server packages] *********************************
+ok: [localhost]
+
+TASK [webserver : Create web content directory] ********************************
+ok: [localhost]
+
+TASK [webserver : Deploy web application template] *****************************
+changed: [localhost]
+
+TASK [webserver : Configure web server] ****************************************
+ok: [localhost]
+
+TASK [webserver : Start and enable web server] *********************************
+ok: [localhost]
+
+TASK [webserver : Ensure firewalld is running] *********************************
+ok: [localhost]
+
+TASK [webserver : Configure firewall for web traffic] **************************
+changed: [localhost]
+
+TASK [webserver : Reload firewall rules] ***************************************
+ok: [localhost]
+
+TASK [Start web server conditionally] ******************************************
+ok: [localhost]
+
+RUNNING HANDLER [webserver : restart webserver] ********************************
+changed: [localhost]
+
+TASK [Update custom facts after cached deployment] *****************************
+ok: [localhost]
+
+TASK [Save updated facts evidence] *********************************************
+changed: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=13   changed=4    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+

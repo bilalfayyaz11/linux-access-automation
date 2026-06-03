@@ -1,0 +1,73 @@
+---
+- name: Install web server packages
+  ansible.builtin.package:
+    name: "{{ web_packages }}"
+    state: present
+  become: true
+  tags: ['packages']
+
+- name: Create web content directory
+  ansible.builtin.file:
+    path: "{{ web_root }}"
+    state: directory
+    owner: "{{ web_user }}"
+    group: "{{ web_group }}"
+    mode: '0755'
+  become: true
+  tags: ['filesystem']
+
+- name: Deploy web application template
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: "{{ web_root }}/index.html"
+    owner: "{{ web_user }}"
+    group: "{{ web_group }}"
+    mode: '0644'
+  become: true
+  notify: restart webserver
+  tags: ['content']
+
+- name: Configure web server
+  ansible.builtin.template:
+    src: "{{ web_config_template }}"
+    dest: "{{ web_config_path }}"
+    owner: root
+    group: root
+    mode: '0644'
+    backup: true
+  become: true
+  notify: restart webserver
+  tags: ['config']
+
+- name: Start and enable web server
+  ansible.builtin.service:
+    name: "{{ web_service }}"
+    state: started
+    enabled: true
+  become: true
+  tags: ['service']
+
+- name: Ensure firewalld is running
+  ansible.builtin.service:
+    name: firewalld
+    state: started
+    enabled: true
+  become: true
+  ignore_errors: true
+  tags: ['firewall']
+
+- name: Configure firewall for web traffic
+  ansible.builtin.command: firewall-cmd --permanent --add-service=http
+  become: true
+  register: firewall_http
+  changed_when: "'success' in firewall_http.stdout"
+  failed_when: false
+  tags: ['firewall']
+
+- name: Reload firewall rules
+  ansible.builtin.command: firewall-cmd --reload
+  become: true
+  when: firewall_http.rc == 0
+  changed_when: false
+  failed_when: false
+  tags: ['firewall']

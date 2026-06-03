@@ -1,0 +1,85 @@
+---
+- name: Monitor Ansible Performance and System Health
+  hosts: webservers
+  gather_facts: true
+  become: true
+
+  vars:
+    performance_threshold:
+      cpu_usage: 80
+      memory_usage: 85
+      disk_usage: 90
+
+  tasks:
+    - name: Install lightweight monitoring tools
+      ansible.builtin.package:
+        name:
+          - sysstat
+          - procps-ng
+          - iproute
+        state: present
+      become: true
+      tags: ['monitoring_tools']
+
+    - name: Check system performance
+      ansible.builtin.shell: |
+        echo "=== CPU Usage ==="
+        top -bn1 | grep "Cpu(s)" | awk '{print $2}' | cut -d'%' -f1
+        echo "=== Memory Usage ==="
+        free | grep Mem | awk '{printf "%.1f\n", $3/$2 * 100.0}'
+        echo "=== Disk Usage ==="
+        df -h / | awk 'NR==2{print $5}' | cut -d'%' -f1
+        echo "=== Load Average ==="
+        uptime | awk -F'load average:' '{print $2}'
+        echo "=== Active Connections ==="
+        ss -tuln | wc -l
+      register: system_performance
+      changed_when: false
+      tags: ['performance_check']
+
+    - name: Parse performance metrics
+      ansible.builtin.set_fact:
+        current_performance:
+          cpu_usage: "{{ system_performance.stdout_lines[1] | float }}"
+          memory_usage: "{{ system_performance.stdout_lines[3] | float }}"
+          disk_usage: "{{ system_performance.stdout_lines[5] | int }}"
+          load_average: "{{ system_performance.stdout_lines[7] | trim }}"
+          connections: "{{ system_performance.stdout_lines[9] | int }}"
+      tags: ['performance_check']
+
+    - name: Check performance thresholds
+      ansible.builtin.debug:
+        msg: |
+          WARNING: Performance threshold exceeded!
+          CPU: {{ current_performance.cpu_usage }}% (threshold: {{ performance_threshold.cpu_usage }}%)
+          Memory: {{ current_performance.memory_usage }}% (threshold: {{ performance_threshold.memory_usage }}%)
+          Disk: {{ current_performance.disk_usage }}% (threshold: {{ performance_threshold.disk_usage }}%)
+      when: >
+        current_performance.cpu_usage | float > performance_threshold.cpu_usage or
+        current_performance.memory_usage | float > performance_threshold.memory_usage or
+        current_performance.disk_usage | int > performance_threshold.disk_usage
+      tags: ['performance_check']
+
+    - name: Save performance metrics locally
+      ansible.builtin.lineinfile:
+        path: "{{ playbook_dir }}/../outputs/ansible-performance.log"
+        line: "{{ ansible_date_time.iso8601 }},{{ inventory_hostname }},{{ current_performance.cpu_usage }},{{ current_performance.memory_usage }},{{ current_performance.disk_usage }},{{ current_performance.connections }}"
+        create: true
+      delegate_to: localhost
+      tags: ['logging']
+
+    - name: Test web server response time
+      ansible.builtin.uri:
+        url: "http://127.0.0.1:{{ http_port | default(80) }}"
+        method: GET
+        status_code: 200
+      register: response_test
+      tags: ['response_test']
+
+    - name: Save response time metrics locally
+      ansible.builtin.lineinfile:
+        path: "{{ playbook_dir }}/../outputs/ansible-response-times.log"
+        line: "{{ ansible_date_time.iso8601 }},{{ inventory_hostname }},{{ response_test.elapsed }},{{ response_test.status }}"
+        create: true
+      delegate_to: localhost
+      tags: ['logging']

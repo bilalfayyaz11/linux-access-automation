@@ -1,0 +1,61 @@
+/home/centos/ansible-scaling-platform
+├── ansible.cfg
+├── group_vars
+├── host_vars
+├── inventories
+│   └── dynamic_inventory.py
+├── outputs
+│   ├── ansible-inventory-parsed.txt
+│   ├── ansible-performance.log
+│   ├── ansible-response-times.log
+│   ├── ansible.log
+│   ├── cache-facts-output.txt
+│   ├── cache-facts-syntax.txt
+│   ├── deploy-with-cache-output.txt
+│   ├── deploy-with-cache-syntax.txt
+│   ├── deployment-metrics.log
+│   ├── dynamic-inventory-output.txt
+│   ├── monitor-performance-output.txt
+│   ├── monitor-performance-syntax.txt
+│   ├── optimized-deployment-output.txt
+│   ├── optimized-deployment-syntax.txt
+│   ├── scale-by-region-output.txt
+│   ├── scale-by-region-syntax.txt
+│   ├── scale-webservers-output.txt
+│   ├── scale-webservers-syntax.txt
+│   ├── troubleshoot-deployment-output.txt
+│   ├── troubleshoot-deployment-syntax.txt
+│   ├── updated-webserver-facts.json
+│   └── webserver-role-structure.txt
+├── playbooks
+│   ├── cache-facts.yml
+│   ├── deploy-with-cache.yml
+│   ├── monitor-performance.yml
+│   ├── optimized-deployment.yml
+│   ├── scale-by-region.yml
+│   ├── scale-webservers.yml
+│   └── troubleshoot-deployment.yml
+├── reports
+│   └── localhost-troubleshooting-report.txt
+└── roles
+    └── webserver
+        ├── README.md
+        ├── defaults
+        │   └── main.yml
+        ├── files
+        ├── handlers
+        │   └── main.yml
+        ├── meta
+        │   └── main.yml
+        ├── tasks
+        │   └── main.yml
+        ├── templates
+        │   ├── httpd.conf.j2
+        │   └── index.html.j2
+        ├── tests
+        │   ├── inventory
+        │   └── test.yml
+        └── vars
+            └── main.yml
+
+16 directories, 42 files
