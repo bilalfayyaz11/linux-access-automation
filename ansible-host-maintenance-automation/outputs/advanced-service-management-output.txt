@@ -1,0 +1,47 @@
+
+PLAY [Advanced service configuration management] *******************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [node2]
+ok: [node1]
+
+TASK [Install Apache web server] ***********************************************
+changed: [node2]
+ok: [node1]
+
+TASK [Ensure Apache document root exists] **************************************
+changed: [node2]
+ok: [node1]
+
+TASK [Create custom index page] ************************************************
+changed: [node1]
+changed: [node2]
+
+TASK [Start and enable firewalld] **********************************************
+ok: [node1]
+ok: [node2]
+
+TASK [Check if HTTP firewall service is enabled] *******************************
+ok: [node2]
+ok: [node1]
+
+TASK [Allow HTTP through firewall] *********************************************
+changed: [node1]
+changed: [node2]
+
+TASK [Reload firewall rules] ***************************************************
+changed: [node1]
+changed: [node2]
+
+TASK [Start and enable Apache] *************************************************
+changed: [node2]
+changed: [node1]
+
+TASK [Verify local HTTP response] **********************************************
+ok: [node1]
+ok: [node2]
+
+PLAY RECAP *********************************************************************
+node1                      : ok=10   changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+node2                      : ok=10   changed=6    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

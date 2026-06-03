@@ -1,0 +1,35 @@
+
+PLAY [Automated package updates] ***********************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [node1]
+ok: [node2]
+
+TASK [Create backup directory] *************************************************
+changed: [node2]
+ok: [node1]
+
+TASK [Save package inventory] **************************************************
+ok: [node1]
+ok: [node2]
+
+TASK [Check available updates] *************************************************
+ok: [node1]
+ok: [node2]
+
+TASK [Display update status] ***************************************************
+ok: [node1] => {
+    "msg": "Update scan completed"
+}
+ok: [node2] => {
+    "msg": "Update scan completed"
+}
+
+TASK [Clean package cache] *****************************************************
+ok: [node1]
+ok: [node2]
+
+PLAY RECAP *********************************************************************
+node1                      : ok=6    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+node2                      : ok=6    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

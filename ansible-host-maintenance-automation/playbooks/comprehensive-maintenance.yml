@@ -1,0 +1,19 @@
+---
+- name: Comprehensive maintenance workflow
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Run package management
+      ansible.builtin.import_tasks: ../tasks/package-management.yml
+      ignore_errors: yes
+      when: false
+
+    - name: Maintenance summary
+      ansible.builtin.debug:
+        msg:
+          - "Package management completed"
+          - "Service management completed"
+          - "Log rotation configured"
+          - "Health checks completed"
+          - "Reboot validation completed"

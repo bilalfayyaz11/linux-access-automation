@@ -1,0 +1,73 @@
+---
+- name: Advanced service configuration management
+  hosts: all
+  become: yes
+  vars:
+    web_service:
+      name: httpd
+      package: httpd
+      port: 80
+
+  tasks:
+    - name: Install Apache web server
+      ansible.builtin.dnf:
+        name: "{{ web_service.package }}"
+        state: present
+
+    - name: Ensure Apache document root exists
+      ansible.builtin.file:
+        path: /var/www/html
+        state: directory
+        owner: apache
+        group: apache
+        mode: '0755'
+
+    - name: Create custom index page
+      ansible.builtin.copy:
+        content: |
+          <html>
+          <head><title>Automated Host Configuration</title></head>
+          <body>
+          <h1>Host: {{ inventory_hostname }}</h1>
+          <p>System configuration is managed by Ansible.</p>
+          <p>Service: Apache HTTP Server</p>
+          </body>
+          </html>
+        dest: /var/www/html/index.html
+        owner: apache
+        group: apache
+        mode: '0644'
+
+    - name: Start and enable firewalld
+      ansible.builtin.systemd:
+        name: firewalld
+        state: started
+        enabled: yes
+
+    - name: Check if HTTP firewall service is enabled
+      ansible.builtin.command: firewall-cmd --permanent --query-service=http
+      register: firewall_http_check
+      failed_when: false
+      changed_when: false
+
+    - name: Allow HTTP through firewall
+      ansible.builtin.command: firewall-cmd --permanent --add-service=http
+      when: firewall_http_check.rc != 0
+      register: firewall_http
+      changed_when: firewall_http.rc == 0
+
+    - name: Reload firewall rules
+      ansible.builtin.command: firewall-cmd --reload
+      when: firewall_http is changed
+
+    - name: Start and enable Apache
+      ansible.builtin.systemd:
+        name: "{{ web_service.name }}"
+        state: started
+        enabled: yes
+
+    - name: Verify local HTTP response
+      ansible.builtin.uri:
+        url: "http://localhost:{{ web_service.port }}"
+        method: GET
+        status_code: 200

@@ -1,0 +1,39 @@
+---
+- name: System health monitoring
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Create health report directory
+      ansible.builtin.file:
+        path: /var/log/health-checks
+        state: directory
+        mode: '0755'
+
+    - name: Check disk usage
+      ansible.builtin.shell: df -h
+      register: disk_usage
+      changed_when: false
+
+    - name: Check memory usage
+      ansible.builtin.shell: free -m
+      register: memory_usage
+      changed_when: false
+
+    - name: Check load average
+      ansible.builtin.shell: uptime
+      register: load_average
+      changed_when: false
+
+    - name: Generate report
+      ansible.builtin.copy:
+        content: |
+          ===== DISK =====
+          {{ disk_usage.stdout }}
+
+          ===== MEMORY =====
+          {{ memory_usage.stdout }}
+
+          ===== LOAD =====
+          {{ load_average.stdout }}
+        dest: /var/log/health-checks/health-report.txt

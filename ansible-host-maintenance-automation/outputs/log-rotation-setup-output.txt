@@ -1,0 +1,39 @@
+
+PLAY [Configure log rotation] **************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [node1]
+ok: [node2]
+
+TASK [Ensure logrotate is installed] *******************************************
+ok: [node2]
+ok: [node1]
+
+TASK [Create application log directory] ****************************************
+changed: [node1]
+ok: [node2]
+
+TASK [Create sample application log] *******************************************
+changed: [node2]
+changed: [node1]
+
+TASK [Deploy logrotate configuration] ******************************************
+changed: [node1]
+ok: [node2]
+
+TASK [Validate logrotate configuration] ****************************************
+ok: [node2]
+ok: [node1]
+
+TASK [Display validation result] ***********************************************
+ok: [node1] => {
+    "msg": "Logrotate validation completed successfully"
+}
+ok: [node2] => {
+    "msg": "Logrotate validation completed successfully"
+}
+
+PLAY RECAP *********************************************************************
+node1                      : ok=7    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+node2                      : ok=7    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

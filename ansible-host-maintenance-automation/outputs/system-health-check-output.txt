@@ -1,0 +1,31 @@
+
+PLAY [System health monitoring] ************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [node2]
+ok: [node1]
+
+TASK [Create health report directory] ******************************************
+changed: [node2]
+ok: [node1]
+
+TASK [Check disk usage] ********************************************************
+ok: [node2]
+ok: [node1]
+
+TASK [Check memory usage] ******************************************************
+ok: [node1]
+ok: [node2]
+
+TASK [Check load average] ******************************************************
+ok: [node1]
+ok: [node2]
+
+TASK [Generate report] *********************************************************
+changed: [node1]
+changed: [node2]
+
+PLAY RECAP *********************************************************************
+node1                      : ok=6    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+node2                      : ok=6    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

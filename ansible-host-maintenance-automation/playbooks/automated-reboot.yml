@@ -1,0 +1,34 @@
+---
+- name: Automated reboot validation
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Check root filesystem usage
+      ansible.builtin.shell: df -h / | tail -1 | awk '{print $5}'
+      register: root_usage
+      changed_when: false
+
+    - name: Display disk usage
+      ansible.builtin.debug:
+        msg: "Root filesystem usage: {{ root_usage.stdout }}"
+
+    - name: Capture boot time
+      ansible.builtin.command: uptime -s
+      register: boot_time_before
+      changed_when: false
+
+    - name: Verify critical services
+      ansible.builtin.shell: systemctl is-active sshd chronyd httpd
+      register: services_before
+      changed_when: false
+
+    - name: Generate reboot readiness report
+      ansible.builtin.copy:
+        content: |
+          Boot Time Before:
+          {{ boot_time_before.stdout }}
+
+          Services:
+          {{ services_before.stdout }}
+        dest: /tmp/reboot-readiness-report.txt

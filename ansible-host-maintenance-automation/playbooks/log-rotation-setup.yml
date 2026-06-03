@@ -1,0 +1,54 @@
+---
+- name: Configure log rotation
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Ensure logrotate is installed
+      ansible.builtin.dnf:
+        name: logrotate
+        state: present
+
+    - name: Create application log directory
+      ansible.builtin.file:
+        path: /var/log/myapp
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Create sample application log
+      ansible.builtin.copy:
+        content: |
+          Sample application log entry
+          Application started successfully
+        dest: /var/log/myapp/app.log
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Deploy logrotate configuration
+      ansible.builtin.copy:
+        content: |
+          /var/log/myapp/*.log {
+              daily
+              rotate 30
+              compress
+              delaycompress
+              missingok
+              notifempty
+              create 0644 root root
+          }
+        dest: /etc/logrotate.d/myapp
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Validate logrotate configuration
+      ansible.builtin.command: logrotate -d /etc/logrotate.conf
+      register: logrotate_test
+      changed_when: false
+
+    - name: Display validation result
+      ansible.builtin.debug:
+        msg: "Logrotate validation completed successfully"

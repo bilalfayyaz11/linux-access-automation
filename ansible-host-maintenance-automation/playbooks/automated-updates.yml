@@ -1,0 +1,29 @@
+---
+- name: Automated package updates
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Create backup directory
+      ansible.builtin.file:
+        path: /backup/pre-update
+        state: directory
+        mode: '0755'
+
+    - name: Save package inventory
+      ansible.builtin.shell: rpm -qa > /backup/pre-update/packages.txt
+      changed_when: false
+
+    - name: Check available updates
+      ansible.builtin.command: dnf check-update
+      register: updates
+      failed_when: false
+      changed_when: false
+
+    - name: Display update status
+      ansible.builtin.debug:
+        msg: "Update scan completed"
+
+    - name: Clean package cache
+      ansible.builtin.command: dnf clean all
+      changed_when: false

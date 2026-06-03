@@ -1,0 +1,35 @@
+
+PLAY [Automated reboot validation] *********************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [node1]
+ok: [node2]
+
+TASK [Check root filesystem usage] *********************************************
+ok: [node2]
+ok: [node1]
+
+TASK [Display disk usage] ******************************************************
+ok: [node1] => {
+    "msg": "Root filesystem usage: 25%"
+}
+ok: [node2] => {
+    "msg": "Root filesystem usage: 25%"
+}
+
+TASK [Capture boot time] *******************************************************
+ok: [node1]
+ok: [node2]
+
+TASK [Verify critical services] ************************************************
+ok: [node1]
+ok: [node2]
+
+TASK [Generate reboot readiness report] ****************************************
+changed: [node2]
+ok: [node1]
+
+PLAY RECAP *********************************************************************
+node1                      : ok=6    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+node2                      : ok=6    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

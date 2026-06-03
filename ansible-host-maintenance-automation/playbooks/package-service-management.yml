@@ -1,0 +1,52 @@
+---
+- name: System package and service management
+  hosts: all
+  become: yes
+  vars:
+    required_packages:
+      - vim-enhanced
+      - curl
+      - wget
+      - git-core
+      - rsync
+      - logrotate
+      - chrony
+
+    required_services:
+      - chronyd
+      - sshd
+
+    packages_to_remove:
+      - telnet
+      - rsh
+
+  tasks:
+    - name: Update package cache
+      ansible.builtin.dnf:
+        update_cache: yes
+
+    - name: Install required packages
+      ansible.builtin.dnf:
+        name: "{{ required_packages }}"
+        state: present
+
+    - name: Remove unwanted packages
+      ansible.builtin.dnf:
+        name: "{{ packages_to_remove }}"
+        state: absent
+
+    - name: Ensure required services are started and enabled
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop: "{{ required_services }}"
+
+    - name: Gather service facts
+      ansible.builtin.service_facts:
+
+    - name: Display service status
+      ansible.builtin.debug:
+        msg: "Service {{ item }} is {{ ansible_facts.services[item + '.service'].state }}"
+      loop: "{{ required_services }}"
+      when: ansible_facts.services[item + '.service'] is defined
