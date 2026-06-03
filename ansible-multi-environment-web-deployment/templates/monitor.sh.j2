@@ -1,0 +1,30 @@
+#!/bin/bash
+
+LOG_FILE="/var/log/web-monitor-{{ environment }}-{{ inventory_hostname }}.log"
+TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
+
+log_message() {
+    echo "[$TIMESTAMP] $1" >> "$LOG_FILE"
+}
+
+if systemctl is-active --quiet httpd; then
+    log_message "INFO: httpd service is running"
+else
+    log_message "ERROR: httpd service is not running"
+    systemctl restart httpd
+    log_message "INFO: attempted httpd restart"
+fi
+
+HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:{{ web_server_port }}/)
+if [ "$HTTP_CODE" = "200" ]; then
+    log_message "INFO: HTTP response OK"
+else
+    log_message "WARNING: HTTP response code $HTTP_CODE"
+fi
+
+DISK_USAGE=$(df / | awk 'NR==2 {print $5}' | sed 's/%//')
+if [ "$DISK_USAGE" -gt 80 ]; then
+    log_message "WARNING: Disk usage is ${DISK_USAGE}%"
+else
+    log_message "INFO: Disk usage is ${DISK_USAGE}%"
+fi

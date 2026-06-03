@@ -1,0 +1,21 @@
+<VirtualHost *:{{ web_server_port }}>
+    ServerName {{ inventory_hostname }}.local
+    DocumentRoot {{ document_root }}/{{ environment }}/{{ inventory_hostname }}
+
+    <Directory {{ document_root }}/{{ environment }}/{{ inventory_hostname }}>
+        Options FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    {% if security_headers | default(false) %}
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options DENY
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    {% endif %}
+
+    ErrorLog /var/log/httpd/{{ inventory_hostname }}_error.log
+    CustomLog /var/log/httpd/{{ inventory_hostname }}_access.log combined
+    LogLevel {{ log_level | default('warn') }}
+</VirtualHost>

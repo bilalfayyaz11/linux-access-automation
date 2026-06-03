@@ -1,0 +1,13 @@
+/var/log/httpd/{{ environment }}-{{ inventory_hostname }}_*.log {
+    daily
+    missingok
+    rotate {% if environment_name == "Production" %}30{% else %}7{% endif %}
+    compress
+    delaycompress
+    notifempty
+    create 640 root apache
+    sharedscripts
+    postrotate
+        /bin/systemctl reload httpd > /dev/null 2>/dev/null || true
+    endscript
+}

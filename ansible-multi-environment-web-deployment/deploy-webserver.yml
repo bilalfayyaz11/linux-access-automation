@@ -1,0 +1,79 @@
+---
+- name: Deploy and configure scalable Apache web servers
+  hosts: webservers
+  become: yes
+  vars:
+    web_server_port: 80
+    document_root: /var/www/html
+    server_name: "{{ inventory_hostname }}"
+
+  tasks:
+    - name: Install required packages
+      ansible.builtin.dnf:
+        name:
+          - httpd
+          - curl
+          - wget
+          - unzip
+          - firewalld
+        state: present
+
+    - name: Start and enable firewall service
+      ansible.builtin.systemd:
+        name: firewalld
+        state: started
+        enabled: yes
+
+    - name: Create document root directory
+      ansible.builtin.file:
+        path: "{{ document_root }}/{{ inventory_hostname }}"
+        state: directory
+        owner: apache
+        group: apache
+        mode: '0755'
+
+    - name: Deploy custom index page
+      ansible.builtin.template:
+        src: templates/index.html.j2
+        dest: "{{ document_root }}/{{ inventory_hostname }}/index.html"
+        owner: apache
+        group: apache
+        mode: '0644'
+      notify: restart httpd
+
+    - name: Deploy Apache virtual host
+      ansible.builtin.template:
+        src: templates/vhost.conf.j2
+        dest: "/etc/httpd/conf.d/{{ inventory_hostname }}.conf"
+        owner: root
+        group: root
+        mode: '0644'
+      notify: restart httpd
+
+    - name: Check if HTTP firewall service is already enabled
+      ansible.builtin.command: firewall-cmd --permanent --query-service=http
+      register: firewall_http_check
+      failed_when: false
+      changed_when: false
+
+    - name: Allow HTTP through firewall
+      ansible.builtin.command: firewall-cmd --permanent --add-service=http
+      when: firewall_http_check.rc != 0
+      register: firewall_http
+      changed_when: firewall_http.rc == 0
+
+    - name: Reload firewall rules
+      ansible.builtin.command: firewall-cmd --reload
+      when: firewall_http is changed
+
+    - name: Start and enable Apache
+      ansible.builtin.systemd:
+        name: httpd
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: restart httpd
+      ansible.builtin.systemd:
+        name: httpd
+        state: restarted

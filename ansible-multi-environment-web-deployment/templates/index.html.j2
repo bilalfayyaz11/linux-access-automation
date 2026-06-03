@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ server_name }} - Ansible Deployment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 40px;
+        }
+        .container {
+            max-width: 850px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.12);
+        }
+        h1 {
+            color: #1f2937;
+        }
+        .box {
+            background: #eef6ff;
+            border-left: 5px solid #2563eb;
+            padding: 18px;
+            margin: 20px 0;
+        }
+        .success {
+            color: #15803d;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Scalable Web Server Deployment</h1>
+    <h2>{{ server_name }}</h2>
+
+    <div class="box">
+        <p><strong>Hostname:</strong> {{ inventory_hostname }}</p>
+        <p><strong>Operating System:</strong> {{ ansible_distribution }} {{ ansible_distribution_version }}</p>
+        <p><strong>Architecture:</strong> {{ ansible_architecture }}</p>
+        <p><strong>Document Root:</strong> {{ document_root }}/{{ inventory_hostname }}</p>
+        <p><strong>Port:</strong> {{ web_server_port }}</p>
+        <p><strong>Managed By:</strong> Ansible</p>
+    </div>
+
+    <p class="success">Deployment completed through idempotent Ansible automation.</p>
+</div>
+</body>
+</html>

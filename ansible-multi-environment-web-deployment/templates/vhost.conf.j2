@@ -1,0 +1,17 @@
+<VirtualHost *:{{ web_server_port }}>
+    ServerName {{ server_name }}
+    DocumentRoot {{ document_root }}/{{ inventory_hostname }}
+
+    <Directory {{ document_root }}/{{ inventory_hostname }}>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog /var/log/httpd/{{ inventory_hostname }}_error.log
+    CustomLog /var/log/httpd/{{ inventory_hostname }}_access.log combined
+
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options DENY
+    Header always set X-XSS-Protection "1; mode=block"
+</VirtualHost>

@@ -1,0 +1,104 @@
+---
+- name: Deploy environment-specific scalable Apache configuration
+  hosts: webservers
+  become: yes
+  vars:
+    document_root: /var/www/html
+    server_name: "{{ inventory_hostname }}"
+
+  tasks:
+    - name: Display deployment information
+      ansible.builtin.debug:
+        msg: |
+          Environment: {{ environment_name }}
+          Host: {{ inventory_hostname }}
+          Port: {{ web_server_port }}
+          Max Connections: {{ max_connections }}
+
+    - name: Install required packages
+      ansible.builtin.dnf:
+        name:
+          - httpd
+          - curl
+          - wget
+          - unzip
+          - firewalld
+          - tar
+        state: present
+
+    - name: Start and enable firewall service
+      ansible.builtin.systemd:
+        name: firewalld
+        state: started
+        enabled: yes
+
+    - name: Create document root directory
+      ansible.builtin.file:
+        path: "{{ document_root }}/{{ environment }}/{{ inventory_hostname }}"
+        state: directory
+        owner: apache
+        group: apache
+        mode: '0755'
+
+    - name: Deploy environment-specific index page
+      ansible.builtin.template:
+        src: templates/index-enhanced.html.j2
+        dest: "{{ document_root }}/{{ environment }}/{{ inventory_hostname }}/index.html"
+        owner: apache
+        group: apache
+        mode: '0644'
+      notify: restart httpd
+
+    - name: Deploy Apache virtual host configuration
+      ansible.builtin.template:
+        src: templates/apache-enhanced.conf.j2
+        dest: "/etc/httpd/conf.d/{{ environment }}-{{ inventory_hostname }}.conf"
+        owner: root
+        group: root
+        mode: '0644'
+      notify: restart httpd
+
+    - name: Check if HTTP firewall service is already enabled
+      ansible.builtin.command: firewall-cmd --permanent --query-service=http
+      register: firewall_http_check
+      failed_when: false
+      changed_when: false
+
+    - name: Allow HTTP through firewall
+      ansible.builtin.command: firewall-cmd --permanent --add-service=http
+      when: firewall_http_check.rc != 0
+      register: firewall_http
+      changed_when: firewall_http.rc == 0
+
+    - name: Reload firewall rules
+      ansible.builtin.command: firewall-cmd --reload
+      when: firewall_http is changed
+
+    - name: Create monitoring script when enabled
+      ansible.builtin.template:
+        src: templates/monitor.sh.j2
+        dest: "/usr/local/bin/web-monitor-{{ environment }}-{{ inventory_hostname }}.sh"
+        owner: root
+        group: root
+        mode: '0755'
+      when: monitoring_enabled | default(false)
+
+    - name: Create logrotate policy
+      ansible.builtin.template:
+        src: templates/logrotate.j2
+        dest: "/etc/logrotate.d/{{ environment }}-{{ inventory_hostname }}"
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Start and enable Apache
+      ansible.builtin.systemd:
+        name: httpd
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: restart httpd
+      ansible.builtin.systemd:
+        name: httpd
+        state: restarted

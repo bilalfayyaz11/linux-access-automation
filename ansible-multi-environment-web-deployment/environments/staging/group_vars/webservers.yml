@@ -1,0 +1,14 @@
+---
+debug_mode: false
+log_level: "info"
+backup_enabled: true
+monitoring_enabled: true
+worker_processes: 2
+worker_connections: 100
+keepalive_timeout: 60
+ssl_enabled: false
+security_headers: true
+app_version: "stable"
+database_pool_size: 10
+cache_enabled: true
+cache_ttl: 300
