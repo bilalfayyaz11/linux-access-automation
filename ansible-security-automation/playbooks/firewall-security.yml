@@ -1,0 +1,67 @@
+---
+- name: Configure Firewall Security Rules
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install and enable firewalld
+      dnf:
+        name: firewalld
+        state: present
+
+    - name: Start firewalld
+      systemd:
+        name: firewalld
+        state: started
+        enabled: yes
+
+    - name: Allow web services
+      ansible.posix.firewalld:
+        service: "{{ item }}"
+        permanent: yes
+        immediate: yes
+        state: enabled
+      loop:
+        - http
+        - https
+        - ssh
+      when: inventory_hostname in groups['webservers']
+
+    - name: Allow database ports
+      ansible.posix.firewalld:
+        port: "{{ item }}"
+        permanent: yes
+        immediate: yes
+        state: enabled
+      loop:
+        - 3306/tcp
+        - 22/tcp
+      when: inventory_hostname in groups['databases']
+
+    - name: Allow app ports
+      ansible.posix.firewalld:
+        port: "{{ item }}"
+        permanent: yes
+        immediate: yes
+        state: enabled
+      loop:
+        - 8080/tcp
+        - 8443/tcp
+        - 22/tcp
+      when: inventory_hostname in groups['appservers']
+
+    - name: Add SSH rate limit rich rule
+      ansible.posix.firewalld:
+        rich_rule: 'rule service name="ssh" accept limit value="3/m"'
+        permanent: yes
+        immediate: yes
+        state: enabled
+      failed_when: false
+
+    - name: List firewall config
+      command: firewall-cmd --list-all
+      register: fw
+      changed_when: false
+
+    - debug:
+        var: fw.stdout_lines

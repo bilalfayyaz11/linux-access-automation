@@ -1,0 +1,31 @@
+---
+- name: Verify Security Configuration
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Run verification commands
+      shell: |
+        echo "SELinux:"
+        sestatus 2>/dev/null || true
+        echo
+        echo "Firewall:"
+        firewall-cmd --state 2>/dev/null || true
+        firewall-cmd --list-all 2>/dev/null || true
+        echo
+        echo "SSH:"
+        sshd -T | grep -E 'permitrootlogin|passwordauthentication|maxauthtries|x11forwarding' || true
+        echo
+        echo "Audit:"
+        systemctl is-active auditd || true
+        echo
+        echo "Cron:"
+        systemctl is-active crond || true
+        echo
+        echo "Security users:"
+        getent passwd secadmin webadmin || true
+      register: verification
+      changed_when: false
+
+    - debug:
+        var: verification.stdout_lines

@@ -1,0 +1,97 @@
+---
+- name: System Security Hardening
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  vars:
+    max_login_attempts: 3
+    password_max_age: 90
+    password_min_age: 7
+
+  tasks:
+    - name: Install available security packages
+      ansible.builtin.dnf:
+        name:
+          - aide
+          - audit
+          - firewalld
+          - cronie
+        state: present
+
+    - name: Configure password aging policies
+      ansible.builtin.lineinfile:
+        path: /etc/login.defs
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        backup: yes
+      loop:
+        - { regexp: '^PASS_MAX_DAYS', line: 'PASS_MAX_DAYS {{ password_max_age }}' }
+        - { regexp: '^PASS_MIN_DAYS', line: 'PASS_MIN_DAYS {{ password_min_age }}' }
+        - { regexp: '^PASS_WARN_AGE', line: 'PASS_WARN_AGE 7' }
+
+    - name: Create PAM faillock configuration
+      ansible.builtin.copy:
+        content: |
+          deny = {{ max_login_attempts }}
+          unlock_time = 900
+          fail_interval = 900
+        dest: /etc/security/faillock.conf
+        owner: root
+        group: root
+        mode: '0644'
+        backup: yes
+
+    - name: Disable unused network services if present
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        state: stopped
+        enabled: no
+      loop:
+        - rpcbind
+        - nfs-server
+        - cups
+      failed_when: false
+
+    - name: Configure kernel parameters for security
+      ansible.posix.sysctl:
+        name: "{{ item.name }}"
+        value: "{{ item.value }}"
+        state: present
+        reload: yes
+      loop:
+        - { name: 'net.ipv4.ip_forward', value: '0' }
+        - { name: 'net.ipv4.conf.all.send_redirects', value: '0' }
+        - { name: 'net.ipv4.conf.all.accept_redirects', value: '0' }
+        - { name: 'net.ipv4.conf.all.accept_source_route', value: '0' }
+        - { name: 'net.ipv4.icmp_echo_ignore_broadcasts', value: '1' }
+
+    - name: Initialize AIDE database
+      ansible.builtin.command: aide --init
+      args:
+        creates: /var/lib/aide/aide.db.new.gz
+      register: aide_init
+      failed_when: false
+
+    - name: Move AIDE database to production location
+      ansible.builtin.command: mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
+      args:
+        creates: /var/lib/aide/aide.db.gz
+      failed_when: false
+
+    - name: Verify hardening status
+      ansible.builtin.shell: |
+        echo "Password policy:"
+        grep -E '^PASS_MAX_DAYS|^PASS_MIN_DAYS|^PASS_WARN_AGE' /etc/login.defs
+        echo
+        echo "Faillock:"
+        cat /etc/security/faillock.conf
+        echo
+        echo "Security sysctl:"
+        sysctl net.ipv4.ip_forward net.ipv4.conf.all.accept_redirects net.ipv4.icmp_echo_ignore_broadcasts
+      register: hardening_verify
+      changed_when: false
+
+    - name: Display hardening verification
+      ansible.builtin.debug:
+        var: hardening_verify.stdout_lines

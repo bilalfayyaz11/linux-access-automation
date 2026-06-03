@@ -1,0 +1,26 @@
+/home/centos/ansible-security-automation
+├── group_vars
+├── host_vars
+├── inventory
+│   └── inventory.ini
+├── outputs
+│   ├── account-access-security-output.txt
+│   ├── ansible-version.txt
+│   ├── final-structure.txt
+│   ├── firewall-security-output.txt
+│   ├── inventory-validation.txt
+│   ├── os-release.txt
+│   ├── security-hardening-output.txt
+│   ├── security-monitoring-output.txt
+│   ├── security-report.txt
+│   ├── selinux-security-output.txt
+│   └── verify-security-output.txt
+└── playbooks
+    ├── account-access-security.yml
+    ├── firewall-security.yml
+    ├── security-hardening.yml
+    ├── security-monitoring.yml
+    ├── selinux-security.yml
+    └── verify-security.yml
+
+5 directories, 18 files

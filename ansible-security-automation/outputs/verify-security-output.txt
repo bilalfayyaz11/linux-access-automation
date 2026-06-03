@@ -1,0 +1,63 @@
+
+PLAY [Verify Security Configuration] *******************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Run verification commands] ***********************************************
+ok: [localhost]
+
+TASK [debug] *******************************************************************
+ok: [localhost] => {
+    "verification.stdout_lines": [
+        "SELinux:",
+        "SELinux status:                 enabled",
+        "SELinuxfs mount:                /sys/fs/selinux",
+        "SELinux root directory:         /etc/selinux",
+        "Loaded policy name:             targeted",
+        "Current mode:                   enforcing",
+        "Mode from config file:          enforcing",
+        "Policy MLS status:              enabled",
+        "Policy deny_unknown status:     allowed",
+        "Memory protection checking:     actual (secure)",
+        "Max kernel policy version:      33",
+        "",
+        "Firewall:",
+        "running",
+        "public (active)",
+        "  target: default",
+        "  icmp-block-inversion: no",
+        "  interfaces: ens5",
+        "  sources: ",
+        "  services: cockpit dhcpv6-client http https ssh",
+        "  ports: 8443/tcp 3306/tcp 22/tcp 8080/tcp",
+        "  protocols: ",
+        "  forward: yes",
+        "  masquerade: no",
+        "  forward-ports: ",
+        "  source-ports: ",
+        "  icmp-blocks: ",
+        "  rich rules: ",
+        "\trule service name=\"ssh\" accept limit value=\"3/m\"",
+        "",
+        "SSH:",
+        "maxauthtries 3",
+        "permitrootlogin no",
+        "passwordauthentication no",
+        "x11forwarding yes",
+        "",
+        "Audit:",
+        "active",
+        "",
+        "Cron:",
+        "active",
+        "",
+        "Security users:",
+        "secadmin:x:1002:1004::/home/secadmin:/bin/bash",
+        "webadmin:x:1003:1005::/home/webadmin:/bin/bash"
+    ]
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

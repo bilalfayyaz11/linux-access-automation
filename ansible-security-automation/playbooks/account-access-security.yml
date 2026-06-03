@@ -1,0 +1,98 @@
+---
+- name: Secure Accounts SSH and Permissions
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Create admin groups
+      group:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - secops
+        - webops
+
+    - name: Create admin users
+      user:
+        name: "{{ item.name }}"
+        groups: "{{ item.groups }}"
+        shell: /bin/bash
+        state: present
+        create_home: yes
+      loop:
+        - { name: secadmin, groups: wheel,secops }
+        - { name: webadmin, groups: webops }
+
+    - name: Configure sudo access
+      copy:
+        content: |
+          secadmin ALL=(ALL) NOPASSWD: ALL
+        dest: /etc/sudoers.d/secadmin
+        mode: '0440'
+        validate: 'visudo -cf %s'
+
+    - name: Configure login banner
+      copy:
+        content: |
+          Authorized access only. Activity may be monitored and logged.
+        dest: /etc/issue.net
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Harden SSH
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        backup: yes
+      loop:
+        - { regexp: '^#?PermitRootLogin', line: 'PermitRootLogin no' }
+        - { regexp: '^#?PasswordAuthentication', line: 'PasswordAuthentication no' }
+        - { regexp: '^#?PubkeyAuthentication', line: 'PubkeyAuthentication yes' }
+        - { regexp: '^#?MaxAuthTries', line: 'MaxAuthTries 3' }
+        - { regexp: '^#?ClientAliveInterval', line: 'ClientAliveInterval 300' }
+        - { regexp: '^#?ClientAliveCountMax', line: 'ClientAliveCountMax 2' }
+        - { regexp: '^#?X11Forwarding', line: 'X11Forwarding no' }
+        - { regexp: '^#?Banner', line: 'Banner /etc/issue.net' }
+
+    - name: Validate SSH config
+      command: sshd -t
+      changed_when: false
+
+    - name: Restart SSH
+      systemd:
+        name: sshd
+        state: restarted
+
+    - name: Secure sensitive file permissions
+      file:
+        path: "{{ item.path }}"
+        owner: root
+        group: root
+        mode: "{{ item.mode }}"
+      loop:
+        - { path: /etc/passwd, mode: '0644' }
+        - { path: /etc/group, mode: '0644' }
+        - { path: /etc/ssh/sshd_config, mode: '0600' }
+
+    - name: Create secure directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0750'
+      loop:
+        - /var/log/secure-apps
+        - /etc/security/custom
+
+    - name: Verify access security
+      shell: |
+        sshd -T | grep -E 'permitrootlogin|passwordauthentication|maxauthtries|x11forwarding'
+        ls -l /etc/passwd /etc/group /etc/ssh/sshd_config
+      register: verify_access
+      changed_when: false
+
+    - debug:
+        var: verify_access.stdout_lines

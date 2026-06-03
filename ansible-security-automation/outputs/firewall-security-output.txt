@@ -1,0 +1,56 @@
+
+PLAY [Configure Firewall Security Rules] ***************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Install and enable firewalld] ********************************************
+ok: [localhost]
+
+TASK [Start firewalld] *********************************************************
+ok: [localhost]
+
+TASK [Allow web services] ******************************************************
+changed: [localhost] => (item=http)
+changed: [localhost] => (item=https)
+ok: [localhost] => (item=ssh)
+
+TASK [Allow database ports] ****************************************************
+changed: [localhost] => (item=3306/tcp)
+changed: [localhost] => (item=22/tcp)
+
+TASK [Allow app ports] *********************************************************
+changed: [localhost] => (item=8080/tcp)
+ok: [localhost] => (item=8443/tcp)
+ok: [localhost] => (item=22/tcp)
+
+TASK [Add SSH rate limit rich rule] ********************************************
+changed: [localhost]
+
+TASK [List firewall config] ****************************************************
+ok: [localhost]
+
+TASK [debug] *******************************************************************
+ok: [localhost] => {
+    "fw.stdout_lines": [
+        "public (active)",
+        "  target: default",
+        "  icmp-block-inversion: no",
+        "  interfaces: ens5",
+        "  sources: ",
+        "  services: cockpit dhcpv6-client http https ssh",
+        "  ports: 8443/tcp 3306/tcp 22/tcp 8080/tcp",
+        "  protocols: ",
+        "  forward: yes",
+        "  masquerade: no",
+        "  forward-ports: ",
+        "  source-ports: ",
+        "  icmp-blocks: ",
+        "  rich rules: ",
+        "\trule service name=\"ssh\" accept limit value=\"3/m\""
+    ]
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=9    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

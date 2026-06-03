@@ -1,0 +1,61 @@
+
+PLAY [Configure SELinux Security Policies] *************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Install SELinux management tools] ****************************************
+ok: [localhost]
+
+TASK [Check current SELinux status] ********************************************
+ok: [localhost]
+
+TASK [Display current SELinux mode] ********************************************
+ok: [localhost] => {
+    "msg": "Current SELinux mode: Enforcing"
+}
+
+TASK [Set SELinux mode in config] **********************************************
+ok: [localhost]
+
+TASK [Set SELinux policy in config] ********************************************
+ok: [localhost]
+
+TASK [Try to set SELinux enforcing immediately] ********************************
+changed: [localhost]
+
+TASK [Configure SELinux booleans for web services] *****************************
+changed: [localhost] => (item=httpd_can_network_connect)
+changed: [localhost] => (item=httpd_can_network_connect_db)
+
+TASK [Create web content directory for context testing] ************************
+changed: [localhost]
+
+TASK [Set SELinux file contexts for web content] *******************************
+changed: [localhost]
+
+TASK [Apply SELinux file contexts] *********************************************
+ok: [localhost]
+
+TASK [Verify SELinux status] ***************************************************
+ok: [localhost]
+
+TASK [Display SELinux status] **************************************************
+ok: [localhost] => {
+    "selinux_status.stdout_lines": [
+        "SELinux status:                 enabled",
+        "SELinuxfs mount:                /sys/fs/selinux",
+        "SELinux root directory:         /etc/selinux",
+        "Loaded policy name:             targeted",
+        "Current mode:                   enforcing",
+        "Mode from config file:          enforcing",
+        "Policy MLS status:              enabled",
+        "Policy deny_unknown status:     allowed",
+        "Memory protection checking:     actual (secure)",
+        "Max kernel policy version:      33"
+    ]
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=13   changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

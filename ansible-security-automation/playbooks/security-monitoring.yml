@@ -1,0 +1,66 @@
+---
+- name: Security Monitoring and Verification
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install monitoring packages
+      dnf:
+        name:
+          - audit
+          - cronie
+        state: present
+
+    - name: Start auditd and crond
+      systemd:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop:
+        - auditd
+        - crond
+      failed_when: false
+
+    - name: Create security check script
+      copy:
+        content: |
+          #!/bin/bash
+          echo "=== Security Status Report ==="
+          date
+          echo
+          echo "SELinux:"
+          sestatus 2>/dev/null || true
+          echo
+          echo "Firewall:"
+          firewall-cmd --state 2>/dev/null || true
+          echo
+          echo "SSH Hardening:"
+          sshd -T | grep -E 'permitrootlogin|passwordauthentication|maxauthtries' || true
+          echo
+          echo "Users:"
+          getent passwd secadmin webadmin || true
+        dest: /usr/local/bin/security-check.sh
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Schedule security check
+      cron:
+        name: Security monitoring
+        minute: "0"
+        hour: "*/6"
+        job: "/usr/local/bin/security-check.sh > /var/log/security-report.log 2>&1"
+        user: root
+
+    - name: Run security check now
+      command: /usr/local/bin/security-check.sh
+      register: security_report
+      changed_when: false
+
+    - name: Save report
+      copy:
+        content: "{{ security_report.stdout }}"
+        dest: /tmp/security-report.txt
+
+    - debug:
+        var: security_report.stdout_lines

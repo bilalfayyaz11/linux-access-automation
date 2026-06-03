@@ -1,0 +1,33 @@
+{
+    "_meta": {
+        "hostvars": {
+            "localhost": {
+                "ansible_connection": "local",
+                "ansible_python_interpreter": "/usr/bin/python3"
+            }
+        }
+    },
+    "all": {
+        "children": [
+            "ungrouped",
+            "webservers",
+            "databases",
+            "appservers"
+        ]
+    },
+    "appservers": {
+        "hosts": [
+            "localhost"
+        ]
+    },
+    "databases": {
+        "hosts": [
+            "localhost"
+        ]
+    },
+    "webservers": {
+        "hosts": [
+            "localhost"
+        ]
+    }
+}

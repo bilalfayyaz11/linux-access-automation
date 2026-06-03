@@ -1,0 +1,93 @@
+---
+- name: Configure SELinux Security Policies
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  vars:
+    selinux_policy: targeted
+    selinux_state: enforcing
+
+  tasks:
+    - name: Install SELinux management tools
+      ansible.builtin.dnf:
+        name:
+          - policycoreutils
+          - policycoreutils-python-utils
+          - selinux-policy
+          - selinux-policy-targeted
+          - setroubleshoot-server
+        state: present
+
+    - name: Check current SELinux status
+      ansible.builtin.command: getenforce
+      register: selinux_current
+      changed_when: false
+      failed_when: false
+
+    - name: Display current SELinux mode
+      ansible.builtin.debug:
+        msg: "Current SELinux mode: {{ selinux_current.stdout | default('unknown') }}"
+
+    - name: Set SELinux mode in config
+      ansible.builtin.lineinfile:
+        path: /etc/selinux/config
+        regexp: '^SELINUX='
+        line: 'SELINUX={{ selinux_state }}'
+        backup: yes
+      register: selinux_config
+
+    - name: Set SELinux policy in config
+      ansible.builtin.lineinfile:
+        path: /etc/selinux/config
+        regexp: '^SELINUXTYPE='
+        line: 'SELINUXTYPE={{ selinux_policy }}'
+        backup: yes
+
+    - name: Try to set SELinux enforcing immediately
+      ansible.builtin.command: setenforce 1
+      register: setenforce_result
+      changed_when: setenforce_result.rc == 0
+      failed_when: false
+
+    - name: Configure SELinux booleans for web services
+      ansible.posix.seboolean:
+        name: "{{ item }}"
+        state: true
+        persistent: true
+      loop:
+        - httpd_can_network_connect
+        - httpd_can_network_connect_db
+      when: inventory_hostname in groups['webservers']
+      failed_when: false
+
+    - name: Create web content directory for context testing
+      ansible.builtin.file:
+        path: /var/www/html
+        state: directory
+        mode: '0755'
+      when: inventory_hostname in groups['webservers']
+
+    - name: Set SELinux file contexts for web content
+      community.general.sefcontext:
+        target: '/var/www/html(/.*)?'
+        setype: httpd_sys_content_t
+        state: present
+      when: inventory_hostname in groups['webservers']
+      failed_when: false
+
+    - name: Apply SELinux file contexts
+      ansible.builtin.command: restorecon -R /var/www/html
+      when: inventory_hostname in groups['webservers']
+      changed_when: false
+      failed_when: false
+
+    - name: Verify SELinux status
+      ansible.builtin.command: sestatus
+      register: selinux_status
+      changed_when: false
+      failed_when: false
+
+    - name: Display SELinux status
+      ansible.builtin.debug:
+        var: selinux_status.stdout_lines
