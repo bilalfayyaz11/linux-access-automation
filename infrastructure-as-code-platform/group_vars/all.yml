@@ -1,0 +1,18 @@
+---
+project_name: "iac-platform"
+environment: "production"
+admin_email: "admin@example.com"
+
+common_packages:
+  - curl
+  - wget
+  - vim
+  - git
+  - unzip
+
+ssh_port: 22
+firewall_enabled: true
+backup_enabled: true
+backup_retention_days: 30
+monitoring_enabled: true
+log_level: "info"

@@ -1,0 +1,10 @@
+=== Infrastructure Release Preparation ===
+Current version: 1.0.0
+Validating Ansible playbooks...
+Checking playbooks/deploy-with-templates.yml
+
+playbook: playbooks/deploy-with-templates.yml
+Checking playbooks/provision-cloud-resources.yml
+
+playbook: playbooks/provision-cloud-resources.yml
+Release notes generated: RELEASE_NOTES.md

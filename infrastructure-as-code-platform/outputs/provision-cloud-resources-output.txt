@@ -1,0 +1,26 @@
+
+PLAY [Provision Cloud Infrastructure] ******************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Create resource provisioning log directory] ******************************
+changed: [localhost]
+
+TASK [Simulate cloud resource provisioning] ************************************
+ok: [localhost] => (item={'name': 'web-server-1', 'type': 'compute', 'size': 'medium', 'os': 'centos-stream-9', 'region': 'local'})
+ok: [localhost] => (item={'name': 'web-server-2', 'type': 'compute', 'size': 'medium', 'os': 'centos-stream-9', 'region': 'local'})
+ok: [localhost] => (item={'name': 'database-server', 'type': 'compute', 'size': 'large', 'os': 'centos-stream-9', 'region': 'local'})
+ok: [localhost] => (item={'name': 'load-balancer', 'type': 'compute', 'size': 'small', 'os': 'centos-stream-9', 'region': 'local'})
+
+TASK [Save provisioning results] ***********************************************
+changed: [localhost]
+
+TASK [Display provisioning summary] ********************************************
+ok: [localhost] => {
+    "msg": "Successfully simulated provisioning of 4 resources."
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=5    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

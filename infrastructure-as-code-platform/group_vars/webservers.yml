@@ -1,0 +1,16 @@
+---
+web_server_package: "httpd"
+web_server_service: "httpd"
+web_server_port: 80
+web_server_ssl_port: 443
+
+app_name: "demo-app"
+app_version: "1.0.0"
+app_port: 8080
+
+max_connections: 1000
+worker_processes: 4
+
+ssl_enabled: false
+ssl_cert_path: "/etc/pki/tls/certs"
+ssl_key_path: "/etc/pki/tls/private"

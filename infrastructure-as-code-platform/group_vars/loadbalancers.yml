@@ -1,0 +1,13 @@
+---
+lb_package: "nginx"
+lb_service: "nginx"
+lb_algorithm: "round_robin"
+lb_health_check_interval: 30
+lb_timeout: 5
+
+backend_servers:
+  - { name: "web1", ip: "127.0.0.1", port: 80, weight: 1 }
+  - { name: "web2", ip: "127.0.0.1", port: 8080, weight: 1 }
+
+ssl_termination: false
+ssl_protocols: "TLSv1.2 TLSv1.3"

@@ -1,0 +1,22 @@
+upstream {{ app_name }}_backend {
+{% for server in backend_servers %}
+    server {{ server.ip }}:{{ server.port }} weight={{ server.weight }};
+{% endfor %}
+}
+
+server {
+    listen 8081;
+    server_name {{ inventory_hostname }}.{{ project_name }}.local;
+
+    location / {
+        proxy_pass http://{{ app_name }}_backend;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+
+    location /health {
+        access_log off;
+        return 200 "healthy\n";
+        add_header Content-Type text/plain;
+    }
+}

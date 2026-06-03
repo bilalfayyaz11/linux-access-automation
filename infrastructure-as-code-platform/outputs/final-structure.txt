@@ -1,0 +1,35 @@
+/home/centos/infrastructure-as-code-platform
+├── RELEASE_NOTES.md
+├── VERSION
+├── group_vars
+│   ├── all.yml
+│   ├── databases.yml
+│   ├── loadbalancers.yml
+│   └── webservers.yml
+├── host_vars
+├── infrastructure.yml
+├── inventory
+│   └── hosts.yml
+├── outputs
+│   ├── deploy-with-templates-output.txt
+│   ├── inventory-validation.txt
+│   ├── provision-cloud-resources-output.txt
+│   ├── provisioning-report.txt
+│   └── release-preparation-output.txt
+├── playbooks
+│   ├── deploy-with-templates.yml
+│   └── provision-cloud-resources.yml
+├── roles
+├── scripts
+│   └── prepare-release.sh
+└── templates
+    ├── apache
+    │   └── vhost.conf.j2
+    ├── index.html.j2
+    ├── mysql
+    │   └── my.cnf.j2
+    ├── nginx
+    │   └── load-balancer.conf.j2
+    └── server-info.txt.j2
+
+11 directories, 21 files

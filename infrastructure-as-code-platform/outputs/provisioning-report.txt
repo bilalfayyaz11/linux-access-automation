@@ -1,0 +1,31 @@
+Cloud Infrastructure Provisioning Report
+Generated: 2026-06-03T02:29:28Z
+
+Provisioning web-server-1...
+Type: compute
+Size: medium
+OS: centos-stream-9
+Region: local
+Status: Provisioned at Wed Jun  3 02:29:29 UTC 2026
+---
+Provisioning web-server-2...
+Type: compute
+Size: medium
+OS: centos-stream-9
+Region: local
+Status: Provisioned at Wed Jun  3 02:29:30 UTC 2026
+---
+Provisioning database-server...
+Type: compute
+Size: large
+OS: centos-stream-9
+Region: local
+Status: Provisioned at Wed Jun  3 02:29:30 UTC 2026
+---
+Provisioning load-balancer...
+Type: compute
+Size: small
+OS: centos-stream-9
+Region: local
+Status: Provisioned at Wed Jun  3 02:29:30 UTC 2026
+---

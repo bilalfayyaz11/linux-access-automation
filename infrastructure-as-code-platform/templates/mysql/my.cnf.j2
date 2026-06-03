@@ -1,0 +1,7 @@
+[mysqld]
+port = {{ db_port }}
+bind-address = 127.0.0.1
+max_connections = {{ db_max_connections }}
+innodb_buffer_pool_size = {{ innodb_buffer_pool_size }}
+character-set-server = utf8mb4
+collation-server = utf8mb4_unicode_ci

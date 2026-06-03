@@ -1,0 +1,13 @@
+<VirtualHost *:{{ web_server_port }}>
+    ServerName {{ inventory_hostname }}.{{ project_name }}.local
+    DocumentRoot /var/www/html/{{ app_name }}
+
+    ErrorLog /var/log/httpd/{{ app_name }}_error.log
+    CustomLog /var/log/httpd/{{ app_name }}_access.log combined
+
+    <Directory /var/www/html/{{ app_name }}>
+        Options -Indexes +FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
